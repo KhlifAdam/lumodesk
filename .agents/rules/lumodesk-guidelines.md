@@ -113,3 +113,8 @@ We will follow this structure as we initialize the Next.js project:
   - Services: `booking-service.ts` (Not `bookingService.ts`)
   - Utilities: `date-formatter.ts`
 - **Next.js Reserved Files:** Next.js App Router files must follow their exact reserved names (`page.tsx`, `layout.tsx`, `loading.tsx`, `route.ts`).
+
+## 17. Tooling & Formatting (pnpm & Biome)
+- **Package Manager:** The project exclusively uses `pnpm`. Do not use `npm` or `yarn` commands to avoid generating conflicting lockfiles.
+- **Formatter:** We use **Biome** (`@biomejs/biome`) as our extremely fast formatter and linter. 
+- **Workflow:** Always ensure your code is formatted. You can run `pnpm format` (which executes `biome format --write .`) to instantly format all files according to our standard.
