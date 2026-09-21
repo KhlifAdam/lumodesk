@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.9.1",
     "@prisma/client": "^7.10.0",
     "better-auth": "^1.7.5",
     "lucide-react": "^1.47.0",
@@ -16,7 +17,9 @@
     "next-intl": "^4.14.5",
     "next-themes": "^0.4.6",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "react-hook-form": "^7.88.0",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
