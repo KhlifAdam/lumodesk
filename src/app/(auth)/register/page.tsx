@@ -13,13 +13,20 @@ import { authClient } from "@/lib/auth-client";
 export default function RegisterPage() {
 	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(false);
-	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
+	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 	async function onSubmit(e: React.FormEvent) {
 		e.preventDefault();
+
+		if (password !== confirmPassword) {
+			toast.error("Passwords do not match.");
+			return;
+		}
+
 		setIsLoading(true);
 
 		try {
@@ -27,7 +34,7 @@ export default function RegisterPage() {
 				{
 					email,
 					password,
-					name,
+					name: email.split("@")[0] || "User",
 				},
 				{
 					onSuccess: () => {
@@ -69,20 +76,6 @@ export default function RegisterPage() {
 				<form onSubmit={onSubmit}>
 					<div className="grid gap-4">
 						<div className="grid gap-2">
-							<Label htmlFor="name">Name</Label>
-							<Input
-								id="name"
-								placeholder="John Doe"
-								type="text"
-								autoCapitalize="words"
-								autoComplete="name"
-								disabled={isLoading}
-								value={name}
-								onChange={(e) => setName(e.target.value)}
-								required
-							/>
-						</div>
-						<div className="grid gap-2">
 							<Label htmlFor="email">Email</Label>
 							<Input
 								id="email"
@@ -117,6 +110,33 @@ export default function RegisterPage() {
 									className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
 								>
 									{showPassword ? (
+										<EyeOff className="h-4 w-4" />
+									) : (
+										<Eye className="h-4 w-4" />
+									)}
+								</button>
+							</div>
+						</div>
+						<div className="grid gap-2">
+							<Label htmlFor="confirmPassword">Confirm Password</Label>
+							<div className="relative">
+								<Input
+									id="confirmPassword"
+									type={showConfirmPassword ? "text" : "password"}
+									placeholder="••••••••"
+									autoComplete="new-password"
+									disabled={isLoading}
+									value={confirmPassword}
+									onChange={(e) => setConfirmPassword(e.target.value)}
+									required
+									minLength={8}
+								/>
+								<button
+									type="button"
+									onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+									className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+								>
+									{showConfirmPassword ? (
 										<EyeOff className="h-4 w-4" />
 									) : (
 										<Eye className="h-4 w-4" />

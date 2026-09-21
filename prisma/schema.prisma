@@ -51,7 +51,7 @@ model Account {
   userId                String    @map("user_id")
   accountId             String    @map("account_id")
   providerId            String    @map("provider_id")
-  userIdOnProvider      String    @map("user_id_on_provider")
+
   accessToken           String?   @map("access_token")
   refreshToken          String?   @map("refresh_token")
   accessTokenExpiresAt  DateTime? @map("access_token_expires_at")

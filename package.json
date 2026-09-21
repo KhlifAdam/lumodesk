@@ -9,7 +9,9 @@
     "organize": "biome check --fix",
     "lint": "biome check --fix",
     "format": "biome format --write . ",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
