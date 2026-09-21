@@ -11,7 +11,10 @@ This file contains the strict technical rules and architecture for **Lumodesk** 
 - **i18n:** `next-intl` (en/fr)
 
 ## 2. Coding Rules & Folder Structure
-- **Keep Files Short:** Source files MUST be a **maximum of 200 lines**. *Exception:* Only exceed this if splitting makes the code significantly harder to read.
+- **Keep Files Short:** Source files MUST be a **maximum of 200 lines**. *Exception:* You can surpass 200 lines by a little (but absolutely no more than 300 lines) ONLY if splitting makes the code structure ugly or overly complex.
+- **Clean Code:** Use custom hooks and other abstraction techniques to keep the logic clean and maintainable.
+- **Reusability:** Create reusable components whenever possible.
+- **Do not over-split:** While modularity is key, avoid splitting components so granularly that the logic becomes hard to trace or results in unnecessary prop drilling for tiny, single-use elements. Find a pragmatic balance.
 - **Modularity:** Extract reusable UI into `components/` and business logic into `services/` or `lib/`.
 - **Language:** Use strict TypeScript.
 - **Strict i18n:** NEVER hardcode user-facing text. Always use `next-intl`. Every UI string MUST be localized from day one.
@@ -25,6 +28,7 @@ This file contains the strict technical rules and architecture for **Lumodesk** 
 - **Server Components:** Default to React Server Components (RSC). Only use `"use client"` when interactivity or React hooks are required.
 - **Server Actions:** Use Server Actions for ALL data mutations instead of `/api` routes to ensure type-safety.
 - **Route Groups:** Strictly separate `app/(public)` (Marketing) from `app/(dashboard)` (CRM).
+- **Images:** ALWAYS use the Next.js `<Image />` component from `next/image` instead of the standard `<img>` tag when possible, for automatic image optimization.
 
 ## 5. Data Validation & Authentication
 - **Zod:** Use `zod` for ALL validation (client forms, Server Action payloads, env vars). NEVER trust client input without Zod.
@@ -57,6 +61,7 @@ This file contains the strict technical rules and architecture for **Lumodesk** 
 - **Kebab Case Everything:** ALL files across the project MUST be named in `kebab-case.tsx` (e.g., `user-profile.tsx`), except Next.js reserved files.
 - **Package Manager:** Exclusively use `pnpm`. NEVER use `npm` or `yarn`.
 - **Formatter:** Use **Biome**. Run `pnpm format` routinely.
+- **Always Lint:** You MUST always run the linter (`pnpm lint`) and formatter (`pnpm format`), and proactively fix any linting issues or warnings that arise from your code changes.
 
 ## 12. Animations & Interactions
 - **Framer Motion:** Use for complex, fluid animations (scroll-reveals, layout transitions).

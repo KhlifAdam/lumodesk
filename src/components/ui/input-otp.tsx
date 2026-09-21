@@ -64,6 +64,7 @@ const InputOTPSeparator = React.forwardRef<
 	React.ElementRef<"div">,
 	React.ComponentPropsWithoutRef<"div">
 >(({ ...props }, ref) => (
+	// biome-ignore lint/a11y/useSemanticElements: Shadcn component
 	<div ref={ref} role="separator" {...props}>
 		<Minus />
 	</div>
