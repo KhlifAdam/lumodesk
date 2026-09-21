@@ -118,3 +118,13 @@ We will follow this structure as we initialize the Next.js project:
 - **Package Manager:** The project exclusively uses `pnpm`. Do not use `npm` or `yarn` commands to avoid generating conflicting lockfiles.
 - **Formatter:** We use **Biome** (`@biomejs/biome`) as our extremely fast formatter and linter. 
 - **Workflow:** Always ensure your code is formatted. You can run `pnpm format` (which executes `biome format --write .`) to instantly format all files according to our standard.
+
+## 18. Animations & Interactions
+- **Framer Motion:** For complex, fluid animations (like floating elements, scroll-reveals, or layout transitions), use `framer-motion`.
+- **CSS Transitions:** For simple hover states (e.g., button colors changing), stick to standard Tailwind `transition` utilities (`transition-all duration-300`).
+- **Aesthetic:** Keep animations smooth, subtle, and premium (e.g., standard spring physics or gentle ease-out timing). Do not make them overly bouncy or distracting.
+
+## 19. Data Lists (Pagination, Filtering & Sorting)
+- **Always Paginate:** Any list of data that could potentially grow large (e.g., Clients, Invoices, Media, Bookings) MUST implement pagination from day one. Do not fetch or render massive unsorted arrays.
+- **Robust Filtering & Sorting:** Always provide a high-quality user experience for data tables. Include text search, category filters (e.g., status dropdowns), and column sorting.
+- **URL Search Params:** Whenever possible, store the active filters, sort state, and current page in the URL search parameters (e.g., `?page=2&status=pending`). This allows users to share links to specific views and keeps the UI state in sync with the server.
