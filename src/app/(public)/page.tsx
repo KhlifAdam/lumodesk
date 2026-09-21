@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Aperture, Bot, CalendarDays, Check, ChevronRight, CirclePlay, Camera, Mail, Menu, Moon, Play, Quote, Sparkles, Star, Sun, MessageCircle, Users, WandSparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -26,22 +27,21 @@ function BrandMark() {
 }
 
 export default function Page() {
-  const [dark, setDark] = useState(false);
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const dark = mounted ? resolvedTheme === "dark" : true;
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [yearly, setYearly] = useState(true);
   const { scrollYProgress } = useScroll();
   const dashboardY = useTransform(scrollYProgress, [0, 0.3], [0, -70]);
 
   useEffect(() => {
-    const preferred = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setDark(preferred);
-    document.documentElement.classList.toggle("dark", preferred);
+    setMounted(true);
   }, []);
 
   const toggleTheme = () => {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
+    setTheme(dark ? "light" : "dark");
   };
 
   return (
