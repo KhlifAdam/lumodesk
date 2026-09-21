@@ -29,7 +29,7 @@
 
 2. **Install dependencies**
    ```bash
-   npm install
+   pnpm install
    ```
 
 3. **Initialize the Database Schema**  
@@ -40,7 +40,7 @@
 
 4. **Start the development server**
    ```bash
-   npm run dev
+   pnpm dev
    ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
