@@ -1,130 +1,68 @@
 # Agent Guidelines & Tech Stack
 
-This file contains the core technical rules and architecture for **Lumodesk** (the PFE Photography/Audiovisual platform). As an AI Agent, I will automatically load and follow these instructions for every task in this project. 
-*(For detailed product features and business logic, refer to `PRD.md` on demand).*
+This file contains the strict technical rules and architecture for **Lumodesk** (the PFE platform). As an AI Agent, I MUST automatically load and follow these instructions for every task. *(For business logic, refer to `PRD.md`).*
 
-## 1. Tech Stack
+## 1. Core Tech Stack
 - **Framework:** Next.js (App Router)
-- **Styling:** Tailwind CSS + shadcn/ui (with `next-themes` for Light/Dark mode)
-- **Database:** PostgreSQL (running locally via Docker)
-- **ORM:** Prisma
+- **Styling:** Tailwind CSS v4 + shadcn/ui + next-themes
+- **Database / ORM:** PostgreSQL (Docker) + Prisma v7
 - **Authentication:** Better Auth
-- **Media Storage:** Cloudflare (Cloudflare R2 for S3-compatible storage)
-- **Internationalization (i18n):** `next-intl` (for multi-language support)
+- **Media Storage:** Cloudflare R2
+- **i18n:** `next-intl` (en/fr)
 
-## 2. Coding Rules & Conventions
-- **Keep Files Short:** Source code files should be a **maximum of 200 lines**. 
-- *Exception:* You may exceed this slightly only if splitting the file into smaller pieces would make the code significantly messier or harder to read.
-- **Modularity:** Extract reusable UI components into the `components/` directory, and extract complex business logic/database calls into the `services/` or `lib/` directories.
-- **Language:** Use strict TypeScript for all files.
-- **Strict i18n:** NEVER hardcode user-facing text in the components. Always use `next-intl` for translations. The app supports English (`en`) and French (`fr`) for now. Every UI string must be localized from day one.
+## 2. Coding Rules & Folder Structure
+- **Keep Files Short:** Source files MUST be a **maximum of 200 lines**. *Exception:* Only exceed this if splitting makes the code significantly harder to read.
+- **Modularity:** Extract reusable UI into `components/` and business logic into `services/` or `lib/`.
+- **Language:** Use strict TypeScript.
+- **Strict i18n:** NEVER hardcode user-facing text. Always use `next-intl`. Every UI string MUST be localized from day one.
+- **Pre-flight:** Always verify `docker-compose.yml` is running before DB migrations. Consult `PRD.md` before starting massive features.
 
-## 3. Recommended Folder Structure
-We will follow this structure as we initialize the Next.js project:
+## 3. Multi-Tenant Architecture & Security
+- **Data Isolation:** Every Prisma query in the private space MUST include a tenant check (e.g., `where: { photographerId: session.user.id }`) to prevent data leakage.
+- **Role-Based Access Control (RBAC):** Strictly respect PRD roles (Admin, Photographe, Client, Equipe) for data access, Server Actions, and UI.
 
-```text
-/
-├── PRD.md                   # Product Requirements Document
-├── docker-compose.yml       # PostgreSQL database container definition
-├── messages/                # i18n translation dictionaries (en.json, fr.json)
-├── prisma/                  # Prisma schema and migrations
-├── src/
-│   ├── app/                 # Next.js App Router (Pages & Layouts)
-│   │   ├── [locale]/        # Dynamic route segment for i18n (en/fr)
-│   │   │   ├── (public)/    # Public-facing site (Portfolio, Booking)
-│   │   │   └── (dashboard)/ # Private CRM/Management space
-│   │   └── api/             # API Routes (Webhooks, better-auth, AI endpoints)
-│   ├── components/          # Reusable React components
-│   │   ├── ui/              # shadcn/ui generated components
-│   │   └── shared/          # Custom shared components
-│   ├── lib/                 # Core configs (Prisma client, Better Auth setup)
-│   ├── services/            # Business logic (Project management, media)
-│   └── types/               # Global TypeScript definitions
-└── package.json
-```
+## 4. Next.js 16 Standards (App Router)
+- **Server Components:** Default to React Server Components (RSC). Only use `"use client"` when interactivity or React hooks are required.
+- **Server Actions:** Use Server Actions for ALL data mutations instead of `/api` routes to ensure type-safety.
+- **Route Groups:** Strictly separate `app/(public)` (Marketing) from `app/(dashboard)` (CRM).
 
-## 4. Agent Behavior Workflow
-- Always verify if a `docker-compose.yml` is running before attempting database migrations.
-- When starting a brand new, large feature, I must use my tools to read `PRD.md` to ensure I respect the exact specifications of the project.
+## 5. Data Validation & Authentication
+- **Zod:** Use `zod` for ALL validation (client forms, Server Action payloads, env vars). NEVER trust client input without Zod.
+- **better-auth:** Follow specific App Router patterns to securely fetch sessions on both server and client.
 
-## 5. Multi-Tenant Architecture & Security
-- **Data Isolation:** This is a SaaS application. Every Prisma query in the private/dashboard space MUST include a tenant check (e.g., `where: { photographerId: session.user.id }` or equivalent) to prevent data leakage between different photographers' workspaces.
-- **Role-Based Access Control (RBAC):** Always respect the roles defined in the PRD (Admin, Photographe, Client, Equipe) when handling data access, server actions, and UI rendering.
+## 6. Prisma ORM v7
+- **Strict Naming Conventions:** Database tables/columns MUST use `snake_case` (e.g., `user_profiles`). Prisma Client TS code MUST use `camelCase` (enforced via `@@map("table_name")` and `@map("column_name")`).
+- **Relationships:** Schema MUST strictly follow the domain models outlined in the PRD.
 
-## 6. Next.js 16 & React 19 Standards
-- **App Router & Server Components:** Use the App Router (`app/`). Default to React Server Components (RSC). Only use `"use client"` when interactivity, React hooks, or browser APIs are required.
-- **Server Actions:** Use Server Actions for all data mutations instead of traditional API routes (`/api`), ensuring they are type-safe and validated.
-- **Route Groups:** Strictly separate the public marketing/portfolio sites (e.g., `app/(public)`) from the SaaS CRM dashboard (`app/(dashboard)`).
+## 7. Caching, Fetching & Performance
+- **Dashboard SSR:** The dashboard MUST use Server Components (SSR) to securely fetch data from Prisma without exposing APIs.
+- **Suspense & Streaming:** Always use `loading.tsx` and `<Suspense>` to stream the UI shell instantly while fetching private data.
+- **Client Fetching:** Use `swr` ONLY for live polling/infinite scrolling. It must NOT be the default method.
+- **Cache Invalidation:** Mutate via Server Actions + `revalidatePath` / `revalidateTag`.
 
-## 7. Data Validation
-- **Zod:** Use `zod` for ALL data validation. This includes validating form inputs on the client, parsing Server Action payloads on the server, and validating environment variables. Never trust client input without Zod validation.
+## 8. Form Handling
+- **React Hook Form:** For all client interactions, use `react-hook-form` paired with `@hookform/resolvers/zod`.
+- **shadcn/ui:** Rely on the `shadcn/ui` `<Form>` components. Submit sanitized data to Server Actions.
 
-## 8. Authentication
-- **better-auth:** Use `better-auth` for authentication. Follow its specific Next.js App Router patterns to fetch the session securely on both the server and the client.
+## 9. UI/UX, Design System & Theming
+- **Rich Aesthetics:** Implement premium designs. Favor glassmorphism, sleek dark modes, and curated palettes. Do not settle for basic MVPs.
+- **Single Source of Truth:** NEVER scatter hardcoded padding, colors, or `rounded-3xl` utilities. Update CSS variables in `globals.css` or the specific `components/ui/` file to maintain a cohesive theme.
+- **Icons:** Exclusively use `lucide-react`.
 
-## 9. UI/UX & Styling
-- **Tailwind CSS v4:** Follow Tailwind v4 conventions for styling.
-- **Rich Aesthetics:** Implement premium, modern designs. Favor glassmorphism, sleek dark modes, subtle micro-animations, and curated color palettes. The UI should look highly professional and "wow" the user. Do not settle for basic MVPs.
-- **Icons:** Exclusively use `lucide-react` for icons to maintain consistency.
+## 10. Translation Organization (next-intl)
+- **File Location:** Strictly `en.json` and `fr.json` in `/messages/`.
+- **Hierarchical Structure:** Group translations hierarchically by Feature or Component (e.g., `"Auth": { "loginButton": "Se connecter" }`). NEVER use flat keys.
 
-## 10. Prisma ORM v7
-- **Naming Conventions (Snake Case):** All database tables and columns MUST use `snake_case` in the actual PostgreSQL database (e.g., `user_profiles`, `created_at`). However, in the Prisma Client (TypeScript code), they should remain `camelCase`. You must achieve this by using Prisma's `@@map("table_name")` for models and `@map("column_name")` for fields.
-- Ensure schema relationships strictly follow the domain models outlined in the PRD (e.g., Projects, Bookings, Clients, Media, Material).
-- Follow the guidelines in the `prisma-upgrade-v7` and `prisma-client-api` skills when writing queries or updating the database.
+## 11. Tooling, Formatting & Naming
+- **Kebab Case Everything:** ALL files across the project MUST be named in `kebab-case.tsx` (e.g., `user-profile.tsx`), except Next.js reserved files.
+- **Package Manager:** Exclusively use `pnpm`. NEVER use `npm` or `yarn`.
+- **Formatter:** Use **Biome**. Run `pnpm format` routinely.
 
-## 11. Caching & Data Fetching
-- **Server Components Default:** For 95% of data fetching, use React Server Components (RSC). Next.js automatically caches and deduplicates these requests natively.
-- **Cache Invalidation:** Use Server Actions combined with `revalidatePath` or `revalidateTag` to mutate data and instantly update the UI.
-- **Client Fetching (SWR):** Only use `swr` (or React Query) when strictly necessary for client-side interactions, such as live polling, infinite scrolling, or real-time dashboard widgets. It should *not* be the default method for loading a page's initial data.
+## 12. Animations & Interactions
+- **Framer Motion:** Use for complex, fluid animations (scroll-reveals, layout transitions).
+- **CSS Transitions:** Use standard Tailwind (`transition-all duration-300`) for simple hover states.
+- **Aesthetic:** Keep animations smooth, subtle, and premium. NEVER overly bouncy.
 
-## 12. Dashboard Performance (Streaming & Suspense)
-- **Do not avoid SSR for the Dashboard:** The dashboard *should* use Server Components (SSR) because it allows us to securely fetch data directly from Prisma without exposing APIs.
-- **Use Suspense:** To ensure the dashboard feels instantaneous (like a traditional SPA), always use `loading.tsx` and `<Suspense>` boundaries. Stream the UI shell (sidebar, header) immediately to the user while the server fetches the private data in the background.
-
-## 13. Form Handling
-- **React Hook Form:** For all client-side form interactions (e.g., creating a booking, updating settings), use `react-hook-form` paired with `@hookform/resolvers/zod`.
-- **Integration with shadcn/ui:** Rely on the `shadcn/ui` `<Form>` components, which internally use `react-hook-form`, to provide accessible, validated, and beautifully styled form fields.
-- **Server Actions:** Once the form is validated on the client by `react-hook-form`, submit the sanitized data to a Server Action for actual database mutation.
-
-## 14. Design System & Theming (Single Source of Truth)
-- **Do not scatter utility classes:** Do not use arbitrary or scattered utility classes for core design elements (like `rounded-3xl`, hardcoded padding, or specific hex colors) directly on individual pages or components.
-- **Update Shadcn / globals.css:** If we want to change the border radius, base padding, or colors for the entire app, we must update the CSS variables in the global CSS file (`globals.css`) or directly modify the specific component file inside `components/ui/`. 
-- **Consistency:** By keeping `shadcn/ui` and our global CSS as the single source of truth, the application will naturally maintain the cohesive, premium "Rich Aesthetics" theme everywhere.
-
-## 15. Translation Files Organization (next-intl)
-- **File Location:** Translation files must be strictly named `en.json` and `fr.json` and placed inside the `/messages/` directory at the root of the project.
-- **Hierarchical Structure:** Do not use flat keys (like `"hello": "Bonjour"`). Group translations hierarchically by Feature, Page, or Component to avoid naming collisions and keep files maintainable.
-  - *Example:* 
-    ```json
-    {
-      "Auth": {
-        "loginButton": "Se connecter",
-        "errors": { "invalidEmail": "Email invalide" }
-      },
-      "Dashboard": { "title": "Tableau de Bord" }
-    }
-    ```
-- **Usage:** In components, use the namespace to fetch the relevant string: `const t = useTranslations('Auth'); t('loginButton');`
-
-## 16. File Naming Conventions
-- **Kebab Case Everything:** To maintain strict consistency with `shadcn/ui` (which generates files like `alert-dialog.tsx`), ALL files across the entire project MUST be named in `kebab-case`.
-- **Examples:**
-  - Components: `user-profile-card.tsx` (Not `UserProfileCard.tsx`)
-  - Services: `booking-service.ts` (Not `bookingService.ts`)
-  - Utilities: `date-formatter.ts`
-- **Next.js Reserved Files:** Next.js App Router files must follow their exact reserved names (`page.tsx`, `layout.tsx`, `loading.tsx`, `route.ts`).
-
-## 17. Tooling & Formatting (pnpm & Biome)
-- **Package Manager:** The project exclusively uses `pnpm`. Do not use `npm` or `yarn` commands to avoid generating conflicting lockfiles.
-- **Formatter:** We use **Biome** (`@biomejs/biome`) as our extremely fast formatter and linter. 
-- **Workflow:** Always ensure your code is formatted. You can run `pnpm format` (which executes `biome format --write .`) to instantly format all files according to our standard.
-
-## 18. Animations & Interactions
-- **Framer Motion:** For complex, fluid animations (like floating elements, scroll-reveals, or layout transitions), use `framer-motion`.
-- **CSS Transitions:** For simple hover states (e.g., button colors changing), stick to standard Tailwind `transition` utilities (`transition-all duration-300`).
-- **Aesthetic:** Keep animations smooth, subtle, and premium (e.g., standard spring physics or gentle ease-out timing). Do not make them overly bouncy or distracting.
-
-## 19. Data Lists (Pagination, Filtering & Sorting)
-- **Always Paginate:** Any list of data that could potentially grow large (e.g., Clients, Invoices, Media, Bookings) MUST implement pagination from day one. Do not fetch or render massive unsorted arrays.
-- **Robust Filtering & Sorting:** Always provide a high-quality user experience for data tables. Include text search, category filters (e.g., status dropdowns), and column sorting.
-- **URL Search Params:** Whenever possible, store the active filters, sort state, and current page in the URL search parameters (e.g., `?page=2&status=pending`). This allows users to share links to specific views and keeps the UI state in sync with the server.
+## 13. Data Lists (Pagination & Filtering)
+- **Always Paginate:** Any large data list (Clients, Invoices, Media) MUST implement pagination from day one. NEVER render massive unsorted arrays.
+- **URL Search Params:** Store active filters, sort state, and current page in the URL (`?page=2&status=pending`) to keep UI in sync with the server.
