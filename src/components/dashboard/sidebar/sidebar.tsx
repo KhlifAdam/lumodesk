@@ -3,6 +3,7 @@
 import { BookOpen, LayoutGrid, Mail, Users } from "lucide-react";
 import { NavItem } from "./nav-item";
 import { SidebarLogo } from "./sidebar-logo";
+import { UserMenu } from "./user-menu";
 
 const NAV_ITEMS = [
 	{ href: "/dashboard", label: "Overview", icon: LayoutGrid },
@@ -11,7 +12,15 @@ const NAV_ITEMS = [
 	{ href: "/dashboard/messages", label: "Messages", icon: Mail },
 ] as const;
 
-export function Sidebar() {
+interface SidebarProps {
+	user: {
+		name: string;
+		email: string;
+		image?: string | null;
+	};
+}
+
+export function Sidebar({ user }: SidebarProps) {
 	return (
 		<aside className="flex h-screen w-56 shrink-0 flex-col border-r border-border bg-card">
 			{/* Logo */}
@@ -25,6 +34,11 @@ export function Sidebar() {
 					<NavItem key={item.href} {...item} />
 				))}
 			</nav>
+
+			{/* User / Footer */}
+			<div className="border-t border-border p-3">
+				<UserMenu user={user} />
+			</div>
 		</aside>
 	);
 }
