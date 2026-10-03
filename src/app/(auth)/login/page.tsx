@@ -40,6 +40,7 @@ export default function LoginPage() {
 				},
 			);
 		} catch (_error) {
+			toast.error("Network error. Please try again.");
 			setIsLoading(false);
 		}
 	}
@@ -75,7 +76,7 @@ export default function LoginPage() {
 								autoCapitalize="none"
 								autoComplete="email"
 								autoCorrect="off"
-								disabled={isLoading}
+								readOnly={isLoading}
 								value={email}
 								onChange={(e) => setEmail(e.target.value)}
 								required
@@ -97,7 +98,7 @@ export default function LoginPage() {
 									type={showPassword ? "text" : "password"}
 									placeholder="••••••••"
 									autoComplete="current-password"
-									disabled={isLoading}
+									readOnly={isLoading}
 									value={password}
 									onChange={(e) => setPassword(e.target.value)}
 									required

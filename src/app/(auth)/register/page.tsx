@@ -49,6 +49,7 @@ export default function RegisterPage() {
 				},
 			);
 		} catch (_error) {
+			toast.error("Network error. Please try again.");
 			setIsLoading(false);
 		}
 	}
@@ -84,7 +85,7 @@ export default function RegisterPage() {
 								autoCapitalize="none"
 								autoComplete="email"
 								autoCorrect="off"
-								disabled={isLoading}
+								readOnly={isLoading}
 								value={email}
 								onChange={(e) => setEmail(e.target.value)}
 								required
@@ -98,7 +99,7 @@ export default function RegisterPage() {
 									type={showPassword ? "text" : "password"}
 									placeholder="••••••••"
 									autoComplete="new-password"
-									disabled={isLoading}
+									readOnly={isLoading}
 									value={password}
 									onChange={(e) => setPassword(e.target.value)}
 									required
@@ -125,7 +126,7 @@ export default function RegisterPage() {
 									type={showConfirmPassword ? "text" : "password"}
 									placeholder="••••••••"
 									autoComplete="new-password"
-									disabled={isLoading}
+									readOnly={isLoading}
 									value={confirmPassword}
 									onChange={(e) => setConfirmPassword(e.target.value)}
 									required

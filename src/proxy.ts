@@ -2,7 +2,12 @@ import { type NextRequest, NextResponse } from "next/server";
 
 export async function proxy(request: NextRequest) {
 	const pathName = request.nextUrl.pathname;
-	const isAuthRoute = ["/login", "/register"].includes(pathName);
+	const isAuthRoute = [
+		"/login",
+		"/register",
+		"/forgot-password",
+		"/reset-password",
+	].includes(pathName);
 
 	// Fetch the session from the Better Auth API route
 	const response = await fetch(new URL("/api/auth/get-session", request.url), {
@@ -28,5 +33,11 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-	matcher: ["/dashboard/:path*", "/login", "/register"],
+	matcher: [
+		"/dashboard/:path*",
+		"/login",
+		"/register",
+		"/forgot-password",
+		"/reset-password",
+	],
 };
