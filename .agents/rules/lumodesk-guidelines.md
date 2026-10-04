@@ -71,3 +71,29 @@ This file contains the strict technical rules and architecture for **Lumodesk** 
 ## 13. Data Lists (Pagination & Filtering)
 - **Always Paginate:** Any large data list (Clients, Invoices, Media) MUST implement pagination from day one. NEVER render massive unsorted arrays.
 - **URL Search Params:** Store active filters, sort state, and current page in the URL (`?page=2&status=pending`) to keep UI in sync with the server.
+- **Reorder + pagination:** Drag-and-drop reorders only the items on the current page. The server accepts a reorder only if it is a permutation of exactly those rows, reuses their existing positions as slots, and rejects anything else as stale. Do not use hard caps in place of pagination.
+
+## 14. Fonts
+- **Google only:** Load every font with `next/font/google`. Do not add local font files.
+
+## 15. Demo & Placeholder Content
+- **Real photos:** Demo sites use real, CC0-licensed photos stored in R2 under `demo/`. Never use generated colour blocks as placeholders.
+
+## 16. Destructive Actions & Cleanup
+- **Ask first:** Before deleting code, files or dependencies, ask. shadcn components are kept for theming even when unused.
+- **Clean up:** Delete temporary files, scratch scripts and test accounts/data created during a task once it is finished.
+
+## 17. Verification
+- **Dev server:** Verify features against the running dev server on port 3000, not only a separate production build.
+- **Restarts:** Say clearly when `pnpm dev` must be restarted (after a migration, `.env` or `next.config` change).
+
+## 18. Public Sites (Theming, i18n, Caching)
+- **Scoped themes:** Light/dark modes are scoped to the public site via `data-site-theme` and never follow the dashboard's theme.
+- **Independent language:** The public site's language is chosen per visitor (`?lang`, cookie, browser, studio default), independent of the dashboard's.
+- **Full translation:** Every visible string, including emails, exists in both `en` and `fr`.
+- **One renderer:** The preview and the public site use the same renderer, so the preview always matches what visitors see.
+- **Cache invalidation:** Public-site data is cached per photographer. Any server action that changes what a site shows must call `revalidatePublicSites()` (`updateTag`).
+
+## 19. Tooling & Schema
+- **Fix script:** `pnpm fix` runs format, lint and organize. Run it before committing.
+- **Prisma config:** The config is `prisma.config.ts`. `postinstall` regenerates the Prisma client, so run `pnpm db:generate` after schema changes.
