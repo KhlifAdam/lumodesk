@@ -1,43 +1,19 @@
+import { getSessionCookie } from "better-auth/cookies";
 import { type NextRequest, NextResponse } from "next/server";
 
-export async function proxy(request: NextRequest) {
-	const pathName = request.nextUrl.pathname;
-	const isAuthRoute = [
-		"/login",
-		"/register",
-		"/forgot-password",
-		"/reset-password",
-	].includes(pathName);
-
-	// Fetch the session from the Better Auth API route
-	const response = await fetch(new URL("/api/auth/get-session", request.url), {
-		headers: {
-			cookie: request.headers.get("cookie") || "",
-		},
-	});
-
-	const session = response.ok ? await response.json() : null;
-
-	if (!session) {
-		if (isAuthRoute) {
-			return NextResponse.next();
-		}
-		return NextResponse.redirect(new URL("/login", request.url));
-	}
-
-	if (isAuthRoute) {
-		return NextResponse.redirect(new URL("/dashboard", request.url));
-	}
-
-	return NextResponse.next();
+/**
+ * Fast first gate: sends visitors without a session cookie to sign-in, with no
+ * database or network call. The cookie is not trusted: `requirePhotographer`
+ * validates the session on every dashboard page and action.
+ *
+ * Auth pages are not redirected when a cookie exists, because an expired
+ * cookie would bounce between /login and /dashboard forever.
+ */
+export function proxy(request: NextRequest) {
+	if (getSessionCookie(request.headers)) return NextResponse.next();
+	return NextResponse.redirect(new URL("/login", request.url));
 }
 
 export const config = {
-	matcher: [
-		"/dashboard/:path*",
-		"/login",
-		"/register",
-		"/forgot-password",
-		"/reset-password",
-	],
+	matcher: ["/dashboard/:path*"],
 };

@@ -9,17 +9,19 @@ interface NavItemProps {
 	href: string;
 	label: string;
 	icon: LucideIcon;
+	exact?: boolean;
 }
 
-export function NavItem({ href, label, icon: Icon }: NavItemProps) {
+export function NavItem({ href, label, icon: Icon, exact }: NavItemProps) {
 	const pathname = usePathname();
-	const isActive = pathname === href || pathname.startsWith(`${href}/`);
+	const isActive =
+		pathname === href || (!exact && pathname.startsWith(`${href}/`));
 
 	return (
 		<Link
 			href={href}
 			className={cn(
-				"flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200",
+				"flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm font-medium transition-all duration-200",
 				isActive
 					? "bg-primary/10 text-primary"
 					: "text-muted-foreground hover:bg-muted hover:text-foreground",

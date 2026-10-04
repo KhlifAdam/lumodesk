@@ -10,21 +10,24 @@ import {
 	WandSparkles,
 } from "lucide-react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { reveal } from "./animations";
 
+const CRM_STEPS = ["contract", "invoice", "questionnaire"] as const;
+
 export function Features() {
+	const t = useTranslations("Landing.features");
+
 	return (
 		<section id="features" className="mx-auto max-w-6xl px-5 py-24 md:py-32">
 			<motion.div {...reveal} className="max-w-2xl">
 				<p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-primary">
-					Everything connected
+					{t("eyebrow")}
 				</p>
 				<h2 className="text-4xl font-semibold leading-tight md:text-6xl">
-					Less admin. More time behind the lens.
+					{t("title")}
 				</h2>
-				<p className="mt-5 text-muted-foreground">
-					Every client touchpoint, beautifully considered and perfectly in sync.
-				</p>
+				<p className="mt-5 text-muted-foreground">{t("subtitle")}</p>
 			</motion.div>
 			<div className="mt-12 grid auto-rows-[300px] grid-cols-1 gap-4 md:grid-cols-6">
 				<motion.article
@@ -34,42 +37,42 @@ export function Features() {
 				>
 					<div className="relative z-10">
 						<Users className="size-5 text-primary" />
-						<h3 className="mt-4 text-xl font-semibold">Smart CRM</h3>
+						<h3 className="mt-4 text-xl font-semibold">{t("crm.title")}</h3>
 						<p className="mt-2 max-w-xs text-sm text-muted-foreground">
-							Know every client, conversation, and milestone at a glance.
+							{t("crm.description")}
 						</p>
 					</div>
 					<div className="absolute -bottom-5 right-[-4%] w-[68%] rounded-lg border border-border bg-background p-4 shadow-xl">
 						<div className="flex items-center gap-3">
 							<Image
 								src="/images/lumodesk-portrait.jpg"
-								alt="Client profile"
+								alt={t("crm.avatarAlt")}
 								width={1200}
 								height={1504}
 								className="size-10 rounded-full object-cover"
 							/>
 							<div>
-								<p className="text-xs font-semibold">Mara Cole</p>
+								<p className="text-xs font-semibold">{t("crm.name")}</p>
 								<p className="text-[10px] text-muted-foreground">
-									Editorial · September 28
+									{t("crm.meta")}
 								</p>
 							</div>
 							<span className="ml-auto rounded-full bg-chart-2/15 px-2 py-1 text-[9px] text-chart-2">
-								Confirmed
+								{t("crm.status")}
 							</span>
 						</div>
-						{["Contract signed", "Invoice paid", "Questionnaire received"].map(
-							(x, i) => (
-								<div
-									key={x}
-									className="mt-3 flex items-center gap-2 text-[10px] text-muted-foreground"
-								>
-									<Check className="size-3 text-chart-2" />
-									{x}
-									<span className="ml-auto">{i + 1}d ago</span>
-								</div>
-							),
-						)}
+						{CRM_STEPS.map((step, i) => (
+							<div
+								key={step}
+								className="mt-3 flex items-center gap-2 text-[10px] text-muted-foreground"
+							>
+								<Check className="size-3 text-chart-2" />
+								{t(`crm.steps.${step}`)}
+								<span className="ml-auto">
+									{t("crm.daysAgo", { count: i + 1 })}
+								</span>
+							</div>
+						))}
 					</div>
 				</motion.article>
 				<motion.article
@@ -78,9 +81,9 @@ export function Features() {
 					className="relative overflow-hidden rounded-xl border border-border bg-card p-6 transition-shadow hover:shadow-luminous md:col-span-2 md:row-span-2"
 				>
 					<Aperture className="size-5 text-primary" />
-					<h3 className="mt-4 text-xl font-semibold">Client Galleries</h3>
+					<h3 className="mt-4 text-xl font-semibold">{t("galleries.title")}</h3>
 					<p className="mt-2 text-sm text-muted-foreground">
-						Deliver work that feels as premium as it looks.
+						{t("galleries.description")}
 					</p>
 					<div className="relative mt-7 h-[390px]">
 						<motion.div
@@ -89,7 +92,7 @@ export function Features() {
 						>
 							<Image
 								src="/images/lumodesk-gallery.jpg"
-								alt="Wedding gallery"
+								alt={t("galleries.weddingAlt")}
 								fill
 								className="rounded-sm object-cover"
 							/>
@@ -100,7 +103,7 @@ export function Features() {
 						>
 							<Image
 								src="/images/lumodesk-editorial.jpg"
-								alt="Editorial gallery"
+								alt={t("galleries.editorialAlt")}
 								fill
 								className="rounded-sm object-cover"
 							/>
@@ -114,13 +117,13 @@ export function Features() {
 				>
 					<div className="absolute right-4 top-4 size-24 rounded-full bg-primary/25 blur-2xl" />
 					<WandSparkles className="relative size-5 text-primary" />
-					<h3 className="mt-4 text-xl font-semibold">AI Assistant</h3>
+					<h3 className="mt-4 text-xl font-semibold">{t("ai.title")}</h3>
 					<p className="mt-2 text-sm text-muted-foreground">
-						Draft emails, curate galleries, and plan timelines in seconds.
+						{t("ai.description")}
 					</p>
 					<div className="mt-6 flex items-center gap-3 rounded-lg border border-primary/30 bg-primary/5 p-3 text-xs">
 						<Bot className="size-5 text-primary" />
-						Your follow-up is ready to send.
+						{t("ai.ready")}
 						<ChevronRight className="ml-auto size-4" />
 					</div>
 				</motion.article>
@@ -130,22 +133,24 @@ export function Features() {
 					className="relative overflow-hidden rounded-xl border border-border bg-card p-6 transition-shadow hover:shadow-luminous md:col-span-2"
 				>
 					<p className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary">
-						Automated invoicing
+						{t("invoicing.label")}
 					</p>
 					<div className="mt-3 flex items-end justify-between">
 						<div>
-							<p className="text-3xl font-bold">$48.2k</p>
+							<p className="text-3xl font-bold">{t("invoicing.amount")}</p>
 							<p className="text-xs text-muted-foreground">
-								Collected this year
+								{t("invoicing.caption")}
 							</p>
 						</div>
-						<span className="text-xs text-chart-2">+18.4%</span>
+						<span className="text-xs text-chart-2">
+							{t("invoicing.growth")}
+						</span>
 					</div>
 					<svg
 						viewBox="0 0 300 90"
 						className="mt-5 w-full text-primary"
 						fill="none"
-						aria-label="Automated invoicing chart"
+						aria-label={t("invoicing.chartLabel")}
 						role="img"
 					>
 						<motion.path

@@ -23,8 +23,13 @@ model User {
 
   role       String?
   banned     Boolean?  @default(false)
-  banReason  String?
-  banExpires DateTime?
+  banReason  String?   @map("ban_reason")
+  banExpires DateTime? @map("ban_expires")
+
+  studio   Studio?
+  media    Media[]
+  albums   Album[]
+  packages Package[]
 
   @@map("users")
 }
@@ -40,17 +45,17 @@ model Session {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  impersonatedBy String?
+  impersonatedBy String? @map("impersonated_by")
 
-  @@map("sessions")
   @@index([userId])
+  @@map("sessions")
 }
 
 model Account {
-  id                    String    @id @default(cuid())
-  userId                String    @map("user_id")
-  accountId             String    @map("account_id")
-  providerId            String    @map("provider_id")
+  id         String @id @default(cuid())
+  userId     String @map("user_id")
+  accountId  String @map("account_id")
+  providerId String @map("provider_id")
 
   accessToken           String?   @map("access_token")
   refreshToken          String?   @map("refresh_token")
@@ -62,10 +67,10 @@ model Account {
   updatedAt             DateTime  @updatedAt @map("updated_at")
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  idToken String?
+  idToken String? @map("id_token")
 
-  @@map("accounts")
   @@index([userId])
+  @@map("accounts")
 }
 
 model Verification {
@@ -76,6 +81,159 @@ model Verification {
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 
-  @@map("verifications")
   @@index([identifier])
+  @@map("verifications")
+}
+
+// ─── Public site ─────────────────────────────────────────────────────────────
+// Every model below is tenant-scoped by `photographerId` (the owning User).
+
+enum SiteTemplate {
+  MINIMAL
+  EDITORIAL
+  BOLD
+
+  @@map("site_template")
+}
+
+enum FontPair {
+  MODERN
+  CLASSIC
+  ELEGANT
+
+  @@map("font_pair")
+}
+
+enum ThemeMode {
+  LIGHT
+  DARK
+  BOTH
+
+  @@map("theme_mode")
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+
+  @@map("media_type")
+}
+
+model Studio {
+  id             String       @id @default(cuid())
+  photographerId String       @unique @map("photographer_id")
+  slug           String       @unique
+  name           String
+  tagline        String?
+  bio            String?
+  email          String?
+  phone          String?
+  city           String?
+  country        String?
+  /// { instagram?, facebook?, youtube?, vimeo?, tiktok?, website? }
+  socials        Json         @default("{}")
+  logoMediaId    String?      @map("logo_media_id")
+  coverMediaId   String?      @map("cover_media_id")
+  template       SiteTemplate @default(MINIMAL)
+  accentColor    String       @default("#c8a96e") @map("accent_color")
+  fontPair       FontPair     @default(MODERN) @map("font_pair")
+  /// LIGHT / DARK forces one palette; BOTH follows the visitor (with a toggle).
+  themeMode      ThemeMode    @default(BOTH) @map("theme_mode")
+  /// Languages the public site is offered in (subset of the app locales).
+  locales        String[]     @default(["en"])
+  defaultLocale  String       @default("en") @map("default_locale")
+  published      Boolean      @default(false)
+  bookingEnabled Boolean      @default(true) @map("booking_enabled")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  photographer User   @relation(fields: [photographerId], references: [id], onDelete: Cascade)
+  logo         Media? @relation("StudioLogo", fields: [logoMediaId], references: [id], onDelete: SetNull)
+  cover        Media? @relation("StudioCover", fields: [coverMediaId], references: [id], onDelete: SetNull)
+
+  @@map("studios")
+}
+
+model Media {
+  id             String    @id @default(cuid())
+  photographerId String    @map("photographer_id")
+  type           MediaType
+  /// Object key in the R2 bucket: `{photographerId}/{cuid}.{ext}`
+  key            String    @unique
+  filename       String
+  mimeType       String    @map("mime_type")
+  size           Int
+  width          Int?
+  height         Int?
+  durationSec    Float?    @map("duration_sec")
+  alt            String?
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  photographer  User        @relation(fields: [photographerId], references: [id], onDelete: Cascade)
+  albumItems    AlbumItem[]
+  studioLogos   Studio[]    @relation("StudioLogo")
+  studioCovers  Studio[]    @relation("StudioCover")
+  albumCovers   Album[]     @relation("AlbumCover")
+  packageCovers Package[]   @relation("PackageCover")
+
+  @@index([photographerId, createdAt])
+  @@map("media")
+}
+
+model Album {
+  id             String   @id @default(cuid())
+  photographerId String   @map("photographer_id")
+  title          String
+  slug           String
+  description    String?
+  coverMediaId   String?  @map("cover_media_id")
+  position       Int      @default(0)
+  published      Boolean  @default(false)
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  photographer User        @relation(fields: [photographerId], references: [id], onDelete: Cascade)
+  cover        Media?      @relation("AlbumCover", fields: [coverMediaId], references: [id], onDelete: SetNull)
+  items        AlbumItem[]
+
+  @@unique([photographerId, slug])
+  @@index([photographerId, position])
+  @@map("albums")
+}
+
+model AlbumItem {
+  albumId  String @map("album_id")
+  mediaId  String @map("media_id")
+  position Int    @default(0)
+
+  album Album @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  media Media @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@id([albumId, mediaId])
+  @@index([albumId, position])
+  @@map("album_items")
+}
+
+model Package {
+  id              String   @id @default(cuid())
+  photographerId  String   @map("photographer_id")
+  name            String
+  description     String?
+  price           Decimal  @db.Decimal(10, 2)
+  currency        String   @default("TND")
+  durationMinutes Int?     @map("duration_minutes")
+  deliverables    String[] @default([])
+  coverMediaId    String?  @map("cover_media_id")
+  position        Int      @default(0)
+  active          Boolean  @default(true)
+  featured        Boolean  @default(false)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  photographer User   @relation(fields: [photographerId], references: [id], onDelete: Cascade)
+  cover        Media? @relation("PackageCover", fields: [coverMediaId], references: [id], onDelete: SetNull)
+
+  @@index([photographerId, position])
+  @@map("packages")
 }

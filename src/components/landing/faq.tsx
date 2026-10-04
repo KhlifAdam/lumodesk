@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import {
 	Accordion,
 	AccordionContent,
@@ -9,30 +10,18 @@ import {
 } from "@/components/ui/accordion";
 import { reveal } from "./animations";
 
-const faqs = [
-	[
-		"Can I try Lumodesk before paying?",
-		"Yes. Every plan begins with a 14-day free trial, with no credit card required.",
-	],
-	[
-		"Can I migrate my existing clients?",
-		"Absolutely. Import contacts, projects, and contracts from a CSV, or let our concierge team handle it.",
-	],
-	[
-		"Are client galleries included?",
-		"Every plan includes beautiful, mobile-ready galleries. Storage limits vary by plan.",
-	],
-	[
-		"Does Lumodesk take a commission?",
-		"Never. Payments go directly to your connected account, with no Lumodesk commission.",
-	],
-	[
-		"Can my team use the same workspace?",
-		"Studio plans include five seats, granular permissions, and shared workflow templates.",
-	],
-];
+const FAQ_ITEMS = [
+	"trial",
+	"migrate",
+	"galleries",
+	"commission",
+	"team",
+] as const;
+const CONTACT_EMAIL = "hello@lumodesk.co";
 
 export function FAQ() {
+	const t = useTranslations("Landing.faq");
+
 	return (
 		<section
 			id="faq"
@@ -40,30 +29,28 @@ export function FAQ() {
 		>
 			<motion.div {...reveal}>
 				<p className="text-xs font-bold uppercase tracking-[0.22em] text-primary">
-					Questions, answered
+					{t("eyebrow")}
 				</p>
-				<h2 className="mt-3 text-4xl font-semibold">
-					A few things you might wonder.
-				</h2>
+				<h2 className="mt-3 text-4xl font-semibold">{t("title")}</h2>
 				<p className="mt-5 text-sm text-muted-foreground">
-					Still curious?{" "}
+					{t("contactPrefix")}{" "}
 					<a
-						href="mailto:hello@lumodesk.co"
+						href={`mailto:${CONTACT_EMAIL}`}
 						className="text-primary underline underline-offset-4"
 					>
-						Talk to our team.
+						{t("contactLink")}
 					</a>
 				</p>
 			</motion.div>
 			<motion.div {...reveal}>
 				<Accordion type="single" collapsible>
-					{faqs.map(([q, a], i) => (
-						<AccordionItem key={q} value={`item-${i}`}>
+					{FAQ_ITEMS.map((id) => (
+						<AccordionItem key={id} value={id}>
 							<AccordionTrigger className="py-5 text-base hover:no-underline">
-								{q}
+								{t(`items.${id}.q`)}
 							</AccordionTrigger>
 							<AccordionContent className="max-w-xl pb-5 leading-6 text-muted-foreground">
-								{a}
+								{t(`items.${id}.a`)}
 							</AccordionContent>
 						</AccordionItem>
 					))}

@@ -67,6 +67,7 @@
 	--shadow-luminous-lg: 0 18px 55px -14px
 		color-mix(in oklab, var(--primary) 62%, transparent);
 	--animate-marquee: marquee 24s linear infinite;
+	--animate-kenburns: kenburns 14s ease-out both;
 }
 
 :root {
@@ -200,4 +201,83 @@
 		);
 	background-size: 44px 44px;
 	mask-image: linear-gradient(to bottom, black, transparent 90%);
+}
+
+@keyframes kenburns {
+	from {
+		transform: scale(1.12);
+	}
+	to {
+		transform: scale(1);
+	}
+}
+
+/* ─── Public site theming ────────────────────────────────────────────────────
+   <SiteRenderer /> sets --s-light-* and --s-dark-* per template, plus the
+   accent and fonts. data-site-theme picks the palette, so a site never
+   inherits the dashboard's theme: "light" | "dark" | "system" (follows the
+   visitor's OS). */
+[data-site-theme] {
+	--s-bg: var(--s-light-bg);
+	--s-fg: var(--s-light-fg);
+	--s-muted: var(--s-light-muted);
+	--s-card: var(--s-light-card);
+	--s-border: var(--s-light-border);
+	color-scheme: light;
+}
+
+[data-site-theme="dark"] {
+	--s-bg: var(--s-dark-bg);
+	--s-fg: var(--s-dark-fg);
+	--s-muted: var(--s-dark-muted);
+	--s-card: var(--s-dark-card);
+	--s-border: var(--s-dark-border);
+	color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+	[data-site-theme="system"] {
+		--s-bg: var(--s-dark-bg);
+		--s-fg: var(--s-dark-fg);
+		--s-muted: var(--s-dark-muted);
+		--s-card: var(--s-dark-card);
+		--s-border: var(--s-dark-border);
+		color-scheme: dark;
+	}
+}
+
+@utility site-bg {
+	background-color: var(--s-bg);
+}
+@utility site-fg {
+	color: var(--s-fg);
+}
+@utility site-muted {
+	color: var(--s-muted);
+}
+@utility site-card {
+	background-color: var(--s-card);
+}
+@utility site-border {
+	border-color: var(--s-border);
+}
+@utility site-glass {
+	background-color: color-mix(in srgb, var(--s-bg) 82%, transparent);
+	backdrop-filter: blur(14px);
+}
+@utility site-accent-bg {
+	background-color: var(--s-accent);
+	color: var(--s-accent-fg);
+}
+@utility site-accent-text {
+	color: var(--s-accent);
+}
+@utility site-accent-border {
+	border-color: var(--s-accent);
+}
+@utility site-heading {
+	font-family: var(--s-heading);
+}
+@utility site-body {
+	font-family: var(--s-body);
 }

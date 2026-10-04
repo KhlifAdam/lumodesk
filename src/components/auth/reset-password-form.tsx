@@ -4,11 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
-import { PasswordInput } from "@/components/auth/password-input";
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -23,70 +22,72 @@ import {
 	InputOTPGroup,
 	InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/client";
+import { AuthHeading } from "./auth-heading";
+import { PasswordInput } from "./password-input";
+import {
+	OTP_LENGTH,
+	type ResetPasswordValues,
+	resetPasswordSchema,
+} from "./schemas";
+import { useAuthError } from "./use-auth-error";
 
-const OTP_LENGTH = 6;
-
-const schema = z
-	.object({
-		otp: z.string().length(OTP_LENGTH, "Enter the 6-digit code."),
-		password: z.string().min(8, "Password must be at least 8 characters."),
-		confirmPassword: z.string(),
-	})
-	.refine((v) => v.password === v.confirmPassword, {
-		path: ["confirmPassword"],
-		message: "Passwords do not match.",
-	});
-type Values = z.infer<typeof schema>;
+const OTP_SLOTS = Array.from({ length: OTP_LENGTH }, (_, i) => `slot-${i}`);
 
 export function ResetPasswordForm({ email }: { email: string }) {
+	const t = useTranslations("Auth");
 	const router = useRouter();
+	const authError = useAuthError();
 	const [isResending, setIsResending] = useState(false);
 	const [showPasswords, setShowPasswords] = useState(false);
-	const form = useForm<Values>({
-		resolver: zodResolver(schema),
+	const form = useForm<ResetPasswordValues>({
+		resolver: zodResolver(resetPasswordSchema),
 		defaultValues: { otp: "", password: "", confirmPassword: "" },
 	});
 	const { isSubmitting } = form.formState;
 
-	async function onSubmit({ otp, password }: Values) {
-		const { error } = await authClient.emailOtp.resetPassword({
-			email,
-			otp,
-			password,
-		});
-		if (error) {
-			toast.error(error.message || "Invalid or expired code.");
-			return;
+	async function onSubmit({ otp, password }: ResetPasswordValues) {
+		try {
+			const { error } = await authClient.emailOtp.resetPassword({
+				email,
+				otp,
+				password,
+			});
+			if (error) return void toast.error(authError.message(error));
+			toast.success(t("reset.success"));
+			router.push("/login");
+		} catch {
+			toast.error(authError.network);
 		}
-		toast.success("Password updated. You can now sign in.");
-		router.push("/login");
 	}
 
 	async function resend() {
 		setIsResending(true);
-		const { error } = await authClient.emailOtp.requestPasswordReset({ email });
-		setIsResending(false);
-		if (error) {
-			toast.error(error.message || "Could not resend the code.");
-			return;
+		try {
+			const { error } = await authClient.emailOtp.requestPasswordReset({
+				email,
+			});
+			if (error) return void toast.error(authError.message(error));
+			form.resetField("otp");
+			toast.success(t("reset.resent"));
+		} catch {
+			toast.error(authError.network);
+		} finally {
+			setIsResending(false);
 		}
-		form.resetField("otp");
-		toast.success("A new code has been sent.");
 	}
 
 	return (
 		<div className="flex flex-col space-y-6">
-			<div className="flex flex-col space-y-2 text-center">
-				<h1 className="text-3xl font-semibold tracking-tight text-foreground">
-					Reset your password
-				</h1>
-				<p className="text-sm text-muted-foreground">
-					Enter the code sent to{" "}
-					<span className="font-medium text-foreground">{email}</span> and
-					choose a new password
-				</p>
-			</div>
+			<AuthHeading
+				title={t("reset.title")}
+				description={t.rich("reset.description", {
+					email,
+					strong: (chunks) => (
+						<span className="font-medium text-foreground">{chunks}</span>
+					),
+				})}
+			/>
 
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
@@ -95,7 +96,7 @@ export function ResetPasswordForm({ email }: { email: string }) {
 						name="otp"
 						render={({ field }) => (
 							<FormItem className="flex flex-col items-center">
-								<FormLabel>Verification code</FormLabel>
+								<FormLabel>{t("reset.otp")}</FormLabel>
 								<FormControl>
 									<InputOTP
 										maxLength={OTP_LENGTH}
@@ -103,9 +104,8 @@ export function ResetPasswordForm({ email }: { email: string }) {
 										{...field}
 									>
 										<InputOTPGroup>
-											{Array.from({ length: OTP_LENGTH }, (_, i) => (
-												// biome-ignore lint/suspicious/noArrayIndexKey: fixed-length slots
-												<InputOTPSlot key={i} index={i} />
+											{OTP_SLOTS.map((slot, index) => (
+												<InputOTPSlot key={slot} index={index} />
 											))}
 										</InputOTPGroup>
 									</InputOTP>
@@ -119,7 +119,7 @@ export function ResetPasswordForm({ email }: { email: string }) {
 						name="password"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>New password</FormLabel>
+								<FormLabel>{t("reset.newPassword")}</FormLabel>
 								<FormControl>
 									<PasswordInput
 										visible={showPasswords}
@@ -139,7 +139,7 @@ export function ResetPasswordForm({ email }: { email: string }) {
 						name="confirmPassword"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Confirm password</FormLabel>
+								<FormLabel>{t("reset.confirmPassword")}</FormLabel>
 								<FormControl>
 									<PasswordInput
 										visible={showPasswords}
@@ -155,7 +155,7 @@ export function ResetPasswordForm({ email }: { email: string }) {
 					/>
 					<Button disabled={isSubmitting}>
 						{isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-						Reset password
+						{t("reset.submit")}
 					</Button>
 				</form>
 			</Form>
@@ -167,14 +167,14 @@ export function ResetPasswordForm({ email }: { email: string }) {
 					disabled={isResending || isSubmitting}
 					className="hover:text-primary disabled:opacity-50"
 				>
-					{isResending ? "Sending..." : "Didn't get a code? Resend"}
+					{isResending ? t("reset.resending") : t("reset.resend")}
 				</button>
 				<Link
 					href="/login"
 					className="flex items-center gap-2 hover:text-primary"
 				>
 					<ArrowLeft className="h-4 w-4" />
-					Back to sign in
+					{t("reset.back")}
 				</Link>
 			</div>
 		</div>

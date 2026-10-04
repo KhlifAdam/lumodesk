@@ -1,1 +1,1 @@
-@AGENTS.md
+@.agents/rules/lumodesk-guidelines.md

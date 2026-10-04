@@ -1,4 +1,7 @@
+"use client";
+
 import { Eye, EyeOff } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ComponentProps } from "react";
 import { Input } from "@/components/ui/input";
 
@@ -13,6 +16,7 @@ export function PasswordInput({
 	onToggleVisible,
 	...props
 }: PasswordInputProps) {
+	const t = useTranslations("Auth.shared");
 	const Icon = visible ? EyeOff : Eye;
 
 	return (
@@ -22,7 +26,7 @@ export function PasswordInput({
 				<button
 					type="button"
 					onClick={onToggleVisible}
-					aria-label={visible ? "Hide passwords" : "Show passwords"}
+					aria-label={visible ? t("hidePassword") : t("showPassword")}
 					className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
 				>
 					<Icon className="h-4 w-4" />

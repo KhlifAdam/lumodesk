@@ -1,0 +1,424 @@
+{
+	"weddings": [
+		{
+			"key": "demo/v2/weddings/01.jpg",
+			"width": 2000,
+			"height": 1335,
+			"source": "https://commons.wikimedia.org/wiki/File:Wedding_smile_at_sunset_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/weddings/02.jpg",
+			"width": 2000,
+			"height": 1334,
+			"source": "https://commons.wikimedia.org/wiki/File:Desert_Wedding_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/weddings/03.jpg",
+			"width": 2000,
+			"height": 1334,
+			"source": "https://commons.wikimedia.org/wiki/File:Bride_holds_wedding_bands_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/weddings/04.jpg",
+			"width": 2000,
+			"height": 1125,
+			"source": "https://commons.wikimedia.org/wiki/File:Wedding_couple_hug_on_cliff_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/weddings/05.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Wedding_Day_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/weddings/06.jpg",
+			"width": 2000,
+			"height": 1328,
+			"source": "https://commons.wikimedia.org/wiki/File:Scott_Webb_2016-03-28_(Unsplash_7G_R_IWt1U).jpg"
+		},
+		{
+			"key": "demo/v2/weddings/07.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Wedding_shoes_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/weddings/08.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Wedding_walk_dark_forest_path_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/weddings/09.jpg",
+			"width": 2000,
+			"height": 1166,
+			"source": "https://commons.wikimedia.org/wiki/File:Windy_wedding_on_a_beach_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/weddings/10.jpg",
+			"width": 2000,
+			"height": 1335,
+			"source": "https://commons.wikimedia.org/wiki/File:Aisle_for_a_Wedding_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/weddings/11.jpg",
+			"width": 1333,
+			"height": 2000,
+			"source": "https://commons.wikimedia.org/wiki/File:Wedding_dress_hangs_from_chandelier_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/weddings/12.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Bride_and_groom_on_rural_road_(Unsplash).jpg"
+		}
+	],
+	"portraits": [
+		{
+			"key": "demo/v2/portraits/01.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Mother_Nature,_Summer_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/portraits/02.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Brunette_woman_portrait_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/portraits/03.jpg",
+			"width": 2000,
+			"height": 1330,
+			"source": "https://commons.wikimedia.org/wiki/File:Hooded_woman_in_snow_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/portraits/04.jpg",
+			"width": 2000,
+			"height": 1465,
+			"source": "https://commons.wikimedia.org/wiki/File:Smiling_woman_with_a_phone_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/portraits/05.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Fashionable_woman_and_bokeh_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/portraits/06.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Lonely_and_Alone_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/portraits/07.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Wishing_on_the_sunrise_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/portraits/08.jpg",
+			"width": 1296,
+			"height": 2000,
+			"source": "https://commons.wikimedia.org/wiki/File:Closed_Eyes_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/portraits/09.jpg",
+			"width": 1333,
+			"height": 2000,
+			"source": "https://commons.wikimedia.org/wiki/File:Woman_knitwear_car_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/portraits/10.jpg",
+			"width": 1333,
+			"height": 2000,
+			"source": "https://commons.wikimedia.org/wiki/File:Curly_hair_and_freckles_man_(Unsplash).jpg"
+		}
+	],
+	"events": [
+		{
+			"key": "demo/v2/events/01.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Audience_enjoying_a_concert_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/events/02.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Charlotte,_United_States_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/events/03.jpg",
+			"width": 2000,
+			"height": 1481,
+			"source": "https://commons.wikimedia.org/wiki/File:Rock_concert_in_Markham_Civic_Centre_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/events/04.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Musicians_at_Velour_Live_Music_Gallery_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/events/05.jpg",
+			"width": 2000,
+			"height": 1273,
+			"source": "https://commons.wikimedia.org/wiki/File:Concert_%C3%A0_Paris_(4Ixxu74o06E).jpg"
+		},
+		{
+			"key": "demo/v2/events/06.jpg",
+			"width": 2000,
+			"height": 1500,
+			"source": "https://commons.wikimedia.org/wiki/File:Live_Music_in_Austin,_TX_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/events/07.jpg",
+			"width": 2000,
+			"height": 1500,
+			"source": "https://commons.wikimedia.org/wiki/File:Rock_gig_under_floodlights_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/events/08.jpg",
+			"width": 2000,
+			"height": 1339,
+			"source": "https://commons.wikimedia.org/wiki/File:Velour_Live_Music_Gallery_Llc,_Provo,_United_States_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/events/09.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Recording_a_concert_(Unsplash).jpg"
+		}
+	],
+	"family": [
+		{
+			"key": "demo/v2/family/01.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Baby_shoes_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/family/02.jpg",
+			"width": 2000,
+			"height": 1125,
+			"source": "https://commons.wikimedia.org/wiki/File:Autumn_baby_to_be_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/family/03.jpg",
+			"width": 2000,
+			"height": 1600,
+			"source": "https://commons.wikimedia.org/wiki/File:Baby_Toys_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/family/04.jpg",
+			"width": 2000,
+			"height": 1335,
+			"source": "https://commons.wikimedia.org/wiki/File:Two_babies_and_woman_sitting_on_sofa_while_holding_baby_and_watching_on_tablet.jpg"
+		},
+		{
+			"key": "demo/v2/family/05.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Summer_in_France_with_baby_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/family/06.jpg",
+			"width": 2000,
+			"height": 1325,
+			"source": "https://commons.wikimedia.org/wiki/File:Luke_Michael_2015-07-23_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/family/07.jpg",
+			"width": 2000,
+			"height": 1325,
+			"source": "https://commons.wikimedia.org/wiki/File:Great_Grandma%27s_Pearls_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/family/08.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Baby_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/family/09.jpg",
+			"width": 2000,
+			"height": 1429,
+			"source": "https://commons.wikimedia.org/wiki/File:Newborn_Baby_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/family/10.jpg",
+			"width": 1333,
+			"height": 2000,
+			"source": "https://commons.wikimedia.org/wiki/File:Karl_Fredrickson_2016-03-17_(Unsplash).jpg"
+		}
+	],
+	"brands": [
+		{
+			"key": "demo/v2/brands/01.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Camera_keys_notebook_coffee_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/brands/02.jpg",
+			"width": 2000,
+			"height": 1335,
+			"source": "https://commons.wikimedia.org/wiki/File:Galway_City,_Ireland_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/brands/03.jpg",
+			"width": 1333,
+			"height": 2000,
+			"source": "https://commons.wikimedia.org/wiki/File:Nathan_Dumlao_2017-05-27_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/brands/04.jpg",
+			"width": 2000,
+			"height": 1335,
+			"source": "https://commons.wikimedia.org/wiki/File:Vicky_Gu_2016_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/brands/05.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Desktop_Workspace_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/brands/06.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Desk_Setup_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/brands/07.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Kyiv_city,_Ukraine_(Unsplash_NdfiqNqL7I8).jpg"
+		},
+		{
+			"key": "demo/v2/brands/08.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Camera,_coaster_and_coffee_in_flatlay_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/brands/09.jpg",
+			"width": 2000,
+			"height": 1281,
+			"source": "https://commons.wikimedia.org/wiki/File:120_E_8th_St,_Los_Angeles,_United_States_(Unsplash).jpg"
+		}
+	],
+	"travel": [
+		{
+			"key": "demo/v2/travel/01.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Blue_Mountains_-_Unsplash.jpg"
+		},
+		{
+			"key": "demo/v2/travel/02.jpg",
+			"width": 2000,
+			"height": 1126,
+			"source": "https://commons.wikimedia.org/wiki/File:Burning_Mountain_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/travel/03.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Hot_air_balloon_in_mountains_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/travel/04.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Lofoten,_Norway_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/travel/05.jpg",
+			"width": 2000,
+			"height": 1324,
+			"source": "https://commons.wikimedia.org/wiki/File:Serene_green_mountains_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/travel/06.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Sunset_Half_Dome_Falls_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/travel/07.jpg",
+			"width": 2000,
+			"height": 1330,
+			"source": "https://commons.wikimedia.org/wiki/File:Beach_2017-05-13_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/travel/08.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Beach_with_rocky_shore_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/travel/09.jpg",
+			"width": 2000,
+			"height": 1125,
+			"source": "https://commons.wikimedia.org/wiki/File:Green_valley_in_the_white_mountains_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/travel/10.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:The_French_Alps_(Unsplash).jpg"
+		}
+	],
+	"studio": [
+		{
+			"key": "demo/v2/studio/01.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Fall_photographer_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/studio/02.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Photographer_in_San_Pedro_Sula_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/studio/03.jpg",
+			"width": 2000,
+			"height": 1371,
+			"source": "https://commons.wikimedia.org/wiki/File:Photographer_taking_a_picture_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/studio/04.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Boy_and_Camera_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/studio/05.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Photographer_focusing_camera_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/studio/06.jpg",
+			"width": 2000,
+			"height": 1324,
+			"source": "https://commons.wikimedia.org/wiki/File:Photographer_in_white_room_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/studio/07.jpg",
+			"width": 1596,
+			"height": 2000,
+			"source": "https://commons.wikimedia.org/wiki/File:Annie_Spratt_2016-03-10_(Unsplash).jpg"
+		},
+		{
+			"key": "demo/v2/studio/08.jpg",
+			"width": 2000,
+			"height": 1333,
+			"source": "https://commons.wikimedia.org/wiki/File:Photographer_in_close-up_(Unsplash).jpg"
+		}
+	]
+}

@@ -1,13 +1,13 @@
-import { LayoutGrid } from "lucide-react";
+import { Aperture } from "lucide-react";
 
-export function SidebarLogo() {
+export function SidebarLogo({ name }: { name: string }) {
 	return (
-		<div className="flex items-center gap-3 px-3 py-2">
-			<div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-luminous">
-				<LayoutGrid className="h-5 w-5" />
+		<div className="flex items-center gap-2.5 px-2 py-1">
+			<div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-luminous">
+				<Aperture className="h-4 w-4" />
 			</div>
-			<span className="text-sm font-semibold tracking-tight text-foreground">
-				Studio North
+			<span className="truncate text-sm font-semibold tracking-tight text-foreground">
+				{name}
 			</span>
 		</div>
 	);

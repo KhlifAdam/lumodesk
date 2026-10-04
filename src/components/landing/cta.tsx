@@ -3,10 +3,13 @@
 import { motion } from "framer-motion";
 import { Aperture, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { reveal } from "./animations";
 
 export function CTA() {
+	const t = useTranslations("Landing.cta");
+
 	return (
 		<section className="px-5 pb-8">
 			<motion.div
@@ -17,15 +20,14 @@ export function CTA() {
 				<div className="relative">
 					<Aperture className="mx-auto size-8" />
 					<h2 className="mx-auto mt-5 max-w-3xl text-4xl font-semibold md:text-6xl">
-						Ready to level up your studio?
+						{t("title")}
 					</h2>
 					<p className="mx-auto mt-5 max-w-xl text-primary-foreground/75">
-						Join thousands of photographers running calmer, more profitable
-						businesses.
+						{t("subtitle")}
 					</p>
 					<Button size="xl" variant="secondary" className="mt-8" asChild>
 						<Link href="/register">
-							Start your free trial <ArrowRight />
+							{t("button")} <ArrowRight />
 						</Link>
 					</Button>
 				</div>

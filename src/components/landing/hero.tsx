@@ -12,11 +12,45 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useFormatter, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { reveal } from "./animations";
 import { BrandMark } from "./brand-mark";
 
+const MOCK_NAV = [
+	{ key: "overview", icon: Aperture },
+	{ key: "bookings", icon: CalendarDays },
+	{ key: "clients", icon: Users },
+	{ key: "messages", icon: Mail },
+] as const;
+
+const MOCK_BARS = [
+	{ id: "h1", h: 38 },
+	{ id: "h2", h: 60 },
+	{ id: "h3", h: 44 },
+	{ id: "h4", h: 78 },
+	{ id: "h5", h: 56 },
+	{ id: "h6", h: 92 },
+	{ id: "h7", h: 70 },
+] as const;
+
 export function Hero() {
+	const t = useTranslations("Landing.hero");
+	const format = useFormatter();
+	const MOCK_STATS = [
+		{
+			key: "revenue",
+			value: format.number(24860, {
+				style: "currency",
+				currency: "USD",
+				maximumFractionDigits: 0,
+			}),
+		},
+		{ key: "projects", value: format.number(18) },
+		{ key: "inquiries", value: format.number(32) },
+		{ key: "views", value: format.number(8400, { notation: "compact" }) },
+	] as const;
 	const { scrollYProgress } = useScroll();
 	const dashboardY = useTransform(scrollYProgress, [0, 0.3], [0, -70]);
 
@@ -27,30 +61,26 @@ export function Hero() {
 		>
 			<motion.div {...reveal}>
 				<span className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-background/70 px-3 py-1.5 text-xs font-medium shadow-sm backdrop-blur">
-					<Sparkles className="size-3.5 text-primary" /> The creative operating
-					system
+					<Sparkles className="size-3.5 text-primary" /> {t("badge")}
 				</span>
 				<h1 className="mx-auto max-w-5xl text-balance font-display text-5xl font-semibold leading-[1.02] md:text-7xl lg:text-[5.6rem]">
-					Your Entire Photography Business,{" "}
-					<span className="text-primary">In One Place.</span>
+					{t("titleStart")}{" "}
+					<span className="text-primary">{t("titleAccent")}</span>
 				</h1>
 				<p className="mx-auto mt-6 max-w-2xl text-balance text-base leading-7 text-muted-foreground md:text-lg">
-					Manage bookings, deliver stunning client galleries, and automate your
-					workflow with AI.
+					{t("subtitle")}
 				</p>
 				<div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
 					<Button variant="luminous" size="xl" asChild>
 						<Link href="/register">
-							Start free trial <ArrowRight />
+							{t("startTrial")} <ArrowRight />
 						</Link>
 					</Button>
 					<Button variant="glass" size="xl">
-						<CirclePlay /> Watch demo
+						<CirclePlay /> {t("watchDemo")}
 					</Button>
 				</div>
-				<p className="mt-4 text-xs text-muted-foreground">
-					14 days free · No credit card required
-				</p>
+				<p className="mt-4 text-xs text-muted-foreground">{t("trialNote")}</p>
 			</motion.div>
 
 			<motion.div
@@ -76,22 +106,27 @@ export function Hero() {
 						<i className="size-2 rounded-full bg-chart-4" />
 						<i className="size-2 rounded-full bg-chart-2" />
 						<span className="ml-3 text-[10px] text-muted-foreground">
-							lumodesk / overview
+							{t("mock.path")}
 						</span>
 					</div>
 					<div className="grid min-h-[390px] grid-cols-[52px_1fr] md:grid-cols-[180px_1fr]">
 						<aside className="border-r border-border p-3 text-left">
 							<div className="mb-7 hidden items-center gap-2 text-xs font-semibold md:flex">
-								<BrandMark /> Studio North
+								<BrandMark /> {t("mock.studio")}
 							</div>
-							{[Aperture, CalendarDays, Users, Mail].map((Icon, i) => (
+							{MOCK_NAV.map(({ key, icon: Icon }, i) => (
 								<div
-									key={Icon.name}
-									className={`mb-2 flex items-center gap-2 rounded-md p-2 text-xs ${i === 0 ? "bg-accent text-foreground" : "text-muted-foreground"}`}
+									key={key}
+									className={cn(
+										"mb-2 flex items-center gap-2 rounded-md p-2 text-xs",
+										i === 0
+											? "bg-accent text-foreground"
+											: "text-muted-foreground",
+									)}
 								>
 									<Icon className="size-3.5" />
 									<span className="hidden md:inline">
-										{["Overview", "Bookings", "Clients", "Messages"][i]}
+										{t(`mock.nav.${key}`)}
 									</span>
 								</div>
 							))}
@@ -100,31 +135,33 @@ export function Hero() {
 							<div className="flex items-end justify-between">
 								<div>
 									<p className="text-xs text-muted-foreground">
-										Monday, September 21
+										{t("mock.date")}
 									</p>
 									<h3 className="mt-1 text-xl font-semibold md:text-2xl">
-										Good morning, Alex.
+										{t("mock.greeting")}
 									</h3>
 								</div>
 								<Button size="sm" className="hidden sm:flex">
-									New project
+									{t("mock.newProject")}
 								</Button>
 							</div>
 							<div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
-								{[
-									["Revenue", "$24,860"],
-									["Projects", "18"],
-									["Inquiries", "32"],
-									["Gallery views", "8.4k"],
-								].map(([a, b], i) => (
+								{MOCK_STATS.map(({ key, value }, i) => (
 									<div
-										key={a}
+										key={key}
 										className="rounded-lg border border-border bg-background p-3"
 									>
-										<p className="text-[10px] text-muted-foreground">{a}</p>
-										<p className="mt-1 font-display text-lg font-bold">{b}</p>
+										<p className="text-[10px] text-muted-foreground">
+											{t(`mock.stats.${key}`)}
+										</p>
+										<p className="mt-1 font-display text-lg font-bold">
+											{value}
+										</p>
 										<div
-											className={`mt-3 h-1 rounded-full ${i === 0 ? "bg-primary" : "bg-accent"}`}
+											className={cn(
+												"mt-3 h-1 rounded-full",
+												i === 0 ? "bg-primary" : "bg-accent",
+											)}
 										/>
 									</div>
 								))}
@@ -132,29 +169,23 @@ export function Hero() {
 							<div className="mt-3 grid gap-3 lg:grid-cols-[1.4fr_.8fr]">
 								<div className="overflow-hidden rounded-lg border border-border bg-background p-3">
 									<div className="mb-3 flex justify-between text-xs font-medium">
-										<span>Latest gallery</span>
-										<span className="text-muted-foreground">View all</span>
+										<span>{t("mock.latestGallery")}</span>
+										<span className="text-muted-foreground">
+											{t("mock.viewAll")}
+										</span>
 									</div>
 									<Image
 										src="/images/lumodesk-editorial.jpg"
-										alt="Editorial project contact sheet"
+										alt={t("mock.imageAlt")}
 										width={1600}
 										height={1104}
 										className="h-44 w-full rounded-md object-cover"
 									/>
 								</div>
 								<div className="rounded-lg border border-border bg-background p-4">
-									<p className="text-xs font-medium">This month</p>
+									<p className="text-xs font-medium">{t("mock.thisMonth")}</p>
 									<div className="mt-6 flex h-28 items-end gap-2">
-										{[
-											{ id: "h1", h: 38 },
-											{ id: "h2", h: 60 },
-											{ id: "h3", h: 44 },
-											{ id: "h4", h: 78 },
-											{ id: "h5", h: 56 },
-											{ id: "h6", h: 92 },
-											{ id: "h7", h: 70 },
-										].map(({ id, h }, i) => (
+										{MOCK_BARS.map(({ id, h }, i) => (
 											<motion.i
 												key={id}
 												initial={{ height: 0 }}

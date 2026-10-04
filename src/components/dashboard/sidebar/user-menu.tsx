@@ -2,6 +2,7 @@
 
 import { LogOut, Settings, User as UserIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -13,7 +14,8 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/client";
+import { LanguageSubmenu } from "./language-submenu";
 
 interface UserMenuProps {
 	user: {
@@ -24,6 +26,7 @@ interface UserMenuProps {
 }
 
 export function UserMenu({ user }: UserMenuProps) {
+	const t = useTranslations("Dashboard.UserMenu");
 	const router = useRouter();
 	const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -89,12 +92,13 @@ export function UserMenu({ user }: UserMenuProps) {
 				<DropdownMenuGroup>
 					<DropdownMenuItem className="cursor-pointer">
 						<UserIcon className="mr-2 h-4 w-4" />
-						<span>Profile</span>
+						<span>{t("profile")}</span>
 					</DropdownMenuItem>
 					<DropdownMenuItem className="cursor-pointer">
 						<Settings className="mr-2 h-4 w-4" />
-						<span>Settings</span>
+						<span>{t("settings")}</span>
 					</DropdownMenuItem>
+					<LanguageSubmenu />
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem
@@ -103,7 +107,7 @@ export function UserMenu({ user }: UserMenuProps) {
 					className="cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive"
 				>
 					<LogOut className="mr-2 h-4 w-4" />
-					<span>{isLoggingOut ? "Logging out..." : "Log out"}</span>
+					<span>{isLoggingOut ? t("loggingOut") : t("logout")}</span>
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>

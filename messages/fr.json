@@ -1,0 +1,875 @@
+{
+	"Metadata": {
+		"title": "Lumodesk",
+		"description": "La plateforme studio des photographes et vidéastes."
+	},
+	"Dashboard": {
+		"Nav": {
+			"workspace": "Espace de travail",
+			"website": "Site web",
+			"overview": "Aperçu",
+			"bookings": "Réservations",
+			"clients": "Clients",
+			"messages": "Messages",
+			"media": "Médiathèque",
+			"portfolio": "Portfolio",
+			"services": "Prestations",
+			"siteProfile": "Profil du site",
+			"appearance": "Apparence"
+		},
+		"UserMenu": {
+			"profile": "Profil",
+			"settings": "Paramètres",
+			"language": "Langue",
+			"logout": "Se déconnecter",
+			"loggingOut": "Déconnexion..."
+		},
+		"ComingSoon": {
+			"badge": "Bientôt disponible",
+			"emptyTitle": "Cette section arrive bientôt",
+			"bookings": {
+				"description": "Demandes de devis et séances, du premier message à la date confirmée.",
+				"empty": "Les demandes de réservation de votre site apparaîtront ici."
+			},
+			"clients": {
+				"description": "Toutes les personnes avec qui vous travaillez, leurs projets et leur historique.",
+				"empty": "Vos clients apparaîtront ici dès que vous recevrez des réservations."
+			},
+			"messages": {
+				"description": "Vos conversations avec les clients et votre équipe.",
+				"empty": "Les messages des clients apparaîtront ici."
+			}
+		},
+		"Overview": {
+			"greeting": {
+				"morning": "Bonjour, {name}.",
+				"afternoon": "Bon après-midi, {name}.",
+				"evening": "Bonsoir, {name}."
+			},
+			"previewSite": "Aperçu du site",
+			"setupStudio": "Configurer votre studio",
+			"stats": {
+				"media": "Photos et vidéos",
+				"albums": "Albums",
+				"albumsDetail": "{published} publiés",
+				"packages": "Formules",
+				"packagesDetail": "{active} visibles",
+				"site": "Votre site",
+				"live": "En ligne",
+				"draft": "Brouillon",
+				"notSetUp": "Non configuré"
+			},
+			"checklist": {
+				"title": "Préparez votre site",
+				"progress": "{done} sur {total} terminées",
+				"complete": "Votre site est complet. Bravo !",
+				"studio": "Configurer votre studio",
+				"media": "Envoyer vos premières photos",
+				"album": "Créer un album",
+				"package": "Ajouter une formule",
+				"publish": "Publier votre site"
+			},
+			"latest": {
+				"title": "Derniers envois",
+				"viewAll": "Tout voir",
+				"empty": "Rien d'envoyé pour le moment.",
+				"upload": "Envoyer des médias"
+			}
+		}
+	},
+	"Common": {
+		"languages": {
+			"en": "English",
+			"fr": "Français"
+		},
+		"pagination": {
+			"previous": "Précédent",
+			"next": "Suivant"
+		},
+		"saveBar": {
+			"unsaved": "Modifications non enregistrées",
+			"discard": "Annuler",
+			"save": "Enregistrer"
+		},
+		"delete": {
+			"action": "Supprimer",
+			"cancel": "Annuler",
+			"confirm": "Supprimer"
+		}
+	},
+	"Errors": {
+		"generic": "Une erreur est survenue. Veuillez réessayer.",
+		"invalidInput": "Certaines informations sont invalides.",
+		"notFound": "Cet élément n'existe plus.",
+		"unsupportedType": "Ce type de fichier n'est pas pris en charge.",
+		"tooLarge": "Ce fichier est trop volumineux.",
+		"uploadMissing": "L'envoi n'a pas abouti. Veuillez réessayer.",
+		"uploadFailed": "Échec de l'envoi. Veuillez réessayer.",
+		"slugTaken": "Cette adresse est déjà prise.",
+		"studioExists": "Votre studio est déjà configuré.",
+		"albumSlugTaken": "Vous avez déjà un album avec cette adresse.",
+		"albumFull": "Cet album est plein (300 éléments max).",
+		"albumLimit": "Vous pouvez avoir jusqu'à 100 albums.",
+		"packageLimit": "Vous pouvez avoir jusqu'à 50 formules.",
+		"staleOrder": "La liste a changé depuis son chargement. Actualisez la page et réessayez."
+	},
+	"Validation": {
+		"required": "Ce champ est obligatoire.",
+		"tooLong": "C'est trop long.",
+		"invalidUrl": "Saisissez une URL valide (https://…).",
+		"invalidEmail": "Saisissez une adresse e-mail valide.",
+		"slugTooShort": "Au moins 3 caractères.",
+		"invalidSlug": "Lettres minuscules, chiffres et tirets uniquement.",
+		"slugReserved": "Cette adresse est réservée.",
+		"slugTaken": "Cette adresse est déjà prise.",
+		"invalidColor": "Utilisez une couleur hexadécimale comme #c8a96e.",
+		"invalidPrice": "Saisissez un prix valide.",
+		"invalidNumber": "Saisissez un nombre valide.",
+		"pickLanguage": "Choisissez au moins une langue.",
+		"defaultLanguageMissing": "La langue par défaut doit faire partie des langues choisies.",
+		"passwordTooShort": "Utilisez au moins 8 caractères.",
+		"passwordsDontMatch": "Les mots de passe ne correspondent pas.",
+		"otpLength": "Saisissez le code à 6 chiffres."
+	},
+	"Media": {
+		"title": "Médiathèque",
+		"description": "Toutes vos photos et vidéos, prêtes à être utilisées sur votre site.",
+		"dropzone": {
+			"title": "Glissez vos fichiers ici ou cliquez pour parcourir",
+			"drop": "Déposez pour envoyer",
+			"hint": "JPG, PNG, WebP, AVIF jusqu'à 25 Mo · MP4, WebM, MOV jusqu'à 500 Mo"
+		},
+		"queue": {
+			"summary": "{done} sur {total} envoyés",
+			"clear": "Effacer les terminés",
+			"retry": "Relancer l'envoi"
+		},
+		"filters": {
+			"all": "Tout",
+			"image": "Photos",
+			"video": "Vidéos",
+			"count": "{total, plural, =0 {Aucun élément} one {# élément} other {# éléments}}"
+		},
+		"empty": {
+			"title": "Votre médiathèque est vide",
+			"description": "Envoyez des photos et vidéos pour commencer à construire votre site."
+		},
+		"detail": {
+			"size": "Taille",
+			"type": "Format",
+			"dimensions": "Dimensions",
+			"duration": "Durée",
+			"altLabel": "Texte alternatif",
+			"altPlaceholder": "Décrivez le contenu de ce média…",
+			"altHint": "Aide les moteurs de recherche et les lecteurs d'écran.",
+			"save": "Enregistrer",
+			"saved": "Texte alternatif enregistré",
+			"copyLink": "Copier le lien",
+			"copied": "Lien copié"
+		},
+		"delete": {
+			"title": "Supprimer ce fichier ?",
+			"description": "Il sera retiré de votre médiathèque, de vos albums et de votre site. Cette action est irréversible.",
+			"done": "Fichier supprimé"
+		},
+		"picker": {
+			"title": "Choisir un média",
+			"hintSingle": "Sélectionnez un élément de votre médiathèque ou envoyez-en un nouveau.",
+			"hintMultiple": "Sélectionnez un ou plusieurs éléments, ou envoyez-en de nouveaux.",
+			"library": "Médiathèque",
+			"upload": "Envoyer",
+			"empty": "Aucun média. Envoyez un fichier pour commencer.",
+			"loadMore": "Charger plus",
+			"cancel": "Annuler",
+			"confirm": "{count, plural, =0 {Sélectionner} one {Utiliser # élément} other {Utiliser # éléments}}"
+		},
+		"field": {
+			"choose": "Choisir",
+			"replace": "Remplacer",
+			"remove": "Retirer"
+		}
+	},
+	"Site": {
+		"slug": {
+			"taken": "Cette adresse est déjà prise."
+		},
+		"setup": {
+			"title": "Configurez votre studio",
+			"description": "Nommez votre studio et réservez son adresse publique.",
+			"name": "Nom du studio",
+			"url": "Adresse publique",
+			"submit": "Créer mon site",
+			"created": "Votre studio est prêt"
+		},
+		"publicUrl": {
+			"live": "En ligne",
+			"draft": "Brouillon",
+			"copy": "Copier le lien",
+			"copied": "Lien copié",
+			"open": "Ouvrir le site"
+		},
+		"profile": {
+			"title": "Profil du site",
+			"description": "La façon dont votre studio se présente sur votre site public.",
+			"saved": "Profil enregistré",
+			"identity": {
+				"title": "Identité",
+				"description": "Le nom, l'adresse et l'histoire de votre studio.",
+				"name": "Nom du studio",
+				"slug": "Adresse publique",
+				"tagline": "Accroche",
+				"taglinePlaceholder": "Photographe mariage & portrait à Tunis",
+				"bio": "À propos",
+				"bioPlaceholder": "Présentez-vous et votre façon de travailler…"
+			},
+			"contact": {
+				"title": "Contact",
+				"description": "Affiché dans la section contact.",
+				"email": "E-mail",
+				"phone": "Téléphone",
+				"city": "Ville",
+				"country": "Pays"
+			},
+			"socials": {
+				"title": "Réseaux sociaux",
+				"description": "Laissez vide pour masquer.",
+				"instagram": "Instagram",
+				"facebook": "Facebook",
+				"youtube": "YouTube",
+				"vimeo": "Vimeo",
+				"tiktok": "TikTok",
+				"website": "Site web"
+			},
+			"branding": {
+				"title": "Identité visuelle",
+				"description": "Logo pour l'en-tête, couverture pour la bannière.",
+				"logo": "Logo",
+				"cover": "Image de couverture"
+			},
+			"visibility": {
+				"title": "Visibilité",
+				"published": "Site publié",
+				"publishedHint": "Désactivé, les visiteurs voient une page « bientôt disponible ».",
+				"booking": "Accepter les réservations",
+				"bookingHint": "Affiche le formulaire de réservation sur votre site."
+			},
+			"preview": "Aperçu"
+		},
+		"appearance": {
+			"title": "Apparence",
+			"description": "Choisissez un modèle et personnalisez-le.",
+			"saved": "Apparence enregistrée",
+			"noStudio": {
+				"title": "Configurez d'abord votre studio",
+				"description": "Créez le profil de votre site pour personnaliser son apparence.",
+				"action": "Aller au profil du site"
+			},
+			"template": {
+				"title": "Modèle",
+				"description": "La mise en page générale de votre site public.",
+				"options": {
+					"MINIMAL": {
+						"name": "Minimal",
+						"description": "Épuré et centré, le travail parle en premier."
+					},
+					"EDITORIAL": {
+						"name": "Éditorial",
+						"description": "Mises en page façon magazine et narration."
+					},
+					"BOLD": {
+						"name": "Audacieux",
+						"description": "Sombre, images pleine largeur et grands titres."
+					}
+				}
+			},
+			"fonts": {
+				"title": "Typographie",
+				"description": "Association de polices titres et texte.",
+				"options": {
+					"MODERN": "Moderne",
+					"CLASSIC": "Classique",
+					"ELEGANT": "Élégant"
+				}
+			},
+			"accent": {
+				"title": "Couleur d'accent",
+				"description": "Utilisée pour les boutons, liens et éléments clés.",
+				"custom": "Couleur personnalisée",
+				"hex": "Couleur hexadécimale"
+			},
+			"preview": {
+				"title": "Aperçu",
+				"open": "Aperçu complet",
+				"hint": "Affiche vos modifications non enregistrées en direct. Utilise un contenu d’exemple tant que vous n’avez pas publié d’albums ni de formules."
+			},
+			"themeMode": {
+				"title": "Mode de couleur",
+				"description": "Clair, sombre, ou au choix du visiteur.",
+				"options": {
+					"LIGHT": "Clair",
+					"DARK": "Sombre",
+					"BOTH": "Les deux"
+				},
+				"hints": {
+					"LIGHT": "Toujours clair.",
+					"DARK": "Toujours sombre.",
+					"BOTH": "Suit l'appareil du visiteur, avec un bouton pour changer."
+				}
+			},
+			"languages": {
+				"title": "Langues du site",
+				"description": "Les visiteurs peuvent passer d'une langue activée à l'autre.",
+				"isDefault": "Par défaut",
+				"makeDefault": "Définir par défaut"
+			}
+		}
+	},
+	"Portfolio": {
+		"title": "Portfolio",
+		"description": "Les albums affichés sur votre site public, dans cet ordre.",
+		"newAlbum": "Nouvel album",
+		"published": "Publié",
+		"draft": "Brouillon",
+		"itemCount": "{count, plural, =0 {Vide} one {# élément} other {# éléments}}",
+		"reorderHint": "Glissez les albums pour les réordonner.",
+		"empty": {
+			"title": "Aucun album",
+			"description": "Regroupez vos meilleurs travaux en albums : Mariages, Portraits, Événements…"
+		},
+		"form": {
+			"createTitle": "Nouvel album",
+			"editTitle": "Modifier l'album",
+			"description": "Les albums organisent votre portfolio par catégorie.",
+			"title": "Titre",
+			"titlePlaceholder": "Mariages",
+			"slug": "Adresse",
+			"slugHint": "Utilisée dans l'adresse de l'album sur votre site.",
+			"descriptionLabel": "Description",
+			"published": "Publié",
+			"publishedHint": "Visible sur votre site public.",
+			"create": "Créer l'album",
+			"save": "Enregistrer",
+			"created": "Album créé",
+			"updated": "Album mis à jour",
+			"deleted": "Album supprimé",
+			"deleteTitle": "Supprimer cet album ?",
+			"deleteDescription": "L'album est supprimé. Ses photos et vidéos restent dans votre médiathèque."
+		},
+		"album": {
+			"edit": "Modifier",
+			"addMedia": "Ajouter des médias",
+			"added": "{count, plural, one {# élément ajouté} other {# éléments ajoutés}}",
+			"cover": "Couverture",
+			"setCover": "Définir comme couverture",
+			"unsetCover": "Retirer la couverture",
+			"coverSet": "Couverture mise à jour",
+			"coverCleared": "Couverture retirée",
+			"remove": "Retirer de l'album",
+			"removed": "Retiré de l'album",
+			"empty": {
+				"title": "Cet album est vide",
+				"description": "Ajoutez des photos et vidéos depuis votre médiathèque. Glissez pour réordonner."
+			}
+		}
+	},
+	"Services": {
+		"title": "Prestations",
+		"description": "Les formules que vos clients peuvent réserver depuis votre site.",
+		"newPackage": "Nouvelle formule",
+		"featured": "En avant",
+		"hidden": "Masquée",
+		"hours": "{count, plural, one {# h} other {# h}}",
+		"deliverableCount": "{count, plural, =0 {Aucun livrable} one {# livrable} other {# livrables}}",
+		"reorderHint": "Glissez les formules pour les réordonner. Cliquez pour modifier.",
+		"empty": {
+			"title": "Aucune formule",
+			"description": "Créez des formules : journée de mariage, séance portrait, vidéo promo…"
+		},
+		"form": {
+			"createTitle": "Nouvelle formule",
+			"editTitle": "Modifier la formule",
+			"description": "Ce qui est inclus et combien cela coûte.",
+			"name": "Nom",
+			"namePlaceholder": "Journée de mariage complète",
+			"descriptionLabel": "Description",
+			"price": "Prix",
+			"currency": "Devise",
+			"duration": "Durée (minutes)",
+			"durationHint": "Laissez vide si elle varie.",
+			"deliverables": "Livrables",
+			"deliverablePlaceholder": "ex. 300 photos retouchées",
+			"addDeliverable": "Ajouter un livrable",
+			"removeDeliverable": "Retirer le livrable",
+			"cover": "Image de couverture",
+			"active": "Visible sur le site",
+			"activeHint": "Les formules masquées restent dans votre tableau de bord.",
+			"featured": "En avant",
+			"featuredHint": "Mise en avant comme formule recommandée.",
+			"create": "Créer la formule",
+			"save": "Enregistrer",
+			"created": "Formule créée",
+			"updated": "Formule mise à jour",
+			"deleted": "Formule supprimée",
+			"deleteTitle": "Supprimer cette formule ?",
+			"deleteDescription": "Elle sera retirée de votre site. Cette action est irréversible."
+		}
+	},
+	"Preview": {
+		"back": "Apparence",
+		"frameTitle": "Aperçu du site",
+		"mine": "Mon contenu",
+		"demo": "Contenu de démo",
+		"device": {
+			"desktop": "Ordinateur",
+			"tablet": "Tablette",
+			"mobile": "Mobile"
+		},
+		"apply": "Utiliser ce modèle",
+		"inUse": "Utilisé",
+		"applied": "Modèle appliqué à votre site",
+		"demoNote": "Contenu d'exemple pour voir toutes les sections. Passez sur « Mon contenu » pour voir votre vrai site.",
+		"demoNoContent": "Vous n'avez pas encore publié d'albums ni de formules : voici un contenu d'exemple avec toutes les sections remplies.",
+		"emptyNote": "Votre site n'a pas encore d'albums ni de formules publiés. Passez au contenu de démo pour voir le modèle complet."
+	},
+	"PublicSite": {
+		"nav": {
+			"portfolio": "Portfolio",
+			"services": "Prestations",
+			"about": "À propos",
+			"contact": "Contact"
+		},
+		"hero": {
+			"cta": "Réserver une séance",
+			"viewWork": "Voir le portfolio",
+			"availability": "Disponible pour de nouveaux projets"
+		},
+		"portfolio": {
+			"title": "Sélection de travaux",
+			"subtitle": "Un aperçu de récentes histoires, portraits et projets.",
+			"all": "Tout",
+			"eyebrow": "Portfolio",
+			"showMore": "Voir plus",
+			"viewAll": "{count, plural, one {Voir # photo} other {Voir les # photos}}"
+		},
+		"services": {
+			"title": "Prestations",
+			"subtitle": "Des formules claires, adaptées à votre histoire.",
+			"featured": "La plus demandée",
+			"hours": "{count, plural, one {# heure} other {# heures}}",
+			"eyebrow": "Formules",
+			"enquire": "Demander un devis"
+		},
+		"about": {
+			"title": "À propos",
+			"eyebrow": "Le photographe"
+		},
+		"contact": {
+			"title": "Travaillons ensemble",
+			"subtitle": "Parlez-moi de votre projet, je vous réponds sous 24 heures.",
+			"cta": "Envoyer une demande",
+			"eyebrow": "Contact"
+		},
+		"lightbox": {
+			"title": "Visionneuse",
+			"previous": "Précédent",
+			"next": "Suivant"
+		},
+		"footer": {
+			"rights": "© {year} {name}. Tous droits réservés.",
+			"madeWith": "Créé avec Lumodesk"
+		},
+		"comingSoon": {
+			"title": "{name} arrive bientôt",
+			"description": "Ce site n'est pas encore publié. Revenez très vite."
+		},
+		"demo": {
+			"studioName": "Atelier Lumière",
+			"tagline": "Photographie de mariage et de portrait intemporelle",
+			"city": "Lyon",
+			"country": "France",
+			"bio": "Je suis photographe et vidéaste, et je crois que les meilleures images naissent quand personne ne pose. Depuis plus de dix ans, je raconte des mariages, des familles et des marques avec un regard calme et naturel.\n\nChaque séance est une collaboration : nous échangeons, nous préparons, puis je me fais discret pour laisser les vrais moments se dérouler.",
+			"albums": {
+				"weddings": {
+					"title": "Mariages",
+					"description": "Des journées complètes, du premier regard à la dernière danse."
+				},
+				"portraits": {
+					"title": "Portraits",
+					"description": "Des portraits sincères et lumineux, pour les personnes et leur personnalité."
+				},
+				"events": {
+					"title": "Événements",
+					"description": "Conférences, lancements et célébrations, couverts avec discrétion."
+				},
+				"family": {
+					"title": "Famille",
+					"description": "Les vrais moments entre ceux qui comptent le plus."
+				},
+				"brands": {
+					"title": "Marques",
+					"description": "Des images qui donnent un visage humain à votre entreprise."
+				},
+				"travel": {
+					"title": "Voyage",
+					"description": "Des lieux et des gens, saisis sur la route."
+				}
+			},
+			"packages": {
+				"essential": {
+					"name": "Essentiel",
+					"description": "Une séance détendue pour portraits ou petites célébrations.",
+					"d1": "Séance de 1h30",
+					"d2": "40 photos retouchées",
+					"d3": "Galerie en ligne privée",
+					"d4": "Fichiers prêts à imprimer"
+				},
+				"signature": {
+					"name": "Signature",
+					"description": "Notre formule la plus demandée pour les mariages et grands jours.",
+					"d1": "Jusqu'à 5 h de couverture",
+					"d2": "300 photos retouchées",
+					"d3": "Galerie en ligne et favoris",
+					"d4": "Rendez-vous de préparation"
+				},
+				"premium": {
+					"name": "Premium",
+					"description": "Une couverture complète, des préparatifs à la dernière danse.",
+					"d1": "Couverture de la journée",
+					"d2": "600 photos retouchées",
+					"d3": "Second photographe",
+					"d4": "Album d'art imprimé"
+				},
+				"film": {
+					"name": "Film",
+					"description": "Un film cinématographique des temps forts de votre journée.",
+					"d1": "Jusqu'à 4 h de tournage",
+					"d2": "Film de 4 minutes",
+					"d3": "Musique sous licence",
+					"d4": "Teaser pour les réseaux"
+				}
+			}
+		},
+		"controls": {
+			"menu": "Ouvrir le menu",
+			"close": "Fermer le menu",
+			"language": "Langue",
+			"toLight": "Passer en mode clair",
+			"toDark": "Passer en mode sombre"
+		}
+	},
+	"Auth": {
+		"metadata": {
+			"title": "Authentification",
+			"description": "Connectez-vous ou créez un compte."
+		},
+		"layout": {
+			"imageAlt": "Photographie éditoriale",
+			"logoLabel": "Logo",
+			"testimonialName": "Sofia Davis, Designer produit",
+			"testimonialQuote": "« Cet outil a transformé la façon dont notre équipe collabore. »"
+		},
+		"login": {
+			"title": "Bon retour",
+			"description": "Saisissez votre e-mail pour accéder à votre compte",
+			"email": "E-mail",
+			"password": "Mot de passe",
+			"forgot": "Mot de passe oublié ?",
+			"submit": "Se connecter",
+			"success": "Connexion réussie.",
+			"noAccount": "Vous n'avez pas de compte ?",
+			"signUp": "S'inscrire"
+		},
+		"register": {
+			"title": "Créer un compte",
+			"description": "Renseignez vos informations pour créer votre compte",
+			"email": "E-mail",
+			"password": "Mot de passe",
+			"confirmPassword": "Confirmer le mot de passe",
+			"submit": "Créer le compte",
+			"success": "Compte créé avec succès !",
+			"haveAccount": "Vous avez déjà un compte ?",
+			"signIn": "Se connecter"
+		},
+		"forgot": {
+			"title": "Mot de passe oublié ?",
+			"description": "Saisissez votre e-mail et nous vous enverrons un code à 6 chiffres pour le réinitialiser",
+			"email": "E-mail",
+			"submit": "Envoyer le code",
+			"sent": "Si cet e-mail est enregistré, un code est en route.",
+			"back": "Retour à la connexion"
+		},
+		"reset": {
+			"title": "Réinitialiser votre mot de passe",
+			"description": "Saisissez le code envoyé à <strong>{email}</strong> et choisissez un nouveau mot de passe",
+			"otp": "Code de vérification",
+			"newPassword": "Nouveau mot de passe",
+			"confirmPassword": "Confirmer le mot de passe",
+			"submit": "Réinitialiser le mot de passe",
+			"success": "Mot de passe mis à jour. Vous pouvez vous connecter.",
+			"resend": "Pas reçu de code ? Renvoyer",
+			"resending": "Envoi…",
+			"resent": "Un nouveau code a été envoyé.",
+			"back": "Retour à la connexion"
+		},
+		"shared": {
+			"emailPlaceholder": "nom@exemple.com",
+			"divider": "Ou continuer avec",
+			"github": "GitHub",
+			"google": "Google",
+			"showPassword": "Afficher le mot de passe",
+			"hidePassword": "Masquer le mot de passe"
+		},
+		"errors": {
+			"generic": "Une erreur est survenue. Veuillez réessayer.",
+			"network": "Erreur réseau. Veuillez réessayer.",
+			"INVALID_EMAIL_OR_PASSWORD": "E-mail ou mot de passe incorrect.",
+			"USER_ALREADY_EXISTS": "Un compte existe déjà avec cet e-mail.",
+			"INVALID_EMAIL": "Saisissez une adresse e-mail valide.",
+			"PASSWORD_TOO_SHORT": "Utilisez au moins 8 caractères.",
+			"PASSWORD_TOO_LONG": "Ce mot de passe est trop long.",
+			"INVALID_OTP": "Ce code est invalide ou a expiré.",
+			"OTP_EXPIRED": "Ce code a expiré. Demandez-en un nouveau.",
+			"TOO_MANY_ATTEMPTS": "Trop de tentatives. Demandez un nouveau code.",
+			"USER_NOT_FOUND": "Nous n'avons pas trouvé ce compte."
+		}
+	},
+	"Landing": {
+		"header": {
+			"features": "Fonctionnalités",
+			"workflow": "Comment ça marche",
+			"pricing": "Tarifs",
+			"faq": "FAQ",
+			"getStarted": "Commencer",
+			"toggleTheme": "Changer de thème",
+			"toggleMenu": "Ouvrir le menu",
+			"language": "Langue"
+		},
+		"hero": {
+			"badge": "Le système d'exploitation créatif",
+			"titleStart": "Toute votre activité photo,",
+			"titleAccent": "au même endroit.",
+			"subtitle": "Gérez vos réservations, livrez de superbes galeries à vos clients et automatisez votre flux de travail grâce à l'IA.",
+			"startTrial": "Essai gratuit",
+			"watchDemo": "Voir la démo",
+			"trialNote": "14 jours gratuits · Sans carte bancaire",
+			"mock": {
+				"path": "lumodesk / aperçu",
+				"studio": "Studio North",
+				"nav": {
+					"overview": "Aperçu",
+					"bookings": "Réservations",
+					"clients": "Clients",
+					"messages": "Messages"
+				},
+				"date": "Lundi 21 septembre",
+				"greeting": "Bonjour, Alex.",
+				"newProject": "Nouveau projet",
+				"stats": {
+					"revenue": "Revenus",
+					"projects": "Projets",
+					"inquiries": "Demandes",
+					"views": "Vues des galeries"
+				},
+				"latestGallery": "Dernière galerie",
+				"viewAll": "Tout voir",
+				"thisMonth": "Ce mois-ci",
+				"imageAlt": "Planche contact d'un projet éditorial"
+			}
+		},
+		"logos": {
+			"title": "Adopté par des créatifs chez"
+		},
+		"features": {
+			"eyebrow": "Tout est connecté",
+			"title": "Moins d'administratif. Plus de temps derrière l'objectif.",
+			"subtitle": "Chaque contact client, pensé avec soin et parfaitement synchronisé.",
+			"crm": {
+				"title": "CRM intelligent",
+				"description": "Connaissez chaque client, conversation et étape en un coup d'œil.",
+				"avatarAlt": "Profil client",
+				"name": "Mara Cole",
+				"meta": "Éditorial · 28 septembre",
+				"status": "Confirmé",
+				"steps": {
+					"contract": "Contrat signé",
+					"invoice": "Facture payée",
+					"questionnaire": "Questionnaire reçu"
+				},
+				"daysAgo": "il y a {count} j"
+			},
+			"galleries": {
+				"title": "Galeries clients",
+				"description": "Livrez un travail aussi premium qu'il en a l'air.",
+				"weddingAlt": "Galerie de mariage",
+				"editorialAlt": "Galerie éditoriale"
+			},
+			"ai": {
+				"title": "Assistant IA",
+				"description": "Rédigez des e-mails, sélectionnez des galeries et planifiez en quelques secondes.",
+				"ready": "Votre relance est prête à être envoyée."
+			},
+			"invoicing": {
+				"label": "Facturation automatisée",
+				"amount": "48,2 k$",
+				"caption": "Encaissé cette année",
+				"growth": "+18,4 %",
+				"chartLabel": "Graphique de facturation automatisée"
+			}
+		},
+		"workflow": {
+			"eyebrow": "Comment ça marche",
+			"title": "De la demande à la galerie finale.",
+			"subtitle": "Un flux de travail soigné qui ravit vos clients et fait avancer votre activité.",
+			"steps": {
+				"capture": {
+					"title": "Capturez chaque demande",
+					"description": "De beaux formulaires alimentent directement votre espace. Lumodesk relance tant que le moment est frais.",
+					"cardTitle": "Nouvelle demande reçue",
+					"cardMeta": "Sofia & James · 12 octobre"
+				},
+				"experience": {
+					"title": "Créez l'expérience",
+					"description": "Contrats, questionnaires, plannings et factures, envoyés exactement au bon moment.",
+					"cardTitle": "Flux en cours",
+					"cardMeta": "7 étapes sur 9 terminées"
+				},
+				"deliver": {
+					"title": "Livrez avec élégance",
+					"description": "Publiez une galerie cinématographique, recueillez les favoris et vendez des tirages sans lever le petit doigt.",
+					"cardTitle": "Galerie publiée",
+					"cardMeta": "418 photos · Prête à partager"
+				}
+			}
+		},
+		"testimonials": {
+			"eyebrow": "Adopté par des créatifs",
+			"title": "Le calme derrière l'art.",
+			"items": {
+				"maya": {
+					"quote": "Lumodesk m'a rendu mes dimanches. Mes clients se sentent choyés, et je reprends enfin le contrôle.",
+					"name": "Maya Chen",
+					"role": "Photographe de mariage"
+				},
+				"theo": {
+					"quote": "C'est le premier outil qui comprend à la fois l'art et le business de notre métier.",
+					"name": "Theo Martins",
+					"role": "Réalisateur commercial"
+				},
+				"nina": {
+					"quote": "Nos réservations ont bondi presque immédiatement. Chaque contact reflète enfin notre marque.",
+					"name": "Nina Ross",
+					"role": "Studio de portrait"
+				}
+			}
+		},
+		"pricing": {
+			"eyebrow": "Tarifs simples",
+			"title": "Évoluez à votre rythme.",
+			"monthly": "Mensuel",
+			"yearly": "Annuel",
+			"yearlyDiscount": "−20 %",
+			"mostPopular": "Le plus populaire",
+			"perMonth": "/ mois",
+			"billedAnnually": "Facturé annuellement",
+			"billedMonthly": "Facturé mensuellement",
+			"cta": "Essai gratuit",
+			"plans": {
+				"starter": {
+					"name": "Starter",
+					"features": [
+						"3 projets actifs",
+						"20 Go de stockage de galeries",
+						"Contrats et factures"
+					]
+				},
+				"pro": {
+					"name": "Pro",
+					"features": [
+						"Projets illimités",
+						"250 Go de stockage de galeries",
+						"Assistant IA de flux de travail",
+						"Automatisations et statistiques"
+					]
+				},
+				"studio": {
+					"name": "Studio",
+					"features": [
+						"5 membres d'équipe",
+						"1 To de stockage de galeries",
+						"Conciergerie prioritaire",
+						"Image de marque personnalisée"
+					]
+				}
+			}
+		},
+		"faq": {
+			"eyebrow": "Questions, réponses",
+			"title": "Quelques questions que vous vous posez.",
+			"contactPrefix": "Encore une question ?",
+			"contactLink": "Parlez à notre équipe.",
+			"items": {
+				"trial": {
+					"q": "Puis-je essayer Lumodesk avant de payer ?",
+					"a": "Oui. Chaque formule commence par 14 jours d'essai gratuit, sans carte bancaire."
+				},
+				"migrate": {
+					"q": "Puis-je migrer mes clients existants ?",
+					"a": "Bien sûr. Importez contacts, projets et contrats depuis un CSV, ou laissez notre équipe s'en charger."
+				},
+				"galleries": {
+					"q": "Les galeries clients sont-elles incluses ?",
+					"a": "Chaque formule inclut de belles galeries adaptées au mobile. Les limites de stockage varient selon la formule."
+				},
+				"commission": {
+					"q": "Lumodesk prend-il une commission ?",
+					"a": "Jamais. Les paiements vont directement sur votre compte connecté, sans commission Lumodesk."
+				},
+				"team": {
+					"q": "Mon équipe peut-elle partager le même espace ?",
+					"a": "Les formules Studio incluent cinq places, des permissions précises et des modèles de flux partagés."
+				}
+			}
+		},
+		"cta": {
+			"title": "Prêt à passer à la vitesse supérieure ?",
+			"subtitle": "Rejoignez des milliers de photographes qui gèrent leur activité plus sereinement et plus rentablement.",
+			"button": "Démarrer l'essai gratuit"
+		},
+		"footer": {
+			"features": "Fonctionnalités",
+			"pricing": "Tarifs",
+			"faq": "FAQ",
+			"privacy": "Confidentialité",
+			"terms": "Conditions",
+			"instagram": "Instagram",
+			"twitter": "Twitter",
+			"videos": "Vidéos",
+			"copyright": "© {year} Lumodesk, Inc. Conçu pour ceux qui voient autrement."
+		}
+	},
+	"Mail": {
+		"passwordReset": {
+			"languageName": "Français",
+			"subject": "Votre code de réinitialisation Lumodesk",
+			"preheader": "Votre code de réinitialisation est {otp}",
+			"heading": "Réinitialisez votre mot de passe",
+			"intro": "Saisissez le code de vérification ci-dessous pour choisir un nouveau mot de passe pour votre compte Lumodesk.",
+			"expires": "Ce code expire dans {minutes} minutes.",
+			"ignore": "Vous n'êtes pas à l'origine de cette demande ? Vous pouvez ignorer cet e-mail : votre mot de passe ne changera pas.",
+			"text": "Votre code de réinitialisation Lumodesk est {otp}. Il expire dans {minutes} minutes. Si vous n'êtes pas à l'origine de cette demande, ignorez cet e-mail."
+		}
+	},
+	"NotFound": {
+		"code": "404",
+		"page": {
+			"title": "Cette page est sortie du cadre",
+			"description": "La page que vous cherchez n'existe pas ou a été déplacée.",
+			"action": "Retour à l'accueil"
+		},
+		"studio": {
+			"title": "Ce studio n'existe pas",
+			"description": "Le lien est peut-être incorrect, ou le studio a été supprimé.",
+			"action": "Découvrir Lumodesk"
+		}
+	}
+}

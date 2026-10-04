@@ -1,17 +1,34 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+import { BRAND_NAME } from "@/lib/brand";
 
-export const metadata: Metadata = {
-	title: "Authentication | Lumodesk",
-	description: "Log in or register for an account.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+	const t = await getTranslations("Auth.metadata");
+	return {
+		title: `${t("title")} | ${BRAND_NAME}`,
+		description: t("description"),
+	};
+}
 
-export default function AuthLayout({
+function initialsOf(name: string) {
+	return name
+		.split(/[\s,]+/)
+		.slice(0, 2)
+		.map((word) => word[0])
+		.join("")
+		.toUpperCase();
+}
+
+export default async function AuthLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const t = await getTranslations("Auth.layout");
+	const testimonialName = t("testimonialName");
+
 	return (
 		<div className="grid min-h-screen grid-cols-1 md:grid-cols-2 bg-background">
 			<div className="relative hidden md:flex flex-col p-10 overflow-hidden text-foreground">
@@ -25,7 +42,7 @@ export default function AuthLayout({
 					<div className="relative w-full max-w-md aspect-[4/5] rounded-[2.5rem] overflow-hidden border border-white/10 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] -rotate-3 transition-transform duration-700 ease-out">
 						<Image
 							src="/images/lumodesk-editorial.jpg"
-							alt="Authentication background"
+							alt={t("imageAlt")}
 							fill
 							className="object-cover w-full h-full"
 							priority
@@ -47,7 +64,7 @@ export default function AuthLayout({
 							xmlns="http://www.w3.org/2000/svg"
 							viewBox="0 0 24 24"
 							fill="none"
-							aria-label="Lumodesk Logo"
+							aria-label={`${BRAND_NAME} ${t("logoLabel")}`}
 							role="img"
 							stroke="currentColor"
 							strokeWidth="2"
@@ -58,20 +75,20 @@ export default function AuthLayout({
 							<path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
 						</svg>
 					</div>
-					Lumodesk
+					{BRAND_NAME}
 				</Link>
 
 				{/* Minimalist Testimonial Pill */}
 				<div className="relative z-10 mt-auto flex items-center gap-3 bg-background/60 backdrop-blur-md px-4 py-3 rounded-full border border-border/50 shadow-sm w-fit max-w-[90%]">
 					<div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-xs ring-1 ring-primary/20">
-						SD
+						{initialsOf(testimonialName)}
 					</div>
 					<div className="flex flex-col">
 						<span className="text-xs font-semibold text-foreground leading-tight">
-							Sofia Davis, Product Designer
+							{testimonialName}
 						</span>
 						<span className="text-[10px] text-muted-foreground italic mt-0.5 truncate">
-							"This tool has transformed how our team collaborates."
+							{t("testimonialQuote")}
 						</span>
 					</div>
 				</div>
