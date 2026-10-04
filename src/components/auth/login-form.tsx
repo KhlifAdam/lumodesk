@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -19,15 +18,20 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth/client";
+import { AUTH_PATHS, type AuthAudience } from "@/lib/auth/client-intent";
+import { AudienceBadge } from "./audience-badge";
+import { AudienceSwitch } from "./audience-switch";
 import { AuthHeading } from "./auth-heading";
 import { PasswordInput } from "./password-input";
 import { type LoginValues, loginSchema } from "./schemas";
 import { SocialLogin } from "./social-login";
 import { useAuthError } from "./use-auth-error";
 
-export function LoginForm() {
+/** Same account either way; the audience decides where the user lands. */
+export function LoginForm({ audience }: { audience: AuthAudience }) {
 	const t = useTranslations("Auth");
-	const router = useRouter();
+	const isClient = audience === "client";
+	const paths = AUTH_PATHS[audience];
 	const authError = useAuthError();
 	const [showPassword, setShowPassword] = useState(false);
 	const form = useForm<LoginValues>({
@@ -41,8 +45,7 @@ export function LoginForm() {
 			const { error } = await authClient.signIn.email(values);
 			if (error) return void toast.error(authError.message(error));
 			toast.success(t("login.success"));
-			router.push("/dashboard");
-			router.refresh();
+			window.location.assign(paths.home);
 		} catch {
 			toast.error(authError.network);
 		}
@@ -50,9 +53,14 @@ export function LoginForm() {
 
 	return (
 		<div className="flex flex-col space-y-6">
+			<AudienceSwitch audience={audience} screen="login" />
 			<AuthHeading
-				title={t("login.title")}
-				description={t("login.description")}
+				title={t(isClient ? "client.login.title" : "login.title")}
+				description={t(
+					isClient ? "client.login.description" : "login.description",
+				)}
+				badge={<AudienceBadge audience={audience} />}
+				highlights={t(`highlights.${audience}`)}
 			/>
 
 			<div className="grid gap-6">
@@ -116,13 +124,13 @@ export function LoginForm() {
 					</form>
 				</Form>
 
-				<SocialLogin disabled={isSubmitting} />
+				<SocialLogin disabled={isSubmitting} audience={audience} />
 			</div>
 
 			<p className="px-8 text-center text-sm text-muted-foreground">
 				{t("login.noAccount")}{" "}
 				<Link
-					href="/register"
+					href={paths.register}
 					className="underline underline-offset-4 hover:text-primary"
 				>
 					{t("login.signUp")}

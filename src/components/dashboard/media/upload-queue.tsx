@@ -2,10 +2,10 @@
 
 import { CheckCircle2, FileImage, FileVideo, RotateCcw } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import type { UploadTask } from "@/components/dashboard/media/use-media-upload";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useErrorMessage } from "@/hooks/use-error-message";
+import type { UploadTask } from "@/hooks/use-upload-queue";
 import { formatBytes } from "@/lib/format";
 
 interface UploadQueueProps {

@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -19,35 +18,62 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth/client";
+import { AUTH_PATHS, type AuthAudience } from "@/lib/auth/client-intent";
+import {
+	clearClientIntent,
+	setClientIntent,
+} from "@/services/auth/intent-actions";
+import { AudienceBadge } from "./audience-badge";
+import { AudienceSwitch } from "./audience-switch";
 import { AuthHeading } from "./auth-heading";
 import { PasswordInput } from "./password-input";
-import { type RegisterValues, registerSchema } from "./schemas";
+import {
+	clientRegisterSchema,
+	type RegisterValues,
+	registerSchema,
+} from "./schemas";
 import { SocialLogin } from "./social-login";
 import { useAuthError } from "./use-auth-error";
 
-export function RegisterForm() {
+interface RegisterFormProps {
+	audience: AuthAudience;
+	/** Pre-filled from an invitation link. */
+	defaultEmail?: string;
+}
+
+export function RegisterForm({
+	audience,
+	defaultEmail = "",
+}: RegisterFormProps) {
 	const t = useTranslations("Auth");
-	const router = useRouter();
 	const authError = useAuthError();
+	const isClient = audience === "client";
+	const paths = AUTH_PATHS[audience];
 	const [showPasswords, setShowPasswords] = useState(false);
 	const form = useForm<RegisterValues>({
-		resolver: zodResolver(registerSchema),
-		defaultValues: { email: "", password: "", confirmPassword: "" },
+		resolver: zodResolver(isClient ? clientRegisterSchema : registerSchema),
+		defaultValues: {
+			name: "",
+			email: defaultEmail,
+			password: "",
+			confirmPassword: "",
+		},
 	});
 	const { isSubmitting } = form.formState;
 
-	async function onSubmit({ email, password }: RegisterValues) {
+	async function onSubmit({ name, email, password }: RegisterValues) {
 		try {
+			// The intent cookie gives the new account the client role.
+			await (isClient ? setClientIntent() : clearClientIntent());
 			const { error } = await authClient.signUp.email({
 				email,
 				password,
-				// The studio name is asked later; start from the address's local part.
-				name: email.split("@")[0] || email,
+				// Photographers name their studio later; start from the local part.
+				name: name || email.split("@")[0] || email,
 			});
 			if (error) return void toast.error(authError.message(error));
 			toast.success(t("register.success"));
-			router.push("/dashboard");
-			router.refresh();
+			window.location.assign(paths.home);
 		} catch {
 			toast.error(authError.network);
 		}
@@ -55,14 +81,39 @@ export function RegisterForm() {
 
 	return (
 		<div className="flex flex-col space-y-6">
+			<AudienceSwitch audience={audience} screen="register" />
 			<AuthHeading
-				title={t("register.title")}
-				description={t("register.description")}
+				title={t(isClient ? "client.register.title" : "register.title")}
+				description={t(
+					isClient ? "client.register.description" : "register.description",
+				)}
+				badge={<AudienceBadge audience={audience} />}
+				highlights={t(`highlights.${audience}`)}
 			/>
 
 			<div className="grid gap-6">
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+						{isClient && (
+							<FormField
+								control={form.control}
+								name="name"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>{t("client.register.name")}</FormLabel>
+										<FormControl>
+											<Input
+												autoComplete="name"
+												placeholder={t("shared.namePlaceholder")}
+												readOnly={isSubmitting}
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						)}
 						<FormField
 							control={form.control}
 							name="email"
@@ -132,13 +183,13 @@ export function RegisterForm() {
 					</form>
 				</Form>
 
-				<SocialLogin disabled={isSubmitting} />
+				<SocialLogin disabled={isSubmitting} audience={audience} />
 			</div>
 
 			<p className="px-8 text-center text-sm text-muted-foreground">
 				{t("register.haveAccount")}{" "}
 				<Link
-					href="/login"
+					href={paths.login}
 					className="underline underline-offset-4 hover:text-primary"
 				>
 					{t("register.signIn")}

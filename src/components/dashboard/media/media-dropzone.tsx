@@ -9,12 +9,15 @@ import { ACCEPTED_MIME_TYPES } from "@/services/media/constants";
 interface MediaDropzoneProps {
 	onFiles: (files: File[]) => void;
 	accept?: readonly string[];
+	/** Overrides the accepted-formats line. */
+	hint?: string;
 	className?: string;
 }
 
 export function MediaDropzone({
 	onFiles,
 	accept = ACCEPTED_MIME_TYPES,
+	hint,
 	className,
 }: MediaDropzoneProps) {
 	const t = useTranslations("Media.dropzone");
@@ -51,7 +54,7 @@ export function MediaDropzone({
 				<p className="text-sm font-medium text-foreground">
 					{isDragging ? t("drop") : t("title")}
 				</p>
-				<p className="text-xs text-muted-foreground">{t("hint")}</p>
+				<p className="text-xs text-muted-foreground">{hint ?? t("hint")}</p>
 			</div>
 			<input
 				ref={inputRef}

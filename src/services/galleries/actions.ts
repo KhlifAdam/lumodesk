@@ -1,0 +1,156 @@
+"use server";
+
+import { type ActionResult, fail, failFromZod, ok } from "@/lib/action-result";
+import { requirePhotographer } from "@/lib/auth/require-photographer";
+import { db } from "@/lib/db";
+import { sendGallerySharedEmail } from "@/lib/mail/send-client-notices";
+import { revalidateClientWork } from "@/services/projects/revalidate";
+import { lockGallery, lockPhotographer } from "@/services/shared/lock-rows";
+import { emptyToNull, idSchema } from "@/services/shared/schemas";
+import { deleteGalleryFiles } from "./cleanup";
+import { GALLERIES_PER_PROJECT_LIMIT } from "./constants";
+import {
+	createGallerySchema,
+	shareGallerySchema,
+	updateGallerySchema,
+} from "./schemas";
+
+export async function createGallery(
+	input: unknown,
+): Promise<ActionResult<{ id: string }>> {
+	const { photographerId } = await requirePhotographer();
+	const parsed = createGallerySchema.safeParse(input);
+	if (!parsed.success) return failFromZod(parsed.error);
+	const { projectId, title } = parsed.data;
+
+	const result = await db.$transaction(async (tx) => {
+		await lockPhotographer(tx, photographerId);
+		const project = await tx.project.findFirst({
+			where: { id: projectId, photographerId },
+			select: { _count: { select: { galleries: true } } },
+		});
+		if (!project) return fail("notFound");
+		const count = project._count.galleries;
+		if (count >= GALLERIES_PER_PROJECT_LIMIT) return fail("galleryLimit");
+		const gallery = await tx.gallery.create({
+			data: { photographerId, projectId, title, position: count },
+			select: { id: true },
+		});
+		return ok(gallery);
+	});
+
+	if (result.ok) revalidateClientWork();
+	return result;
+}
+
+export async function updateGallery(input: unknown): Promise<ActionResult> {
+	const { photographerId } = await requirePhotographer();
+	const parsed = updateGallerySchema.safeParse(input);
+	if (!parsed.success) return failFromZod(parsed.error);
+	const { id, description, selectionLimit, ...rest } = parsed.data;
+
+	const result = await db.$transaction(async (tx) => {
+		await lockGallery(tx, id);
+		const gallery = await tx.gallery.findFirst({
+			where: { id, photographerId },
+			select: { id: true },
+		});
+		if (!gallery) return fail("notFound");
+		if (selectionLimit !== null) {
+			const picked = await tx.galleryItem.count({
+				where: { galleryId: id, selected: true },
+			});
+			if (selectionLimit < picked) return fail("limitBelowSelection");
+		}
+		await tx.gallery.update({
+			where: { id },
+			data: { ...rest, selectionLimit, description: emptyToNull(description) },
+		});
+		return ok();
+	});
+
+	if (result.ok) revalidateClientWork();
+	return result;
+}
+
+export async function shareGallery(input: unknown): Promise<ActionResult> {
+	const { photographerId } = await requirePhotographer();
+	const parsed = shareGallerySchema.safeParse(input);
+	if (!parsed.success) return failFromZod(parsed.error);
+	const { id, shared } = parsed.data;
+
+	const gallery = await db.gallery.findFirst({
+		where: { id, photographerId },
+		select: {
+			title: true,
+			sharedAt: true,
+			project: {
+				select: {
+					title: true,
+					client: { select: { email: true } },
+				},
+			},
+			photographer: {
+				select: { name: true, studio: { select: { name: true } } },
+			},
+		},
+	});
+	if (!gallery) return fail("notFound");
+
+	await db.gallery.update({
+		where: { id },
+		data: { sharedAt: shared ? (gallery.sharedAt ?? new Date()) : null },
+	});
+
+	// Before the invitation is accepted there is nobody to notify yet.
+	const client = gallery.project.client;
+	if (shared && !gallery.sharedAt && client) {
+		sendGallerySharedEmail({
+			to: client.email,
+			studio: gallery.photographer.studio?.name ?? gallery.photographer.name,
+			gallery: gallery.title,
+			project: gallery.project.title,
+			galleryId: id,
+		}).catch((error) =>
+			console.error("Failed to send gallery shared email:", error),
+		);
+	}
+
+	revalidateClientWork();
+	return ok();
+}
+
+/** Unlocks a submitted selection so the client can change it. */
+export async function reopenSelection(input: unknown): Promise<ActionResult> {
+	const { photographerId } = await requirePhotographer();
+	const parsed = idSchema.safeParse(input);
+	if (!parsed.success) return failFromZod(parsed.error);
+
+	const { count } = await db.gallery.updateMany({
+		where: { id: parsed.data, photographerId },
+		data: { submittedAt: null },
+	});
+	if (count === 0) return fail("notFound");
+
+	revalidateClientWork();
+	return ok();
+}
+
+export async function deleteGallery(input: unknown): Promise<ActionResult> {
+	const { photographerId } = await requirePhotographer();
+	const parsed = idSchema.safeParse(input);
+	if (!parsed.success) return failFromZod(parsed.error);
+
+	const files = await db.galleryItem.findMany({
+		where: { galleryId: parsed.data, photographerId },
+		select: { key: true, previewKey: true },
+	});
+	const { count } = await db.gallery.deleteMany({
+		where: { id: parsed.data, photographerId },
+	});
+	if (count === 0) return fail("notFound");
+
+	await deleteGalleryFiles(files);
+	revalidateClientWork();
+	return ok();
+}

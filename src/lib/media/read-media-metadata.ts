@@ -42,7 +42,7 @@ export function readMediaMetadata(file: File): Promise<MediaMetadata> {
 /** PUTs a file to a presigned URL, reporting progress (0–100). */
 export function putWithProgress(
 	url: string,
-	file: File,
+	file: Blob,
 	onProgress: (percent: number) => void,
 ): Promise<void> {
 	return new Promise((resolve, reject) => {

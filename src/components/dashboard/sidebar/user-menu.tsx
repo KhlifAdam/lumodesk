@@ -1,6 +1,7 @@
 "use client";
 
-import { LogOut, Settings, User as UserIcon } from "lucide-react";
+import { LogOut, Settings, User as UserIcon, UserRound } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -97,6 +98,12 @@ export function UserMenu({ user }: UserMenuProps) {
 					<DropdownMenuItem className="cursor-pointer">
 						<Settings className="mr-2 h-4 w-4" />
 						<span>{t("settings")}</span>
+					</DropdownMenuItem>
+					<DropdownMenuItem asChild className="cursor-pointer">
+						<Link href="/portal">
+							<UserRound className="mr-2 h-4 w-4" />
+							<span>{t("clientSpace")}</span>
+						</Link>
 					</DropdownMenuItem>
 					<LanguageSubmenu />
 				</DropdownMenuGroup>

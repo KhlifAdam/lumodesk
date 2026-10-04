@@ -21,8 +21,22 @@ export const loginSchema = z.object({
 	password: z.string().min(1, "required"),
 });
 
+const registerFields = {
+	email,
+	password: newPassword,
+	confirmPassword: z.string(),
+};
+
 export const registerSchema = withMatchingPasswords(
-	z.object({ email, password: newPassword, confirmPassword: z.string() }),
+	z.object({ ...registerFields, name: z.string().trim().max(80, "tooLong") }),
+);
+
+/** Clients sign up from a studio site and must give their name. */
+export const clientRegisterSchema = withMatchingPasswords(
+	z.object({
+		...registerFields,
+		name: z.string().trim().min(1, "required").max(80, "tooLong"),
+	}),
 );
 
 export const forgotPasswordSchema = z.object({ email });

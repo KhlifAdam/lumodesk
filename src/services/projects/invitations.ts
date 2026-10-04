@@ -1,0 +1,58 @@
+import "server-only";
+
+import { type ActionResult, fail, ok } from "@/lib/action-result";
+import { db } from "@/lib/db";
+import { sendProjectInvitationEmail } from "@/lib/mail/send-client-notices";
+
+/**
+ * Invites `email` to the photographer's project: the project waits as
+ * PENDING until that person accepts it from their portal.
+ */
+export async function inviteToProject(
+	photographer: { id: string; email: string },
+	projectId: string,
+	rawEmail: string,
+): Promise<ActionResult> {
+	const email = rawEmail.trim().toLowerCase();
+	if (email === photographer.email.toLowerCase()) return fail("inviteSelf");
+
+	const project = await db.project.findFirst({
+		where: { id: projectId, photographerId: photographer.id },
+		select: {
+			title: true,
+			eventDate: true,
+			inviteStatus: true,
+			photographer: {
+				select: { name: true, studio: { select: { name: true } } },
+			},
+		},
+	});
+	if (!project) return fail("notFound");
+	if (project.inviteStatus === "ACCEPTED") return fail("alreadyAccepted");
+
+	await db.project.update({
+		where: { id: projectId },
+		data: {
+			inviteEmail: email,
+			inviteStatus: "PENDING",
+			invitedAt: new Date(),
+			clientId: null,
+		},
+	});
+
+	const account = await db.user.findFirst({
+		where: { email: { equals: email, mode: "insensitive" } },
+		select: { id: true },
+	});
+	sendProjectInvitationEmail({
+		to: email,
+		studio: project.photographer.studio?.name ?? project.photographer.name,
+		project: project.title,
+		eventDate: project.eventDate,
+		hasAccount: Boolean(account),
+	}).catch((error) =>
+		console.error("Failed to send project invitation email:", error),
+	);
+
+	return ok();
+}

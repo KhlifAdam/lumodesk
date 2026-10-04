@@ -4,6 +4,11 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth/client";
+import { AUTH_PATHS, type AuthAudience } from "@/lib/auth/client-intent";
+import {
+	clearClientIntent,
+	setClientIntent,
+} from "@/services/auth/intent-actions";
 import { GithubIcon, GoogleIcon } from "./brand-icons";
 
 const PROVIDERS = [
@@ -12,13 +17,26 @@ const PROVIDERS = [
 ] as const;
 
 /** "Or continue with" divider + provider buttons. */
-export function SocialLogin({ disabled }: { disabled?: boolean }) {
+export function SocialLogin({
+	disabled,
+	audience,
+}: {
+	disabled?: boolean;
+	audience: AuthAudience;
+}) {
 	const t = useTranslations("Auth.shared");
 	const [pending, setPending] = useState(false);
 
 	async function signIn(provider: (typeof PROVIDERS)[number]["id"]) {
 		setPending(true);
-		await authClient.signIn.social({ provider, callbackURL: "/dashboard" });
+		// The intent decides the role if OAuth creates a new account.
+		await (audience === "client" ? setClientIntent() : clearClientIntent());
+		const callbackURL = AUTH_PATHS[audience].home;
+		await authClient.signIn.social({
+			provider,
+			callbackURL,
+			newUserCallbackURL: callbackURL,
+		});
 	}
 
 	return (

@@ -6,6 +6,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import type { Locale } from "@/i18n/config";
 import { cn } from "@/lib/utils";
+import { ClientAreaLink } from "./client-area-link";
 import { useSiteTheme } from "./site-shell";
 
 interface SiteControlsProps {
@@ -14,7 +15,7 @@ interface SiteControlsProps {
 	className?: string;
 }
 
-/** Language switcher (when several) + light/dark toggle (when allowed). */
+/** Language switcher (when several), light/dark toggle (when allowed), client area. */
 export function SiteControls({
 	locale,
 	locales,
@@ -30,8 +31,6 @@ export function SiteControls({
 		query.set("lang", target);
 		return `${pathname}?${query}`;
 	};
-
-	if (locales.length < 2 && !canToggle) return null;
 
 	return (
 		<div className={cn("flex items-center gap-3", className)}>
@@ -75,6 +74,7 @@ export function SiteControls({
 					)}
 				</button>
 			)}
+			<ClientAreaLink />
 		</div>
 	);
 }

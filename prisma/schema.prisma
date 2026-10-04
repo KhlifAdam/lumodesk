@@ -31,6 +31,14 @@ model User {
   albums   Album[]
   packages Package[]
 
+  projects        Project[]        @relation("PhotographerProjects")
+  clientProjects  Project[]        @relation("ClientProjects")
+  clientProfiles  ClientProfile[]  @relation("ProfilesOwned")
+  profilesAboutMe ClientProfile[]  @relation("ProfilesAbout")
+  galleries       Gallery[]
+  galleryItems    GalleryItem[]
+  galleryComments GalleryComment[]
+
   @@map("users")
 }
 
@@ -236,4 +244,138 @@ model Package {
 
   @@index([photographerId, position])
   @@map("packages")
+}
+
+// ─── Clients, projects & private galleries ───────────────────────────────────
+// Dashboard queries scope by `photographerId`; portal queries by `clientId`.
+// A client is attached to a project by accepting an invitation.
+
+enum ProjectStage {
+  BOOKING
+  PREP
+  SHOOTING
+  IMPORT
+  ORGANIZATION
+  SELECTION
+  POST_PRODUCTION
+  EXPORT
+  VALIDATION
+  DELIVERY
+
+  @@map("project_stage")
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+
+  @@map("invite_status")
+}
+
+/// A photographer's private record about a client. Never grants access:
+/// that comes only from accepted projects.
+model ClientProfile {
+  id             String   @id @default(cuid())
+  photographerId String   @map("photographer_id")
+  clientId       String   @map("client_id")
+  notes          String?
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  photographer User @relation("ProfilesOwned", fields: [photographerId], references: [id], onDelete: Cascade)
+  client       User @relation("ProfilesAbout", fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@unique([photographerId, clientId])
+  @@index([clientId])
+  @@map("client_profiles")
+}
+
+model Project {
+  id             String        @id @default(cuid())
+  photographerId String        @map("photographer_id")
+  /// Set when the invited client accepts.
+  clientId       String?       @map("client_id")
+  /// Lowercased address the invitation was sent to.
+  inviteEmail    String?       @map("invite_email")
+  inviteStatus   InviteStatus? @map("invite_status")
+  invitedAt      DateTime?     @map("invited_at")
+  title          String
+  description    String?
+  eventDate      DateTime?     @map("event_date")
+  location       String?
+  stage          ProjectStage  @default(BOOKING)
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+
+  photographer User      @relation("PhotographerProjects", fields: [photographerId], references: [id], onDelete: Cascade)
+  client       User?     @relation("ClientProjects", fields: [clientId], references: [id], onDelete: SetNull)
+  galleries    Gallery[]
+
+  @@index([photographerId, stage, updatedAt])
+  @@index([clientId, updatedAt])
+  @@index([inviteEmail, inviteStatus])
+  @@map("projects")
+}
+
+model Gallery {
+  id               String    @id @default(cuid())
+  photographerId   String    @map("photographer_id")
+  projectId        String    @map("project_id")
+  title            String
+  description      String?
+  position         Int       @default(0)
+  selectionEnabled Boolean   @default(true) @map("selection_enabled")
+  selectionLimit   Int?      @map("selection_limit")
+  sharedAt         DateTime? @map("shared_at")
+  submittedAt      DateTime? @map("submitted_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  photographer User          @relation(fields: [photographerId], references: [id], onDelete: Cascade)
+  project      Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  items        GalleryItem[]
+
+  @@index([projectId, position])
+  @@index([photographerId])
+  @@map("galleries")
+}
+
+model GalleryItem {
+  id             String   @id @default(cuid())
+  galleryId      String   @map("gallery_id")
+  photographerId String   @map("photographer_id")
+  /// Object key in the private R2 bucket.
+  key            String   @unique
+  previewKey     String?  @map("preview_key")
+  filename       String
+  mimeType       String   @map("mime_type")
+  size           Int
+  width          Int?
+  height         Int?
+  position       Int      @default(0)
+  selected       Boolean  @default(false)
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  gallery      Gallery          @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  photographer User             @relation(fields: [photographerId], references: [id], onDelete: Cascade)
+  comments     GalleryComment[]
+
+  @@index([galleryId, position])
+  @@index([galleryId, selected])
+  @@map("gallery_items")
+}
+
+model GalleryComment {
+  id            String   @id @default(cuid())
+  galleryItemId String   @map("gallery_item_id")
+  authorId      String   @map("author_id")
+  body          String
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  item   GalleryItem @relation(fields: [galleryItemId], references: [id], onDelete: Cascade)
+  author User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([galleryItemId, createdAt])
+  @@map("gallery_comments")
 }

@@ -15,14 +15,16 @@
 			"portfolio": "Portfolio",
 			"services": "Services",
 			"siteProfile": "Site profile",
-			"appearance": "Appearance"
+			"appearance": "Appearance",
+			"projects": "Projects"
 		},
 		"UserMenu": {
 			"profile": "Profile",
 			"settings": "Settings",
 			"language": "Language",
 			"logout": "Log out",
-			"loggingOut": "Logging out..."
+			"loggingOut": "Logging out...",
+			"clientSpace": "Client space"
 		},
 		"ComingSoon": {
 			"badge": "Coming soon",
@@ -111,7 +113,17 @@
 		"albumFull": "This album is full (300 items max).",
 		"albumLimit": "You can have up to 100 albums.",
 		"packageLimit": "You can have up to 50 packages.",
-		"staleOrder": "The list changed since you loaded it. Refresh and try again."
+		"staleOrder": "The list changed since you loaded it. Refresh and try again.",
+		"galleryLimit": "A project can have up to 30 galleries.",
+		"galleryFull": "This gallery is full (2000 photos max).",
+		"limitBelowSelection": "The client already picked more photos than this limit.",
+		"selectionLocked": "The selection is closed.",
+		"selectionLimitReached": "You've reached the selection limit.",
+		"selectionEmpty": "Pick at least one photo first.",
+		"inviteSelf": "You can't invite yourself.",
+		"alreadyAccepted": "The client already accepted this project.",
+		"emailNotVerified": "Verify your email first.",
+		"invitationNotFound": "This invitation is no longer available."
 	},
 	"Validation": {
 		"required": "This field is required.",
@@ -129,7 +141,8 @@
 		"defaultLanguageMissing": "The default language must be one of the selected languages.",
 		"passwordTooShort": "Use at least 8 characters.",
 		"passwordsDontMatch": "Passwords don't match.",
-		"otpLength": "Enter the 6-digit code."
+		"otpLength": "Enter the 6-digit code.",
+		"invalidDate": "Enter a valid date."
 	},
 	"Media": {
 		"title": "Media library",
@@ -554,7 +567,8 @@
 			"close": "Close menu",
 			"language": "Language",
 			"toLight": "Switch to light mode",
-			"toDark": "Switch to dark mode"
+			"toDark": "Switch to dark mode",
+			"clientArea": "Client area"
 		}
 	},
 	"Auth": {
@@ -563,14 +577,17 @@
 			"description": "Log in or register for an account."
 		},
 		"layout": {
-			"imageAlt": "Editorial photograph",
 			"logoLabel": "Logo",
-			"testimonialName": "Sofia Davis, Product Designer",
-			"testimonialQuote": "“This tool has transformed how our team collaborates.”"
+			"photographer": {
+				"imageAlt": "Photographer in her studio holding a camera"
+			},
+			"client": {
+				"imageAlt": "Newlywed couple walking along the coast at sunset"
+			}
 		},
 		"login": {
-			"title": "Welcome back",
-			"description": "Enter your email to sign in to your account",
+			"title": "Welcome back, photographer",
+			"description": "Sign in to manage your studio",
 			"email": "Email",
 			"password": "Password",
 			"forgot": "Forgot password?",
@@ -580,8 +597,8 @@
 			"signUp": "Sign up"
 		},
 		"register": {
-			"title": "Create an account",
-			"description": "Enter your details below to create your account",
+			"title": "Start your studio",
+			"description": "Create your photographer account to set up your studio",
 			"email": "Email",
 			"password": "Password",
 			"confirmPassword": "Confirm password",
@@ -613,6 +630,7 @@
 		},
 		"shared": {
 			"emailPlaceholder": "name@example.com",
+			"namePlaceholder": "Jane Smith",
 			"divider": "Or continue with",
 			"github": "GitHub",
 			"google": "Google",
@@ -631,6 +649,35 @@
 			"OTP_EXPIRED": "That code has expired. Request a new one.",
 			"TOO_MANY_ATTEMPTS": "Too many attempts. Request a new code.",
 			"USER_NOT_FOUND": "We couldn't find that account."
+		},
+		"audience": {
+			"photographer": "Photographer",
+			"client": "Client"
+		},
+		"client": {
+			"login": {
+				"title": "Welcome back",
+				"description": "Sign in to follow your projects and galleries with every photographer"
+			},
+			"register": {
+				"title": "Create your client account",
+				"description": "One account for all your photographers: projects, galleries and selections",
+				"name": "Full name"
+			}
+		},
+		"startStudio": {
+			"title": "Open your studio",
+			"description": "{email} is a client account. You can also run your own studio with it: same login, both spaces.",
+			"submit": "Create my studio",
+			"back": "Back to my client space"
+		},
+		"badge": {
+			"photographer": "Studio",
+			"client": "Client space"
+		},
+		"highlights": {
+			"photographer": "Portfolio · Clients · Galleries",
+			"client": "Projects · Galleries · Your selections"
 		}
 	},
 	"Landing": {
@@ -857,6 +904,43 @@
 			"expires": "This code expires in {minutes} minutes.",
 			"ignore": "Didn't ask for this? You can safely ignore this email — your password won't change.",
 			"text": "Your Lumodesk password reset code is {otp}. It expires in {minutes} minutes. If you didn't request this, you can ignore this email."
+		},
+		"galleryShared": {
+			"languageName": "English",
+			"subject": "{studio} shared a gallery with you",
+			"preheader": "New photos from {studio}: {gallery}",
+			"heading": "Your photos are ready to view",
+			"intro": "{studio} shared the gallery “{gallery}” for your project “{project}”. Open it to browse the photos, pick your favourites and leave comments.",
+			"cta": "Open the gallery",
+			"text": "{studio} shared the gallery “{gallery}” for your project “{project}”. Open it here: {url}"
+		},
+		"selectionSubmitted": {
+			"languageName": "English",
+			"subject": "{client} submitted their selection",
+			"preheader": "{client} picked {count} photos in {gallery}",
+			"heading": "A selection is ready for review",
+			"intro": "{client} picked {count} photos in the gallery “{gallery}” for the project “{project}”.",
+			"cta": "Review the selection",
+			"text": "{client} picked {count} photos in “{gallery}” ({project}). Review them here: {url}"
+		},
+		"projectInvitation": {
+			"languageName": "English",
+			"subject": "{studio} invited you to a project",
+			"preheader": "{studio} invited you to {project}",
+			"heading": "You're invited",
+			"intro": "{studio} invited you to follow the project “{project}” on Lumodesk. Accept it to see its progress and your photo galleries.",
+			"cta": "View the invitation",
+			"text": "{studio} invited you to follow the project “{project}” on Lumodesk. View it here: {url}"
+		},
+		"emailVerification": {
+			"languageName": "English",
+			"subject": "Your Lumodesk verification code",
+			"preheader": "Your verification code is {otp}",
+			"heading": "Verify your email",
+			"intro": "Use the code below to confirm this address on your Lumodesk account.",
+			"expires": "This code expires in {minutes} minutes.",
+			"ignore": "Didn't ask for this? You can safely ignore this email.",
+			"text": "Your Lumodesk verification code is {otp}. It expires in {minutes} minutes."
 		}
 	},
 	"NotFound": {
@@ -870,6 +954,240 @@
 			"title": "This studio isn't here",
 			"description": "The link may be wrong, or the studio may have been removed.",
 			"action": "Discover Lumodesk"
+		}
+	},
+	"Clients": {
+		"title": "Clients",
+		"description": "People who accepted one of your projects.",
+		"list": {
+			"search": "Search by name or email",
+			"projectCount": "{count, plural, =0 {No projects} one {# project} other {# projects}}"
+		},
+		"empty": {
+			"title": "No clients yet",
+			"description": "Invite a client from a project: they appear here once they accept.",
+			"noMatch": "No clients match this search."
+		},
+		"detail": {
+			"back": "All clients",
+			"newProject": "New project",
+			"projects": "{count, plural, =0 {Projects} one {# project} other {# projects}}",
+			"noProjects": "No projects for this client yet."
+		},
+		"notes": {
+			"label": "Private notes",
+			"hint": "Only you can see these.",
+			"placeholder": "Preferences, contacts, reminders…",
+			"save": "Save notes",
+			"saved": "Notes saved."
+		}
+	},
+	"Projects": {
+		"title": "Projects",
+		"description": "Every shoot, from booking to delivery.",
+		"stages": {
+			"BOOKING": "Booking",
+			"PREP": "Preparation",
+			"SHOOTING": "Shooting",
+			"IMPORT": "Import",
+			"ORGANIZATION": "Organization",
+			"SELECTION": "Selection",
+			"POST_PRODUCTION": "Post-production",
+			"EXPORT": "Export",
+			"VALIDATION": "Validation",
+			"DELIVERY": "Delivered"
+		},
+		"list": {
+			"new": "New project",
+			"search": "Search projects or clients",
+			"allStages": "All stages",
+			"galleries": "{count, plural, =0 {No galleries} one {# gallery} other {# galleries}}",
+			"noClient": "No client yet"
+		},
+		"empty": {
+			"title": "No projects yet",
+			"description": "Create a project for one of your clients to track it and share galleries.",
+			"noMatch": "No projects match these filters."
+		},
+		"form": {
+			"createTitle": "New project",
+			"editTitle": "Edit project",
+			"description": "The client sees the title, date, location and description once they accept.",
+			"title": "Title",
+			"titlePlaceholder": "Wedding of Sarah & Karim",
+			"eventDate": "Date",
+			"location": "Location",
+			"descriptionLabel": "Description",
+			"create": "Create project",
+			"save": "Save",
+			"created": "Project created.",
+			"updated": "Project updated.",
+			"clientEmail": "Client email",
+			"clientEmailHint": "Optional. We'll email them an invitation to accept.",
+			"createdInvited": "Project created and invitation sent."
+		},
+		"detail": {
+			"back": "All projects",
+			"edit": "Edit",
+			"workflow": "Workflow",
+			"stageUpdated": "Stage updated.",
+			"galleries": "Galleries",
+			"noGalleries": "No galleries yet",
+			"noGalleriesHint": "Create a gallery, upload photos, then share it with your client.",
+			"deleteTitle": "Delete this project?",
+			"deleteDescription": "Its galleries, photos and comments are deleted for good.",
+			"deleted": "Project deleted."
+		},
+		"invite": {
+			"prompt": "Invite the client:",
+			"send": "Send invitation",
+			"sent": "Invitation sent.",
+			"resend": "Resend",
+			"inviteAgain": "Invite again",
+			"change": "Change email",
+			"keep": "Cancel",
+			"cancel": "Withdraw invitation",
+			"cancelled": "Invitation withdrawn.",
+			"status": {
+				"PENDING": "Invitation pending",
+				"DECLINED": "Declined"
+			}
+		}
+	},
+	"Galleries": {
+		"card": {
+			"private": "Private",
+			"submitted": "Selection sent",
+			"photos": "{count, plural, =0 {Empty} one {# photo} other {# photos}}"
+		},
+		"lightbox": {
+			"title": "Photo",
+			"previous": "Previous photo",
+			"next": "Next photo"
+		},
+		"comments": {
+			"title": "Comments",
+			"empty": "No comments yet.",
+			"photographer": "Photographer",
+			"placeholder": "Write a comment…",
+			"send": "Send",
+			"open": "Comments"
+		},
+		"create": {
+			"button": "New gallery",
+			"title": "New gallery",
+			"description": "Galleries stay private until you share them.",
+			"name": "Name",
+			"placeholder": "Selection – ceremony",
+			"submit": "Create gallery"
+		},
+		"manager": {
+			"description": "Upload photos, then share the gallery with your client.",
+			"dropHint": "JPG, PNG, WebP up to 40 MB · stored privately",
+			"shared": "Shared with client",
+			"private": "Private",
+			"sharedToast": "Gallery shared. Your client has been notified.",
+			"unsharedToast": "Gallery hidden from your client.",
+			"picks": "{count, plural, =0 {No picks yet} one {# pick} other {# picks}}",
+			"picksOf": "{count} / {limit} picks",
+			"submitted": "Submitted",
+			"reopen": "Reopen selection",
+			"reopened": "Selection reopened.",
+			"filters": {
+				"all": "All photos",
+				"selected": "Client picks"
+			},
+			"empty": {
+				"title": "No photos yet",
+				"description": "Drop photos above. They stay private until you share the gallery."
+			},
+			"noPicks": "Your client hasn't picked any photos yet.",
+			"open": "Open {name}",
+			"comments": "Comments",
+			"remove": "Delete photo",
+			"removed": "Photo deleted."
+		},
+		"settings": {
+			"button": "Settings",
+			"title": "Gallery settings",
+			"description": "Control what your client can do in this gallery.",
+			"name": "Name",
+			"descriptionLabel": "Message to the client",
+			"selection": "Photo selection",
+			"selectionHint": "Let the client pick their favourites and submit them.",
+			"limit": "Selection limit",
+			"limitHint": "Leave empty for no limit.",
+			"save": "Save",
+			"saved": "Gallery updated.",
+			"deleteTitle": "Delete this gallery?",
+			"deleteDescription": "All its photos, picks and comments are deleted for good.",
+			"deleted": "Gallery deleted."
+		}
+	},
+	"Portal": {
+		"header": {
+			"title": "Client space",
+			"dashboard": "My dashboard",
+			"logout": "Log out",
+			"createStudio": "Create your studio"
+		},
+		"projects": {
+			"greeting": "Hello {name}",
+			"description": "Your projects with every photographer, in one place.",
+			"galleries": "{count, plural, =0 {No galleries yet} one {# gallery} other {# galleries}}",
+			"empty": {
+				"title": "No projects yet",
+				"description": "When a photographer invites you to a project and you accept it, it shows up here."
+			}
+		},
+		"project": {
+			"back": "All projects",
+			"progress": "Progress",
+			"galleries": "Galleries",
+			"noGalleries": "No galleries yet",
+			"noGalleriesHint": "Your photographer will share your photos here."
+		},
+		"gallery": {
+			"hint": "Tap the heart to pick your favourites, then send your selection.",
+			"hintLimit": "Pick up to {limit} favourites, then send your selection.",
+			"hintSubmitted": "Your selection has been sent to your photographer.",
+			"filters": {
+				"all": "All photos",
+				"selected": "My picks"
+			},
+			"empty": "This gallery is empty for now.",
+			"noPicks": "You haven't picked any photos yet.",
+			"open": "Open {name}",
+			"comments": "Comments",
+			"select": "Add to my picks",
+			"unselect": "Remove from my picks"
+		},
+		"selection": {
+			"selected": "selected",
+			"submit": "Send selection",
+			"submitted": "Selection sent",
+			"submittedToast": "Selection sent to your photographer.",
+			"confirmTitle": "Send your selection?",
+			"confirmDescription": "You picked {count, plural, one {# photo} other {# photos}}. Once sent, your photographer has to reopen the selection before you can change it.",
+			"cancel": "Keep choosing",
+			"confirm": "Send"
+		},
+		"invitations": {
+			"title": "{count, plural, one {You have an invitation} other {You have # invitations}}",
+			"accept": "Accept",
+			"decline": "Decline",
+			"accepted": "Invitation accepted.",
+			"declined": "Invitation declined."
+		},
+		"verify": {
+			"title": "{count, plural, one {A photographer invited you to a project} other {Photographers invited you to # projects}}",
+			"description": "Verify {email} to see and accept your invitations.",
+			"send": "Send me a code",
+			"sent": "We sent a 6-digit code to your email.",
+			"codePlaceholder": "6-digit code",
+			"verify": "Verify",
+			"resend": "Resend code",
+			"verified": "Email verified."
 		}
 	}
 }

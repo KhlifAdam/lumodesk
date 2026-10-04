@@ -1,10 +1,9 @@
 import "server-only";
 
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
+import { requireUser } from "@/lib/auth/require-user";
 import { ROLES } from "@/lib/auth/roles";
-import { auth } from "@/lib/auth/server";
 
 /**
  * Resolves the current photographer for private-space queries and actions.
@@ -12,10 +11,12 @@ import { auth } from "@/lib/auth/server";
  * Cached per request so pages and nested components share one session lookup.
  */
 export const requirePhotographer = cache(async () => {
-	const session = await auth.api.getSession({ headers: await headers() });
+	const session = await requireUser();
+	const { role } = session.user;
 
-	if (!session) redirect("/login");
-	if (session.user.role !== ROLES.photographer) redirect("/");
+	// Client accounts are offered to open a studio with the same login.
+	if (role === ROLES.client) redirect("/start-studio");
+	if (role !== ROLES.photographer) redirect("/");
 
 	return { session, photographerId: session.user.id };
 });
