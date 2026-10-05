@@ -19,8 +19,10 @@ export async function inviteClient(input: unknown): Promise<ActionResult> {
 		parsed.data.projectId,
 		parsed.data.email,
 	);
-	if (result.ok) revalidateClientWork();
-	return result;
+	if (!result.ok) return result;
+
+	revalidateClientWork();
+	return result.data.emailSent ? ok() : fail("inviteEmailFailed");
 }
 
 /** Withdraws a pending or declined invitation. */

@@ -26,7 +26,7 @@ function toData(values: ProjectValues) {
 /** Creates the project, then invites the client when an email is given. */
 export async function createProject(
 	input: unknown,
-): Promise<ActionResult<{ id: string }>> {
+): Promise<ActionResult<{ id: string; emailSent: boolean }>> {
 	const { session, photographerId } = await requirePhotographer();
 	const parsed = createProjectSchema.safeParse(input);
 	if (!parsed.success) return failFromZod(parsed.error);
@@ -42,11 +42,13 @@ export async function createProject(
 	});
 	const invited = clientEmail
 		? await inviteToProject(photographer, project.id, clientEmail)
-		: ok();
+		: ok({ emailSent: true });
 
 	revalidateClientWork();
 	// The project exists either way; a failed invite can be retried from it.
-	return invited.ok ? ok(project) : invited;
+	return invited.ok
+		? ok({ ...project, emailSent: invited.data.emailSent })
+		: invited;
 }
 
 export async function updateProject(input: unknown): Promise<ActionResult> {

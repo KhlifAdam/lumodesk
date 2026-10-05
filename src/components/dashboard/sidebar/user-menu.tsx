@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { authClient } from "@/lib/auth/client";
 import { LanguageSubmenu } from "./language-submenu";
+import { ThemeSubmenu } from "./theme-submenu";
 
 interface UserMenuProps {
 	user: {
@@ -106,6 +107,7 @@ export function UserMenu({ user }: UserMenuProps) {
 						</Link>
 					</DropdownMenuItem>
 					<LanguageSubmenu />
+					<ThemeSubmenu />
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem

@@ -12,7 +12,7 @@ export async function inviteToProject(
 	photographer: { id: string; email: string },
 	projectId: string,
 	rawEmail: string,
-): Promise<ActionResult> {
+): Promise<ActionResult<{ emailSent: boolean }>> {
 	const email = rawEmail.trim().toLowerCase();
 	if (email === photographer.email.toLowerCase()) return fail("inviteSelf");
 
@@ -44,15 +44,19 @@ export async function inviteToProject(
 		where: { email: { equals: email, mode: "insensitive" } },
 		select: { id: true },
 	});
-	sendProjectInvitationEmail({
-		to: email,
-		studio: project.photographer.studio?.name ?? project.photographer.name,
-		project: project.title,
-		eventDate: project.eventDate,
-		hasAccount: Boolean(account),
-	}).catch((error) =>
-		console.error("Failed to send project invitation email:", error),
-	);
-
-	return ok();
+	// The invitation is saved either way; `emailSent` tells the caller whether
+	// the message left, so a mail failure is never silent.
+	try {
+		await sendProjectInvitationEmail({
+			to: email,
+			studio: project.photographer.studio?.name ?? project.photographer.name,
+			project: project.title,
+			eventDate: project.eventDate,
+			hasAccount: Boolean(account),
+		});
+		return ok({ emailSent: true });
+	} catch (error) {
+		console.error("Failed to send project invitation email:", error);
+		return ok({ emailSent: false });
+	}
 }

@@ -27,10 +27,14 @@ export async function ProjectTable({
 						<div className="min-w-0 flex-1">
 							<p className="truncate text-sm font-medium">{project.title}</p>
 							{!hideClient && (
-								<p className="flex items-center gap-1.5 truncate text-xs text-muted-foreground">
-									{project.client.name ?? project.client.email ?? t("noClient")}
+								<div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+									<span className="truncate">
+										{project.client.name ??
+											project.client.email ??
+											t("noClient")}
+									</span>
 									<InviteStatusBadge status={project.client.status} />
-								</p>
+								</div>
 							)}
 						</div>
 						<div className="flex items-center gap-3 text-xs text-muted-foreground">

@@ -22,6 +22,12 @@
 			"profile": "Profile",
 			"settings": "Settings",
 			"language": "Language",
+			"theme": "Theme",
+			"themes": {
+				"light": "Light",
+				"dark": "Dark",
+				"system": "System"
+			},
 			"logout": "Log out",
 			"loggingOut": "Logging out...",
 			"clientSpace": "Client space"
@@ -121,6 +127,7 @@
 		"selectionLimitReached": "You've reached the selection limit.",
 		"selectionEmpty": "Pick at least one photo first.",
 		"inviteSelf": "You can't invite yourself.",
+		"inviteEmailFailed": "The invitation is saved, but the email couldn't be sent. Try resending it.",
 		"alreadyAccepted": "The client already accepted this project.",
 		"emailNotVerified": "Verify your email first.",
 		"invitationNotFound": "This invitation is no longer available."
@@ -1024,7 +1031,8 @@
 			"updated": "Project updated.",
 			"clientEmail": "Client email",
 			"clientEmailHint": "Optional. We'll email them an invitation to accept.",
-			"createdInvited": "Project created and invitation sent."
+			"createdInvited": "Project created and invitation sent.",
+			"createdEmailFailed": "Project created, but the invitation email couldn't be sent. Resend it from the project."
 		},
 		"detail": {
 			"back": "All projects",

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { LanguageSubmenu } from "@/components/dashboard/sidebar/language-submenu";
+import { ThemeSubmenu } from "@/components/dashboard/sidebar/theme-submenu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
 	DropdownMenu,
@@ -77,6 +78,7 @@ export function PortalHeader({ user, isPhotographer }: PortalHeaderProps) {
 							)}
 						</DropdownMenuItem>
 						<LanguageSubmenu />
+						<ThemeSubmenu />
 						<DropdownMenuSeparator />
 						<DropdownMenuItem
 							onClick={logout}

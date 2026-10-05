@@ -72,7 +72,9 @@ export function ProjectFormDialog({
 		}
 		const result = await createProject({ ...values, clientEmail });
 		if (!result.ok) return void toast.error(errorMessage(result.error));
-		toast.success(clientEmail ? t("createdInvited") : t("created"));
+		if (clientEmail && !result.data.emailSent)
+			toast.warning(t("createdEmailFailed"));
+		else toast.success(clientEmail ? t("createdInvited") : t("created"));
 		setOpen(false);
 		router.push(`/dashboard/projects/${result.data.id}`);
 	}

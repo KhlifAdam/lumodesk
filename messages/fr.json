@@ -22,6 +22,12 @@
 			"profile": "Profil",
 			"settings": "Paramètres",
 			"language": "Langue",
+			"theme": "Thème",
+			"themes": {
+				"light": "Clair",
+				"dark": "Sombre",
+				"system": "Système"
+			},
 			"logout": "Se déconnecter",
 			"loggingOut": "Déconnexion...",
 			"clientSpace": "Espace client"
@@ -121,6 +127,7 @@
 		"selectionLimitReached": "Vous avez atteint la limite de sélection.",
 		"selectionEmpty": "Choisissez d'abord au moins une photo.",
 		"inviteSelf": "Vous ne pouvez pas vous inviter vous-même.",
+		"inviteEmailFailed": "L'invitation est enregistrée, mais l'e-mail n'a pas pu être envoyé. Essayez de la renvoyer.",
 		"alreadyAccepted": "Le client a déjà accepté ce projet.",
 		"emailNotVerified": "Vérifiez d'abord votre e-mail.",
 		"invitationNotFound": "Cette invitation n'est plus disponible."
@@ -1024,7 +1031,8 @@
 			"updated": "Projet mis à jour.",
 			"clientEmail": "E-mail du client",
 			"clientEmailHint": "Facultatif. Nous lui enverrons une invitation à accepter.",
-			"createdInvited": "Projet créé et invitation envoyée."
+			"createdInvited": "Projet créé et invitation envoyée.",
+			"createdEmailFailed": "Projet créé, mais l'e-mail d'invitation n'a pas pu être envoyé. Renvoyez-le depuis le projet."
 		},
 		"detail": {
 			"back": "Tous les projets",
