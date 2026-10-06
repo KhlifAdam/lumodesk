@@ -902,6 +902,10 @@
 		}
 	},
 	"Mail": {
+		"footer": {
+			"reason": "Vous recevez cet e-mail suite à une demande concernant votre compte Lumodesk.",
+			"rights": "Tous droits réservés."
+		},
 		"passwordReset": {
 			"languageName": "Français",
 			"subject": "Votre code de réinitialisation Lumodesk",

@@ -3,6 +3,7 @@
 import { type ActionResult, fail, failFromZod, ok } from "@/lib/action-result";
 import { requireClient } from "@/lib/auth/require-client";
 import { db } from "@/lib/db";
+import { resolveMailLocale } from "@/lib/mail/mail-copy";
 import { sendSelectionSubmittedEmail } from "@/lib/mail/send-client-notices";
 import { revalidateClientWork } from "@/services/projects/revalidate";
 import { lockGallery } from "@/services/shared/lock-rows";
@@ -81,7 +82,7 @@ export async function submitSelection(input: unknown): Promise<ActionResult> {
 				selectionLimit: true,
 				submittedAt: true,
 				project: { select: { id: true, title: true } },
-				photographer: { select: { email: true } },
+				photographer: { select: { email: true, locale: true } },
 			},
 		});
 		if (!gallery) return fail("notFound");
@@ -106,6 +107,7 @@ export async function submitSelection(input: unknown): Promise<ActionResult> {
 	const { photographer, project, title, count } = result.data;
 	sendSelectionSubmittedEmail({
 		to: photographer.email,
+		locale: resolveMailLocale(photographer.locale),
 		client: session.user.name,
 		gallery: title,
 		project: project.title,

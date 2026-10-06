@@ -1,17 +1,19 @@
-import en from "../../../../messages/en.json";
-import fr from "../../../../messages/fr.json";
+import type { Locale } from "@/i18n/config";
+import { mailCopy } from "../mail-copy";
 import { otpEmail } from "./otp-email";
 
-/** One email in both languages, so it doesn't depend on the visitor's locale. */
 export function passwordResetOtpTemplate({
+	locale,
 	otp,
 	expiresInMinutes,
 }: {
+	locale: Locale;
 	otp: string;
 	expiresInMinutes: number;
 }) {
 	return otpEmail(
-		{ en: en.Mail.passwordReset, fr: fr.Mail.passwordReset },
+		mailCopy(locale).passwordReset,
+		locale,
 		otp,
 		expiresInMinutes,
 	);

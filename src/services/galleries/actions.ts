@@ -3,6 +3,7 @@
 import { type ActionResult, fail, failFromZod, ok } from "@/lib/action-result";
 import { requirePhotographer } from "@/lib/auth/require-photographer";
 import { db } from "@/lib/db";
+import { resolveMailLocale } from "@/lib/mail/mail-copy";
 import { sendGallerySharedEmail } from "@/lib/mail/send-client-notices";
 import { revalidateClientWork } from "@/services/projects/revalidate";
 import { lockGallery, lockPhotographer } from "@/services/shared/lock-rows";
@@ -87,7 +88,7 @@ export async function shareGallery(input: unknown): Promise<ActionResult> {
 			project: {
 				select: {
 					title: true,
-					client: { select: { email: true } },
+					client: { select: { email: true, locale: true } },
 				},
 			},
 			photographer: {
@@ -107,6 +108,7 @@ export async function shareGallery(input: unknown): Promise<ActionResult> {
 	if (shared && !gallery.sharedAt && client) {
 		sendGallerySharedEmail({
 			to: client.email,
+			locale: resolveMailLocale(client.locale),
 			studio: gallery.photographer.studio?.name ?? gallery.photographer.name,
 			gallery: gallery.title,
 			project: gallery.project.title,

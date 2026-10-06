@@ -2,6 +2,8 @@ import "server-only";
 
 import { type ActionResult, fail, ok } from "@/lib/action-result";
 import { db } from "@/lib/db";
+import { resolveMailLocale } from "@/lib/mail/mail-copy";
+import { getRequestLocale } from "@/lib/mail/request-locale";
 import { sendProjectInvitationEmail } from "@/lib/mail/send-client-notices";
 
 /**
@@ -42,13 +44,15 @@ export async function inviteToProject(
 
 	const account = await db.user.findFirst({
 		where: { email: { equals: email, mode: "insensitive" } },
-		select: { id: true },
+		select: { id: true, locale: true },
 	});
 	// The invitation is saved either way; `emailSent` tells the caller whether
 	// the message left, so a mail failure is never silent.
 	try {
 		await sendProjectInvitationEmail({
 			to: email,
+			// Their saved language; a new address gets the inviter's.
+			locale: resolveMailLocale(account?.locale, await getRequestLocale()),
 			studio: project.photographer.studio?.name ?? project.photographer.name,
 			project: project.title,
 			eventDate: project.eventDate,

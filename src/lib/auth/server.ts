@@ -15,6 +15,11 @@ export const auth = betterAuth({
 		provider: "postgresql",
 	}),
 	databaseHooks: clientIntentHooks,
+	user: {
+		additionalFields: {
+			locale: { type: "string", required: false, input: false },
+		},
+	},
 	emailAndPassword: {
 		enabled: true,
 	},

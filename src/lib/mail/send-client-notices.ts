@@ -1,6 +1,6 @@
+import type { Locale } from "@/i18n/config";
 import { env } from "@/lib/env";
-import en from "../../../messages/en.json";
-import fr from "../../../messages/fr.json";
+import { mailCopy } from "./mail-copy";
 import { sendMail } from "./send-mail";
 import { noticeEmail } from "./templates/notice-email";
 
@@ -15,40 +15,49 @@ function shortDate(date: Date) {
 /** To the invited client; new addresses are sent to the client sign-up. */
 export async function sendProjectInvitationEmail(props: {
 	to: string;
+	locale: Locale;
 	studio: string;
 	project: string;
 	eventDate: Date | null;
 	hasAccount: boolean;
 }) {
-	const { to, studio, project, eventDate, hasAccount } = props;
-	const copy = { en: en.Mail.projectInvitation, fr: fr.Mail.projectInvitation };
+	const { to, locale, studio, project, eventDate, hasAccount } = props;
 	const label = eventDate ? `${project} (${shortDate(eventDate)})` : project;
 	const url = appUrl(
 		hasAccount ? "/portal" : `/client/register?email=${encodeURIComponent(to)}`,
 	);
 	await sendMail({
 		to,
-		...noticeEmail(copy, { studio, project: label }, url),
+		...noticeEmail(
+			mailCopy(locale).projectInvitation,
+			locale,
+			{ studio, project: label },
+			url,
+		),
 	});
 }
 
 /** To the client, when a gallery becomes visible to them. */
 export async function sendGallerySharedEmail(props: {
 	to: string;
+	locale: Locale;
 	studio: string;
 	gallery: string;
 	project: string;
 	galleryId: string;
 }) {
-	const { to, galleryId, ...vars } = props;
-	const copy = { en: en.Mail.galleryShared, fr: fr.Mail.galleryShared };
+	const { to, locale, galleryId, ...vars } = props;
 	const url = appUrl(`/portal/galleries/${galleryId}`);
-	await sendMail({ to, ...noticeEmail(copy, vars, url) });
+	await sendMail({
+		to,
+		...noticeEmail(mailCopy(locale).galleryShared, locale, vars, url),
+	});
 }
 
 /** To the photographer, when the client submits their picks. */
 export async function sendSelectionSubmittedEmail(props: {
 	to: string;
+	locale: Locale;
 	client: string;
 	gallery: string;
 	project: string;
@@ -56,16 +65,17 @@ export async function sendSelectionSubmittedEmail(props: {
 	projectId: string;
 	galleryId: string;
 }) {
-	const { to, projectId, galleryId, count, ...vars } = props;
-	const copy = {
-		en: en.Mail.selectionSubmitted,
-		fr: fr.Mail.selectionSubmitted,
-	};
+	const { to, locale, projectId, galleryId, count, ...vars } = props;
 	const url = appUrl(
 		`/dashboard/projects/${projectId}/galleries/${galleryId}?filter=selected`,
 	);
 	await sendMail({
 		to,
-		...noticeEmail(copy, { ...vars, count: String(count) }, url),
+		...noticeEmail(
+			mailCopy(locale).selectionSubmitted,
+			locale,
+			{ ...vars, count: String(count) },
+			url,
+		),
 	});
 }

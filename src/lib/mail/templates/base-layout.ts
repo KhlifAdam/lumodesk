@@ -1,3 +1,6 @@
+import type { Locale } from "@/i18n/config";
+import { mailCopy } from "../mail-copy";
+
 export const mailColors = {
 	page: "#0b0d17",
 	card: "#14172a",
@@ -11,15 +14,17 @@ export const mailColors = {
 const FONT = "'Segoe UI',Helvetica,Arial,sans-serif";
 
 type BaseLayoutProps = {
+	locale: Locale;
 	preheader: string;
 	content: string;
 };
 
 /** Table-based, inline-styled layout so it renders in every email client. */
-export function baseLayout({ preheader, content }: BaseLayoutProps) {
+export function baseLayout({ locale, preheader, content }: BaseLayoutProps) {
 	const c = mailColors;
+	const footer = mailCopy(locale).footer;
 	return `<!doctype html>
-<html lang="en">
+<html lang="${locale}">
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -39,8 +44,8 @@ export function baseLayout({ preheader, content }: BaseLayoutProps) {
 					${content}
 				</td></tr>
 				<tr><td align="center" style="padding:24px 16px 0;font-size:12px;line-height:18px;color:${c.muted};">
-					You received this email because a request was made for your Lumodesk account.<br />
-					&copy; ${new Date().getFullYear()} Lumodesk. All rights reserved.
+					${footer.reason}<br />
+					&copy; ${new Date().getFullYear()} Lumodesk. ${footer.rights}
 				</td></tr>
 			</table>
 		</td></tr>

@@ -16,6 +16,8 @@ model User {
   email         String    @unique
   emailVerified Boolean   @map("email_verified")
   image         String?
+  /// Preferred language (`en` | `fr`); picks the language of emails sent to them.
+  locale        String?
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
   sessions      Session[]
