@@ -26,6 +26,7 @@ import {
 import { AudienceBadge } from "./audience-badge";
 import { AudienceSwitch } from "./audience-switch";
 import { AuthHeading } from "./auth-heading";
+import { ClientBackLink } from "./client-back-link";
 import { PasswordInput } from "./password-input";
 import {
 	clientRegisterSchema,
@@ -81,7 +82,7 @@ export function RegisterForm({
 
 	return (
 		<div className="flex flex-col space-y-6">
-			<AudienceSwitch audience={audience} screen="register" />
+			{isClient && <ClientBackLink />}
 			<AuthHeading
 				title={t(isClient ? "client.register.title" : "register.title")}
 				description={t(
@@ -195,6 +196,7 @@ export function RegisterForm({
 					{t("register.signIn")}
 				</Link>
 			</p>
+			<AudienceSwitch audience={audience} screen="register" />
 		</div>
 	);
 }

@@ -87,6 +87,7 @@ export const fetchSiteCore = unstable_cache(
 
 		return {
 			studio: {
+				slug: studio.slug,
 				name: studio.name,
 				tagline: studio.tagline ?? "",
 				bio: studio.bio ?? "",
@@ -112,6 +113,7 @@ export const fetchSiteCore = unstable_cache(
 			defaultLocale: studio.defaultLocale,
 		};
 	},
-	["public-site-core"],
+	// Bump when the cached shape changes, so old entries are never reused.
+	["public-site-core-v2"],
 	{ tags: [PUBLIC_SITE_TAG] },
 );

@@ -107,6 +107,7 @@ export async function buildDemoSite(
 	const name = t("studioName");
 	return {
 		studio: {
+			slug: "",
 			name,
 			tagline: t("tagline"),
 			bio: t("bio"),

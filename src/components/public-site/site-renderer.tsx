@@ -30,6 +30,7 @@ export async function SiteRenderer({ site }: { site: SiteData }) {
 				mode={design.themeMode}
 				initialTheme={initialSiteTheme(design.themeMode)}
 				storageKey={`lumodesk-site-theme:${studio.name}`}
+				studioSlug={studio.slug}
 				lang={i18n.locale}
 				style={siteStyle(design, palette)}
 				className={cn(

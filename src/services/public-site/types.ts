@@ -13,6 +13,8 @@ export interface SiteMedia {
 }
 
 export interface SiteStudio {
+	/** Public address `/s/{slug}`; empty for demo data, which has no real site. */
+	slug: string;
 	name: string;
 	tagline: string;
 	bio: string;

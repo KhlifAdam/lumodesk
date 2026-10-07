@@ -601,7 +601,11 @@
 			"submit": "Sign in",
 			"success": "Signed in successfully.",
 			"noAccount": "Don't have an account?",
-			"signUp": "Sign up"
+			"signUp": "Sign up",
+			"wrongAudience": {
+				"photographer": "This is a client account. Please use the client sign-in.",
+				"client": "This account can't sign in to the client space."
+			}
 		},
 		"register": {
 			"title": "Start your studio",
@@ -659,9 +663,20 @@
 		},
 		"audience": {
 			"photographer": "Photographer",
-			"client": "Client"
+			"client": "Client",
+			"switch": {
+				"photographer": {
+					"prompt": "Are you a photographer?",
+					"cta": "Go to the photographer space"
+				},
+				"client": {
+					"prompt": "Are you a client?",
+					"cta": "Go to the client space"
+				}
+			}
 		},
 		"client": {
+			"back": "Back to welcome",
 			"login": {
 				"title": "Welcome back",
 				"description": "Sign in to follow your projects and galleries with every photographer"
@@ -900,6 +915,22 @@
 			"videos": "Videos",
 			"copyright": "© {year} Lumodesk, Inc. Built for the ones who see differently."
 		}
+	},
+	"ClientWelcome": {
+		"metaTitle": "Client space",
+		"title": "Welcome to {studio}'s client space",
+		"genericTitle": "Welcome to your client space",
+		"subtitle": "Follow your project, open your private galleries and choose your favourite photos.",
+		"points": [
+			"Follow your project, step by step",
+			"View your private galleries",
+			"Pick your favourite photos"
+		],
+		"signIn": "Sign in",
+		"createAccount": "Create an account",
+		"hint": "Invited by your photographer? Create your account with the email address that received the invitation.",
+		"backToSite": "Back to {studio}'s site",
+		"backHome": "Back to home"
 	},
 	"Mail": {
 		"footer": {

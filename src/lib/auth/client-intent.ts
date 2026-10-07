@@ -9,6 +9,8 @@ export type AuthAudience = "photographer" | "client";
 export const AUTH_PATHS = {
 	photographer: { login: "/login", register: "/register", home: "/dashboard" },
 	client: {
+		/** Where clients arrive from a studio's site, before signing in. */
+		welcome: "/client",
 		login: "/client/login",
 		register: "/client/register",
 		home: "/portal",

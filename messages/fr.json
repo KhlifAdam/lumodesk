@@ -601,7 +601,11 @@
 			"submit": "Se connecter",
 			"success": "Connexion réussie.",
 			"noAccount": "Vous n'avez pas de compte ?",
-			"signUp": "S'inscrire"
+			"signUp": "S'inscrire",
+			"wrongAudience": {
+				"photographer": "Ceci est un compte client. Veuillez utiliser la connexion client.",
+				"client": "Ce compte ne peut pas se connecter à l'espace client."
+			}
 		},
 		"register": {
 			"title": "Lancez votre studio",
@@ -659,9 +663,20 @@
 		},
 		"audience": {
 			"photographer": "Photographe",
-			"client": "Client"
+			"client": "Client",
+			"switch": {
+				"photographer": {
+					"prompt": "Vous êtes photographe ?",
+					"cta": "Accéder à l'espace photographe"
+				},
+				"client": {
+					"prompt": "Vous êtes client ?",
+					"cta": "Accéder à l'espace client"
+				}
+			}
 		},
 		"client": {
+			"back": "Retour à l'accueil client",
 			"login": {
 				"title": "Bon retour",
 				"description": "Connectez-vous pour suivre vos projets et vos galeries avec tous vos photographes"
@@ -900,6 +915,22 @@
 			"videos": "Vidéos",
 			"copyright": "© {year} Lumodesk, Inc. Conçu pour ceux qui voient autrement."
 		}
+	},
+	"ClientWelcome": {
+		"metaTitle": "Espace client",
+		"title": "Bienvenue dans l'espace client de {studio}",
+		"genericTitle": "Bienvenue dans votre espace client",
+		"subtitle": "Suivez votre projet, ouvrez vos galeries privées et choisissez vos photos préférées.",
+		"points": [
+			"Suivez votre projet, étape par étape",
+			"Consultez vos galeries privées",
+			"Choisissez vos photos préférées"
+		],
+		"signIn": "Se connecter",
+		"createAccount": "Créer un compte",
+		"hint": "Invité par votre photographe ? Créez votre compte avec l'adresse e-mail qui a reçu l'invitation.",
+		"backToSite": "Retour au site de {studio}",
+		"backHome": "Retour à l'accueil"
 	},
 	"Mail": {
 		"footer": {

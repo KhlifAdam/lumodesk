@@ -19,15 +19,25 @@ import {
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth/client";
 import { AUTH_PATHS, type AuthAudience } from "@/lib/auth/client-intent";
+import { ROLES } from "@/lib/auth/roles";
 import { AudienceBadge } from "./audience-badge";
 import { AudienceSwitch } from "./audience-switch";
 import { AuthHeading } from "./auth-heading";
+import { ClientBackLink } from "./client-back-link";
 import { PasswordInput } from "./password-input";
 import { type LoginValues, loginSchema } from "./schemas";
 import { SocialLogin } from "./social-login";
 import { useAuthError } from "./use-auth-error";
 
-/** Same account either way; the audience decides where the user lands. */
+/**
+ * Roles allowed to sign in on each side's page. A photographer can also be a
+ * client of another studio, so the client page takes both.
+ */
+const AUDIENCE_ROLES: Record<AuthAudience, string[]> = {
+	photographer: [ROLES.photographer, ROLES.admin],
+	client: [ROLES.client, ROLES.photographer],
+};
+
 export function LoginForm({ audience }: { audience: AuthAudience }) {
 	const t = useTranslations("Auth");
 	const isClient = audience === "client";
@@ -42,8 +52,14 @@ export function LoginForm({ audience }: { audience: AuthAudience }) {
 
 	async function onSubmit(values: LoginValues) {
 		try {
-			const { error } = await authClient.signIn.email(values);
+			const { data, error } = await authClient.signIn.email(values);
 			if (error) return void toast.error(authError.message(error));
+			// Each side only takes its own accounts: sign back out and point the
+			// person to the right page.
+			if (!AUDIENCE_ROLES[audience].includes(data?.user.role ?? "")) {
+				await authClient.signOut();
+				return void toast.error(t(`login.wrongAudience.${audience}`));
+			}
 			toast.success(t("login.success"));
 			window.location.assign(paths.home);
 		} catch {
@@ -53,7 +69,7 @@ export function LoginForm({ audience }: { audience: AuthAudience }) {
 
 	return (
 		<div className="flex flex-col space-y-6">
-			<AudienceSwitch audience={audience} screen="login" />
+			{isClient && <ClientBackLink />}
 			<AuthHeading
 				title={t(isClient ? "client.login.title" : "login.title")}
 				description={t(
@@ -136,6 +152,7 @@ export function LoginForm({ audience }: { audience: AuthAudience }) {
 					{t("login.signUp")}
 				</Link>
 			</p>
+			<AudienceSwitch audience={audience} screen="login" />
 		</div>
 	);
 }

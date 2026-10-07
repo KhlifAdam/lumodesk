@@ -19,14 +19,25 @@ interface SiteThemeContextValue {
 	/** Effective scheme right now (system resolved). */
 	isDark: boolean;
 	toggle: () => void;
+	/** Address of the studio this site belongs to ("" for demo data). */
+	studioSlug: string;
 }
 
 const SiteThemeContext = createContext<SiteThemeContextValue | null>(null);
 
-export function useSiteTheme() {
+function useSiteContext() {
 	const context = useContext(SiteThemeContext);
-	if (!context) throw new Error("useSiteTheme must be used inside SiteShell");
+	if (!context) throw new Error("Site hooks must be used inside SiteShell");
 	return context;
+}
+
+export function useSiteTheme() {
+	return useSiteContext();
+}
+
+/** The studio's slug, for links that must carry the studio (e.g. client area). */
+export function useStudioSlug() {
+	return useSiteContext().studioSlug;
 }
 
 function useSystemDark() {
@@ -46,6 +57,7 @@ interface SiteShellProps {
 	initialTheme: SiteTheme;
 	/** Remembers the visitor's choice per site. */
 	storageKey: string;
+	studioSlug: string;
 	lang: string;
 	style: CSSProperties;
 	className: string;
@@ -57,6 +69,7 @@ export function SiteShell({
 	mode,
 	initialTheme,
 	storageKey,
+	studioSlug,
 	lang,
 	style,
 	className,
@@ -90,8 +103,8 @@ export function SiteShell({
 	}, [isDark, storageKey]);
 
 	const value = useMemo(
-		() => ({ canToggle, isDark, toggle }),
-		[canToggle, isDark, toggle],
+		() => ({ canToggle, isDark, toggle, studioSlug }),
+		[canToggle, isDark, toggle, studioSlug],
 	);
 
 	return (

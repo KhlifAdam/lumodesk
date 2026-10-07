@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { cookies, headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { SiteRenderer } from "@/components/public-site/site-renderer";
-import { LOCALE_COOKIE } from "@/i18n/config";
+import { getLocaleCandidates } from "@/lib/public-site/locale-candidates";
 import { getPublicSite } from "@/services/public-site/queries";
 
 type Props = {
@@ -11,14 +10,8 @@ type Props = {
 	searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-/** Visitor's language preferences, most explicit first. */
 async function localeCandidates(searchParams: Props["searchParams"]) {
-	const { lang } = await searchParams;
-	const cookie = (await cookies()).get(LOCALE_COOKIE)?.value;
-	const browser = ((await headers()).get("accept-language") ?? "")
-		.split(",")
-		.map((part) => part.split(";")[0].trim().slice(0, 2).toLowerCase());
-	return [typeof lang === "string" ? lang : undefined, cookie, ...browser];
+	return getLocaleCandidates((await searchParams).lang);
 }
 
 export async function generateMetadata({
