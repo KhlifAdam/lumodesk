@@ -131,7 +131,8 @@
 		"inviteEmailFailed": "L'invitation est enregistrée, mais l'e-mail n'a pas pu être envoyé. Essayez de la renvoyer.",
 		"alreadyAccepted": "Le client a déjà accepté ce projet.",
 		"emailNotVerified": "Vérifiez d'abord votre e-mail.",
-		"invitationNotFound": "Cette invitation n'est plus disponible."
+		"invitationNotFound": "Cette invitation n'est plus disponible.",
+		"unpaidProject": "Marquez le projet comme payé avant de le livrer."
 	},
 	"Validation": {
 		"required": "Ce champ est obligatoire.",
@@ -1154,7 +1155,10 @@
 			"noGalleriesHint": "Créez une galerie, importez des photos puis partagez-la avec votre client.",
 			"deleteTitle": "Supprimer ce projet ?",
 			"deleteDescription": "Ses galeries, photos et commentaires seront définitivement supprimés.",
-			"deleted": "Projet supprimé."
+			"deleted": "Projet supprimé.",
+			"unpaidLocked": "Marquez le projet comme payé pour débloquer la livraison.",
+			"unpaidHint": "La livraison est verrouillée tant que le projet n'est pas payé. Les fichiers restent masqués au client jusqu'à la livraison.",
+			"filesHidden": "Les fichiers sont masqués au client jusqu'à ce que le projet soit livré et payé."
 		},
 		"invite": {
 			"prompt": "Inviter le client :",
@@ -1170,6 +1174,14 @@
 				"PENDING": "Invitation en attente",
 				"DECLINED": "Refusée"
 			}
+		},
+		"payment": {
+			"paid": "Payé",
+			"unpaid": "Impayé",
+			"markPaid": "Marquer comme payé",
+			"markUnpaid": "Marquer comme impayé",
+			"markedPaid": "Marqué comme payé.",
+			"markedUnpaid": "Marqué comme impayé."
 		}
 	},
 	"Calendar": {

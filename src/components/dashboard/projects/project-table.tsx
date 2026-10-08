@@ -4,6 +4,7 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { StageBadge } from "@/components/client-work/stage-badge";
 import type { ProjectSummary } from "@/services/projects/types";
 import { InviteStatusBadge } from "./invite-status-badge";
+import { PaymentBadge } from "./payment-badge";
 
 /** Project rows; `hideClient` when the list is already one client's. */
 export async function ProjectTable({
@@ -51,6 +52,7 @@ export async function ProjectTable({
 								<Images className="h-3 w-3" />
 								{t("galleries", { count: project.galleryCount })}
 							</span>
+							<PaymentBadge paid={project.paid} />
 							<StageBadge stage={project.stage} />
 						</div>
 					</Link>

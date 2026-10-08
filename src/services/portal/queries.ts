@@ -4,6 +4,7 @@ import type { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
 import { studioBrandSelect, toStudioBrand } from "@/services/clients/branding";
 import { listGallerySummaries } from "@/services/galleries/summaries";
+import { isVisibleToClient } from "@/services/projects/visibility";
 import { pageMeta, pageSkip } from "@/services/shared/pagination";
 import type {
 	PortalProject,
@@ -32,7 +33,8 @@ function toPortalProject(row: PortalRow): PortalProject {
 		location: row.location ?? "",
 		studio: studio ? toStudioBrand(studio) : null,
 		photographerName: name,
-		sharedGalleryCount: row._count.galleries,
+		// Files stay hidden until the project is delivered and paid.
+		sharedGalleryCount: isVisibleToClient(row) ? row._count.galleries : 0,
 	};
 }
 
@@ -67,10 +69,12 @@ export async function getPortalProject(
 	return {
 		...toPortalProject(row),
 		description: row.description ?? "",
-		galleries: await listGallerySummaries({
-			projectId: id,
-			sharedAt: { not: null },
-		}),
+		galleries: isVisibleToClient(row)
+			? await listGallerySummaries({
+					projectId: id,
+					sharedAt: { not: null },
+				})
+			: [],
 	};
 }
 

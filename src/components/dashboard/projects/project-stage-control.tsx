@@ -8,14 +8,17 @@ import { StageTimeline } from "@/components/client-work/stage-timeline";
 import { useErrorMessage } from "@/hooks/use-error-message";
 import { updateProjectStage } from "@/services/projects/actions";
 import type { ProjectStage } from "@/services/projects/stages";
+import { PAYMENT_GATED_STAGE } from "@/services/projects/visibility";
 
 /** Clickable workflow; the new stage shows at once and rolls back on error. */
 export function ProjectStageControl({
 	projectId,
 	stage,
+	paid,
 }: {
 	projectId: string;
 	stage: ProjectStage;
+	paid: boolean;
 }) {
 	const t = useTranslations("Projects.detail");
 	const router = useRouter();
@@ -41,7 +44,15 @@ export function ProjectStageControl({
 				stage={optimistic}
 				onSelect={select}
 				disabled={isPending}
+				locked={
+					paid
+						? undefined
+						: { stage: PAYMENT_GATED_STAGE, reason: t("unpaidLocked") }
+				}
 			/>
+			{!paid && (
+				<p className="mt-2 text-xs text-destructive">{t("unpaidHint")}</p>
+			)}
 		</section>
 	);
 }

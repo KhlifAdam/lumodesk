@@ -14,6 +14,8 @@ interface StageTimelineProps {
 	/** Makes each step clickable (photographer only). */
 	onSelect?: (stage: ProjectStage) => void;
 	disabled?: boolean;
+	/** Steps that can't be picked, with the reason shown on hover. */
+	locked?: { stage: ProjectStage; reason: string };
 }
 
 /** The project workflow as a row of steps; past steps are checked. */
@@ -21,6 +23,7 @@ export function StageTimeline({
 	stage,
 	onSelect,
 	disabled,
+	locked,
 }: StageTimelineProps) {
 	const t = useTranslations("Projects.stages");
 	const current = stageIndex(stage);
@@ -63,7 +66,10 @@ export function StageTimeline({
 						{onSelect ? (
 							<button
 								type="button"
-								disabled={disabled || state === "current"}
+								disabled={
+									disabled || state === "current" || locked?.stage === step
+								}
+								title={locked?.stage === step ? locked.reason : undefined}
 								onClick={() => onSelect(step)}
 								className="flex w-full flex-col items-center gap-1 rounded-lg p-1.5 transition-colors hover:bg-muted disabled:cursor-default disabled:hover:bg-transparent"
 							>

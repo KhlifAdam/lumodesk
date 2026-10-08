@@ -19,6 +19,7 @@ function toSummary(row: ProjectRow): ProjectSummary {
 		id: row.id,
 		title: row.title,
 		stage: row.stage,
+		paid: row.paid,
 		eventDate: row.eventDate?.toISOString() ?? null,
 		location: row.location ?? "",
 		client: {

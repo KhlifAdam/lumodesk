@@ -1,4 +1,11 @@
-import { ArrowLeft, CalendarDays, Images, MapPin, Pencil } from "lucide-react";
+import {
+	ArrowLeft,
+	CalendarDays,
+	EyeOff,
+	Images,
+	MapPin,
+	Pencil,
+} from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
@@ -7,6 +14,7 @@ import { NewGalleryDialog } from "@/components/dashboard/projects/new-gallery-di
 import { ProjectClientCard } from "@/components/dashboard/projects/project-client-card";
 import { ProjectDeleteButton } from "@/components/dashboard/projects/project-delete-button";
 import { ProjectFormDialog } from "@/components/dashboard/projects/project-form-dialog";
+import { ProjectPaymentControl } from "@/components/dashboard/projects/project-payment-control";
 import { ProjectStageControl } from "@/components/dashboard/projects/project-stage-control";
 import { EmptyState } from "@/components/dashboard/shared/empty-state";
 import { PageHeader } from "@/components/dashboard/shared/page-header";
@@ -14,6 +22,7 @@ import { PageShell } from "@/components/dashboard/shared/page-shell";
 import { Button } from "@/components/ui/button";
 import { requirePhotographer } from "@/lib/auth/require-photographer";
 import { getProject } from "@/services/projects/queries";
+import { isVisibleToClient } from "@/services/projects/visibility";
 
 export default async function ProjectPage({
 	params,
@@ -66,6 +75,7 @@ export default async function ProjectPage({
 				}
 			/>
 			<ProjectClientCard projectId={project.id} client={project.client} />
+			<ProjectPaymentControl projectId={project.id} paid={project.paid} />
 			<div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
 				{project.eventDate && (
 					<span className="flex items-center gap-1">
@@ -88,12 +98,22 @@ export default async function ProjectPage({
 					{project.description}
 				</p>
 			)}
-			<ProjectStageControl projectId={project.id} stage={project.stage} />
+			<ProjectStageControl
+				projectId={project.id}
+				stage={project.stage}
+				paid={project.paid}
+			/>
 			<section className="flex flex-col gap-3">
 				<div className="flex items-center justify-between">
 					<h2 className="text-sm font-semibold">{t("galleries")}</h2>
 					<NewGalleryDialog projectId={project.id} />
 				</div>
+				{!isVisibleToClient(project) && (
+					<p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+						<EyeOff className="h-3.5 w-3.5" />
+						{t("filesHidden")}
+					</p>
+				)}
 				{project.galleries.length === 0 ? (
 					<EmptyState
 						icon={Images}

@@ -131,7 +131,8 @@
 		"inviteEmailFailed": "The invitation is saved, but the email couldn't be sent. Try resending it.",
 		"alreadyAccepted": "The client already accepted this project.",
 		"emailNotVerified": "Verify your email first.",
-		"invitationNotFound": "This invitation is no longer available."
+		"invitationNotFound": "This invitation is no longer available.",
+		"unpaidProject": "Mark the project as paid before delivering it."
 	},
 	"Validation": {
 		"required": "This field is required.",
@@ -1154,7 +1155,10 @@
 			"noGalleriesHint": "Create a gallery, upload photos, then share it with your client.",
 			"deleteTitle": "Delete this project?",
 			"deleteDescription": "Its galleries, photos and comments are deleted for good.",
-			"deleted": "Project deleted."
+			"deleted": "Project deleted.",
+			"unpaidLocked": "Mark the project as paid to unlock delivery.",
+			"unpaidHint": "Delivery is locked until the project is paid. Files stay hidden from the client until it is delivered.",
+			"filesHidden": "Files are hidden from the client until the project is delivered and paid."
 		},
 		"invite": {
 			"prompt": "Invite the client:",
@@ -1170,6 +1174,14 @@
 				"PENDING": "Invitation pending",
 				"DECLINED": "Declined"
 			}
+		},
+		"payment": {
+			"paid": "Paid",
+			"unpaid": "Unpaid",
+			"markPaid": "Mark as paid",
+			"markUnpaid": "Mark as unpaid",
+			"markedPaid": "Marked as paid.",
+			"markedUnpaid": "Marked as unpaid."
 		}
 	},
 	"Calendar": {

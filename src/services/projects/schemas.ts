@@ -34,6 +34,8 @@ export const updateProjectSchema = projectSchema.extend({ id: idSchema });
 
 export const updateStageSchema = z.object({ id: idSchema, stage: stageSchema });
 
+export const updatePaidSchema = z.object({ id: idSchema, paid: z.boolean() });
+
 export const inviteClientSchema = z.object({
 	projectId: idSchema,
 	email: z.email("invalidEmail"),

@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { resolveMailLocale } from "@/lib/mail/mail-copy";
 import { sendGallerySharedEmail } from "@/lib/mail/send-client-notices";
 import { revalidateClientWork } from "@/services/projects/revalidate";
+import { isVisibleToClient } from "@/services/projects/visibility";
 import { lockGallery, lockPhotographer } from "@/services/shared/lock-rows";
 import { emptyToNull, idSchema } from "@/services/shared/schemas";
 import { deleteGalleryFiles } from "./cleanup";
@@ -88,6 +89,8 @@ export async function shareGallery(input: unknown): Promise<ActionResult> {
 			project: {
 				select: {
 					title: true,
+					stage: true,
+					paid: true,
 					client: { select: { email: true, locale: true } },
 				},
 			},
@@ -103,9 +106,15 @@ export async function shareGallery(input: unknown): Promise<ActionResult> {
 		data: { sharedAt: shared ? (gallery.sharedAt ?? new Date()) : null },
 	});
 
-	// Before the invitation is accepted there is nobody to notify yet.
+	// Nobody to notify before the invitation is accepted, and the link is dead
+	// until the project is delivered and paid.
 	const client = gallery.project.client;
-	if (shared && !gallery.sharedAt && client) {
+	if (
+		shared &&
+		!gallery.sharedAt &&
+		client &&
+		isVisibleToClient(gallery.project)
+	) {
 		sendGallerySharedEmail({
 			to: client.email,
 			locale: resolveMailLocale(client.locale),

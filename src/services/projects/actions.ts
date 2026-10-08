@@ -10,9 +10,11 @@ import { revalidateClientWork } from "./revalidate";
 import {
 	createProjectSchema,
 	type ProjectValues,
+	updatePaidSchema,
 	updateProjectSchema,
 	updateStageSchema,
 } from "./schemas";
+import { PAYMENT_GATED_STAGE } from "./visibility";
 
 function toData(values: ProjectValues) {
 	return {
@@ -75,9 +77,33 @@ export async function updateProjectStage(
 	if (!parsed.success) return failFromZod(parsed.error);
 
 	const { id, stage } = parsed.data;
+	// The paid check is part of the write, so it can't race with a payment edit.
+	const { count } = await db.project.updateMany({
+		where: {
+			id,
+			photographerId,
+			...(stage === PAYMENT_GATED_STAGE && { paid: true }),
+		},
+		data: { stage },
+	});
+	if (count === 0) {
+		const exists = await db.project.count({ where: { id, photographerId } });
+		return fail(exists ? "unpaidProject" : "notFound");
+	}
+
+	revalidateClientWork();
+	return ok();
+}
+
+export async function updateProjectPaid(input: unknown): Promise<ActionResult> {
+	const { photographerId } = await requirePhotographer();
+	const parsed = updatePaidSchema.safeParse(input);
+	if (!parsed.success) return failFromZod(parsed.error);
+
+	const { id, paid } = parsed.data;
 	const { count } = await db.project.updateMany({
 		where: { id, photographerId },
-		data: { stage },
+		data: { paid },
 	});
 	if (count === 0) return fail("notFound");
 

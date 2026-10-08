@@ -2,6 +2,7 @@ import "server-only";
 
 import type { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
+import { CLIENT_VISIBLE_PROJECT } from "@/services/projects/visibility";
 import { pageMeta, pageSkip } from "@/services/shared/pagination";
 import { GALLERY_PAGE_SIZE } from "./constants";
 import { galleryItemSelect, toGalleryPhoto } from "./sign-items";
@@ -78,7 +79,7 @@ export function getClientGallery(
 		{
 			id: galleryId,
 			sharedAt: { not: null },
-			project: { clientId },
+			project: { clientId, ...CLIENT_VISIBLE_PROJECT },
 		},
 		params,
 	);

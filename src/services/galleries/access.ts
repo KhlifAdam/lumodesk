@@ -1,10 +1,12 @@
 import "server-only";
 
 import { db } from "@/lib/db";
+import { isVisibleToClient } from "@/services/projects/visibility";
 
 /**
  * Who may see a gallery: its photographer always; the project's client only
- * once it is shared. Returns null for everyone else.
+ * once it is shared and the project is delivered and paid. Returns null for
+ * everyone else.
  */
 export async function getGalleryAccess(galleryId: string, userId: string) {
 	const gallery = await db.gallery.findUnique({
@@ -12,13 +14,14 @@ export async function getGalleryAccess(galleryId: string, userId: string) {
 		select: {
 			photographerId: true,
 			sharedAt: true,
-			project: { select: { clientId: true } },
+			project: { select: { clientId: true, stage: true, paid: true } },
 		},
 	});
 	if (!gallery) return null;
 	if (gallery.photographerId === userId) return "owner" as const;
 	const isClient = gallery.project.clientId === userId;
-	return isClient && gallery.sharedAt ? ("client" as const) : null;
+	const visible = gallery.sharedAt && isVisibleToClient(gallery.project);
+	return isClient && visible ? ("client" as const) : null;
 }
 
 /** Same check, starting from a photo. */

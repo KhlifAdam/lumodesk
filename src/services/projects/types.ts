@@ -17,6 +17,7 @@ export interface ProjectSummary {
 	id: string;
 	title: string;
 	stage: ProjectStage;
+	paid: boolean;
 	eventDate: string | null;
 	location: string;
 	client: ProjectClient;

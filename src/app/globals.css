@@ -60,6 +60,7 @@
 	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
 	--color-sidebar-border: var(--sidebar-border);
 	--color-sidebar-ring: var(--sidebar-ring);
+	--color-success: var(--success);
 	--color-glow: var(--glow);
 	--color-soft: var(--soft);
 	--color-event-shoot: var(--event-shoot);
@@ -110,6 +111,7 @@
 	--sidebar-accent-foreground: oklch(0.208 0.042 265.755);
 	--sidebar-border: oklch(0.929 0.013 255.508);
 	--sidebar-ring: oklch(0.704 0.04 256.788);
+	--success: oklch(0.55 0.15 155);
 	--glow: oklch(0.76 0.14 82);
 	--soft: oklch(0.96 0.025 82);
 	--event-shoot: oklch(0.66 0.14 68);
@@ -153,6 +155,7 @@
 	--sidebar-accent-foreground: oklch(0.984 0.003 247.858);
 	--sidebar-border: oklch(1 0 0 / 10%);
 	--sidebar-ring: oklch(0.551 0.027 264.364);
+	--success: oklch(0.75 0.15 155);
 	--glow: oklch(0.76 0.14 82);
 	--soft: oklch(0.2 0.025 72);
 	--event-shoot: oklch(0.78 0.13 75);
