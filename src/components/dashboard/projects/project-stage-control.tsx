@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { StageTimeline } from "@/components/client-work/stage-timeline";
 import { useErrorMessage } from "@/hooks/use-error-message";
 import { updateProjectStage } from "@/services/projects/actions";
+import type { PaymentStatus } from "@/services/projects/options";
 import type { ProjectStage } from "@/services/projects/stages";
 import { PAYMENT_GATED_STAGE } from "@/services/projects/visibility";
 
@@ -14,11 +15,11 @@ import { PAYMENT_GATED_STAGE } from "@/services/projects/visibility";
 export function ProjectStageControl({
 	projectId,
 	stage,
-	paid,
+	payment,
 }: {
 	projectId: string;
 	stage: ProjectStage;
-	paid: boolean;
+	payment: PaymentStatus;
 }) {
 	const t = useTranslations("Projects.detail");
 	const router = useRouter();
@@ -45,12 +46,12 @@ export function ProjectStageControl({
 				onSelect={select}
 				disabled={isPending}
 				locked={
-					paid
+					payment === "PAID"
 						? undefined
 						: { stage: PAYMENT_GATED_STAGE, reason: t("unpaidLocked") }
 				}
 			/>
-			{!paid && (
+			{payment !== "PAID" && (
 				<p className="mt-2 text-xs text-destructive">{t("unpaidHint")}</p>
 			)}
 		</section>

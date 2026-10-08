@@ -11,6 +11,13 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -28,6 +35,8 @@ interface TextFieldProps<T extends FieldValues> extends BaseFieldProps<T> {
 	/** Renders a textarea with this many rows. */
 	rows?: number;
 	prefix?: ReactNode;
+	/** `step` of a number input, e.g. `0.001`. */
+	step?: string;
 }
 
 /** Compact text / textarea field bound to the surrounding react-hook-form. */
@@ -40,6 +49,7 @@ export function TextField<T extends FieldValues>({
 	type = "text",
 	rows,
 	prefix,
+	step,
 }: TextFieldProps<T>) {
 	const { control } = useFormContext<T>();
 	return (
@@ -66,6 +76,8 @@ export function TextField<T extends FieldValues>({
 								)}
 								<Input
 									type={type}
+									step={step}
+									min={type === "number" ? 0 : undefined}
 									placeholder={placeholder}
 									className={cn("h-8 text-sm", prefix && "pl-8")}
 									{...field}
@@ -120,6 +132,70 @@ export function SwitchField<T extends FieldValues>({
 					<FormControl>
 						<Switch checked={field.value} onCheckedChange={field.onChange} />
 					</FormControl>
+				</FormItem>
+			)}
+		/>
+	);
+}
+
+interface SelectFieldProps<T extends FieldValues> extends BaseFieldProps<T> {
+	options: { value: string; label: string }[];
+	/** Adds a choice that stores an empty string. */
+	emptyLabel?: string;
+}
+
+// Radix Select can't hold an empty value.
+const EMPTY = "__empty__";
+
+/** Compact select bound to a string field. */
+export function SelectField<T extends FieldValues>({
+	name,
+	label,
+	description,
+	className,
+	options,
+	emptyLabel,
+}: SelectFieldProps<T>) {
+	const { control } = useFormContext<T>();
+	return (
+		<FormField
+			control={control}
+			name={name}
+			render={({ field }) => (
+				<FormItem className={cn("space-y-1", className)}>
+					<FormLabel className="text-xs">{label}</FormLabel>
+					<Select
+						value={field.value || (emptyLabel ? EMPTY : undefined)}
+						onValueChange={(value) =>
+							field.onChange(value === EMPTY ? "" : value)
+						}
+					>
+						<FormControl>
+							<SelectTrigger className="h-8 w-full text-sm">
+								<SelectValue />
+							</SelectTrigger>
+						</FormControl>
+						<SelectContent>
+							{emptyLabel && (
+								<SelectItem value={EMPTY} className="text-sm">
+									{emptyLabel}
+								</SelectItem>
+							)}
+							{options.map((option) => (
+								<SelectItem
+									key={option.value}
+									value={option.value}
+									className="text-sm"
+								>
+									{option.label}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+					{description && (
+						<FormDescription className="text-xs">{description}</FormDescription>
+					)}
+					<FormMessage className="text-xs" />
 				</FormItem>
 			)}
 		/>

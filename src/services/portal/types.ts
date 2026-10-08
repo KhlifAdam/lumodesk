@@ -6,6 +6,7 @@ import type { PageMeta } from "@/services/shared/pagination";
 export interface PortalProject {
 	id: string;
 	title: string;
+	photographerId: string;
 	stage: ProjectStage;
 	eventDate: string | null;
 	location: string;

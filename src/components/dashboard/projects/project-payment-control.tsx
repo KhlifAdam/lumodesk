@@ -1,50 +1,70 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useTransition } from "react";
+import { useOptimistic, useTransition } from "react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { useErrorMessage } from "@/hooks/use-error-message";
-import { updateProjectPaid } from "@/services/projects/actions";
-import { PaymentBadge } from "./payment-badge";
+import { cn } from "@/lib/utils";
+import { updateProjectPayment } from "@/services/projects/actions";
+import {
+	PAYMENT_STATUSES,
+	type PaymentStatus,
+} from "@/services/projects/options";
+import { PAYMENT_TONE } from "./payment-badge";
 
-/** Payment status with a button to flip it. */
+/** Quick way to change the payment status; the badge colour follows it. */
 export function ProjectPaymentControl({
 	projectId,
-	paid,
+	status,
 }: {
 	projectId: string;
-	paid: boolean;
+	status: PaymentStatus;
 }) {
 	const t = useTranslations("Projects.payment");
 	const router = useRouter();
 	const errorMessage = useErrorMessage();
+	const [optimistic, setOptimistic] = useOptimistic(status);
 	const [isPending, startTransition] = useTransition();
 
-	const toggle = () =>
+	const change = (next: PaymentStatus) =>
 		startTransition(async () => {
-			const result = await updateProjectPaid({ id: projectId, paid: !paid });
+			setOptimistic(next);
+			const result = await updateProjectPayment({
+				id: projectId,
+				paymentStatus: next,
+			});
 			if (!result.ok) return void toast.error(errorMessage(result.error));
-			toast.success(paid ? t("markedUnpaid") : t("markedPaid"));
+			toast.success(t("updated"));
 			router.refresh();
 		});
 
 	return (
-		<div className="flex items-center gap-2">
-			<PaymentBadge paid={paid} />
-			<Button
-				type="button"
-				variant="outline"
-				size="sm"
-				className="h-7 gap-1.5 text-xs"
-				disabled={isPending}
-				onClick={toggle}
+		<Select
+			value={optimistic}
+			onValueChange={(value) => change(value as PaymentStatus)}
+			disabled={isPending}
+		>
+			<SelectTrigger
+				aria-label={t("change")}
+				className={cn("h-7 w-40 text-xs", PAYMENT_TONE[optimistic])}
 			>
-				{isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-				{paid ? t("markUnpaid") : t("markPaid")}
-			</Button>
-		</div>
+				<SelectValue />
+			</SelectTrigger>
+			<SelectContent>
+				{PAYMENT_STATUSES.map((value) => (
+					<SelectItem key={value} value={value} className="text-xs">
+						{t(`status.${value}`)}
+					</SelectItem>
+				))}
+			</SelectContent>
+		</Select>
 	);
 }

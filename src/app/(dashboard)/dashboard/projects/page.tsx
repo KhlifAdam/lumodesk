@@ -1,7 +1,7 @@
 import { FolderKanban, Plus } from "lucide-react";
+import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
-import { ProjectFormDialog } from "@/components/dashboard/projects/project-form-dialog";
 import { ProjectTable } from "@/components/dashboard/projects/project-table";
 import { StageFilter } from "@/components/dashboard/projects/stage-filter";
 import { EmptyState } from "@/components/dashboard/shared/empty-state";
@@ -34,14 +34,12 @@ export default async function ProjectsPage({
 				title={t("title")}
 				description={t("description")}
 				actions={
-					<ProjectFormDialog
-						trigger={
-							<Button size="sm" className="h-8 gap-1.5 text-xs">
-								<Plus className="h-3.5 w-3.5" />
-								{t("list.new")}
-							</Button>
-						}
-					/>
+					<Button asChild size="sm" className="h-8 gap-1.5 text-xs">
+						<Link href="/dashboard/projects/new">
+							<Plus className="h-3.5 w-3.5" />
+							{t("list.new")}
+						</Link>
+					</Button>
 				}
 			/>
 			<div className="flex flex-wrap items-center gap-2">

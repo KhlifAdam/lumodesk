@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import type { SiteData } from "@/services/public-site/types";
+import { BookingRequest } from "../../shared/booking-request";
 import { ContactDetails, SocialLinks } from "../../shared/contact-parts";
 import { Reveal } from "../../shared/reveal";
 
@@ -22,13 +23,13 @@ export async function EditorialContact({ site }: { site: SiteData }) {
 						{t("title")}
 					</h2>
 					<p className="site-muted max-w-md text-lg">{t("subtitle")}</p>
-					{studio.bookingEnabled && studio.email && (
-						<a
-							href={`mailto:${studio.email}`}
+					{studio.bookingEnabled && (
+						<BookingRequest
+							email={studio.email}
 							className="site-accent-bg mt-2 inline-flex h-12 items-center rounded-full px-8 text-sm font-semibold transition-opacity hover:opacity-90"
 						>
 							{t("cta")}
-						</a>
+						</BookingRequest>
 					)}
 				</Reveal>
 				<Reveal

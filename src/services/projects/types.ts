@@ -1,5 +1,11 @@
 import type { GallerySummary } from "@/services/galleries/types";
 import type { PageMeta } from "@/services/shared/pagination";
+import type {
+	LocationType,
+	MediaType,
+	PaymentStatus,
+	ServiceType,
+} from "./options";
 import type { ProjectStage } from "./stages";
 
 export type InviteStatus = "PENDING" | "ACCEPTED" | "DECLINED";
@@ -10,6 +16,8 @@ export interface ProjectClient {
 	id: string | null;
 	name: string | null;
 	email: string | null;
+	/** E.164; set for phone-only clients and phone invitations. */
+	phone: string | null;
 	status: InviteStatus | null;
 }
 
@@ -17,16 +25,34 @@ export interface ProjectSummary {
 	id: string;
 	title: string;
 	stage: ProjectStage;
-	paid: boolean;
+	serviceType: ServiceType;
+	mediaType: MediaType;
 	eventDate: string | null;
 	location: string;
 	client: ProjectClient;
+	price: number | null;
+	advance: number;
+	paymentStatus: PaymentStatus;
 	galleryCount: number;
 	updatedAt: string;
 }
 
 export interface ProjectDetail extends ProjectSummary {
 	description: string;
+	/** The confirmed booking this project came from. */
+	bookingId: string | null;
+	clientPhone: string;
+	contactName: string;
+	contactPhone: string;
+	clientNotes: string;
+	startTime: string;
+	endTime: string;
+	locationType: LocationType | "";
+	deliveryDeadline: string | null;
+	equipment: string;
+	financialNotes: string;
+	team: string;
+	internalNotes: string;
 	galleries: GallerySummary[];
 }
 

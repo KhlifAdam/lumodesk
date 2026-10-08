@@ -1,6 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import type { SiteData } from "@/services/public-site/types";
+import { BookingRequest } from "../../shared/booking-request";
 import { ContactDetails, SocialLinks } from "../../shared/contact-parts";
 import { Reveal } from "../../shared/reveal";
 
@@ -39,13 +40,13 @@ export async function BoldContact({ site }: { site: SiteData }) {
 						/>
 					</div>
 					<div className="flex flex-col items-start gap-6 md:items-end">
-						{studio.bookingEnabled && studio.email && (
-							<a
-								href={`mailto:${studio.email}`}
+						{studio.bookingEnabled && (
+							<BookingRequest
+								email={studio.email}
 								className="site-accent-bg inline-flex h-14 items-center px-10 text-sm font-bold uppercase tracking-[0.25em] transition-transform hover:-translate-y-0.5"
 							>
 								{t("cta")}
-							</a>
+							</BookingRequest>
 						)}
 						<SocialLinks
 							studio={studio}

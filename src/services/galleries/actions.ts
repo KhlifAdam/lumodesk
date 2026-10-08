@@ -5,6 +5,8 @@ import { requirePhotographer } from "@/lib/auth/require-photographer";
 import { db } from "@/lib/db";
 import { resolveMailLocale } from "@/lib/mail/mail-copy";
 import { sendGallerySharedEmail } from "@/lib/mail/send-client-notices";
+import { realEmail } from "@/lib/phone";
+import { sendGallerySharedSms } from "@/lib/sms/send-client-sms";
 import { revalidateClientWork } from "@/services/projects/revalidate";
 import { isVisibleToClient } from "@/services/projects/visibility";
 import { lockGallery, lockPhotographer } from "@/services/shared/lock-rows";
@@ -90,8 +92,10 @@ export async function shareGallery(input: unknown): Promise<ActionResult> {
 				select: {
 					title: true,
 					stage: true,
-					paid: true,
-					client: { select: { email: true, locale: true } },
+					paymentStatus: true,
+					client: {
+						select: { email: true, phoneNumber: true, locale: true },
+					},
 				},
 			},
 			photographer: {
@@ -115,15 +119,30 @@ export async function shareGallery(input: unknown): Promise<ActionResult> {
 		client &&
 		isVisibleToClient(gallery.project)
 	) {
-		sendGallerySharedEmail({
-			to: client.email,
-			locale: resolveMailLocale(client.locale),
-			studio: gallery.photographer.studio?.name ?? gallery.photographer.name,
-			gallery: gallery.title,
-			project: gallery.project.title,
-			galleryId: id,
-		}).catch((error) =>
-			console.error("Failed to send gallery shared email:", error),
+		const studio =
+			gallery.photographer.studio?.name ?? gallery.photographer.name;
+		const locale = resolveMailLocale(client.locale);
+		// Phone-only clients have no real email: text them instead.
+		const notice = realEmail(client.email)
+			? sendGallerySharedEmail({
+					to: client.email,
+					locale,
+					studio,
+					gallery: gallery.title,
+					project: gallery.project.title,
+					galleryId: id,
+				})
+			: client.phoneNumber
+				? sendGallerySharedSms({
+						to: client.phoneNumber,
+						locale,
+						studio,
+						gallery: gallery.title,
+						galleryId: id,
+					})
+				: Promise.resolve();
+		notice.catch((error) =>
+			console.error("Failed to notify the client of a shared gallery:", error),
 		);
 	}
 

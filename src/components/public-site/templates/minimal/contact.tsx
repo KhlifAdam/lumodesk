@@ -1,6 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import type { SiteData } from "@/services/public-site/types";
+import { BookingRequest } from "../../shared/booking-request";
 import { ContactDetails, SocialLinks } from "../../shared/contact-parts";
 import { Reveal } from "../../shared/reveal";
 
@@ -31,13 +32,13 @@ export async function MinimalContact({ site }: { site: SiteData }) {
 						<ArrowUpRight className="h-6 w-6 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
 					</a>
 				)}
-				{studio.bookingEnabled && studio.email && (
-					<a
-						href={`mailto:${studio.email}`}
+				{studio.bookingEnabled && (
+					<BookingRequest
+						email={studio.email}
 						className="site-accent-bg inline-flex h-12 items-center rounded-full px-8 text-sm font-semibold transition-transform hover:-translate-y-0.5"
 					>
 						{t("cta")}
-					</a>
+					</BookingRequest>
 				)}
 				<ContactDetails
 					studio={{ ...studio, email: "" }}

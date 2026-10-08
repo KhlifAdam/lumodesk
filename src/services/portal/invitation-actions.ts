@@ -3,12 +3,14 @@
 import { type ActionResult, fail, failFromZod, ok } from "@/lib/action-result";
 import { requireClient } from "@/lib/auth/require-client";
 import { db } from "@/lib/db";
+import { pendingFor, verifiedContact } from "@/services/portal/contacts";
 import { revalidateClientWork } from "@/services/projects/revalidate";
 import { idSchema } from "@/services/shared/schemas";
 
 /**
- * Answers an invitation sent to the signed-in address. A verified email is
- * required, so nobody can claim invitations by registering someone's address.
+ * Answers an invitation sent to a contact the signed-in client has verified:
+ * a verified email or a verified phone number. Verification is required, so
+ * nobody can claim invitations by registering someone else's address.
  */
 async function answerInvitation(
 	input: unknown,
@@ -17,14 +19,13 @@ async function answerInvitation(
 	const { session, clientId } = await requireClient();
 	const parsed = idSchema.safeParse(input);
 	if (!parsed.success) return failFromZod(parsed.error);
-	if (!session.user.emailVerified) return fail("emailNotVerified");
+
+	const { user } = session;
+	const contact = verifiedContact(user);
+	if (!contact.email && !contact.phone) return fail("emailNotVerified");
 
 	const { count } = await db.project.updateMany({
-		where: {
-			id: parsed.data,
-			inviteEmail: session.user.email.toLowerCase(),
-			inviteStatus: "PENDING",
-		},
+		where: { id: parsed.data, ...pendingFor(contact) },
 		data: accept
 			? { clientId, inviteStatus: "ACCEPTED" }
 			: { inviteStatus: "DECLINED" },

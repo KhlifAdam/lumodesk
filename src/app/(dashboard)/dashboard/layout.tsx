@@ -3,6 +3,7 @@ import { Sidebar } from "@/components/dashboard/sidebar/sidebar";
 import { TimeZoneSync } from "@/components/dashboard/time-zone-sync";
 import { requirePhotographer } from "@/lib/auth/require-photographer";
 import { getRequestTimeZone } from "@/lib/request-time-zone";
+import { countUnread } from "@/services/messages/queries";
 import { getStudioSummary } from "@/services/studio/queries";
 
 export default async function DashboardLayout({
@@ -11,15 +12,20 @@ export default async function DashboardLayout({
 	children: ReactNode;
 }) {
 	const { session, photographerId } = await requirePhotographer();
-	const [studio, timeZone] = await Promise.all([
+	const [studio, timeZone, unreadMessages] = await Promise.all([
 		getStudioSummary(photographerId),
 		getRequestTimeZone(),
+		countUnread({ id: photographerId, role: "photographer" }),
 	]);
 
 	return (
 		<div className="flex h-screen overflow-hidden bg-background">
 			<TimeZoneSync serverTimeZone={timeZone} />
-			<Sidebar studioName={studio?.name ?? "Lumodesk"} user={session.user} />
+			<Sidebar
+				studioName={studio?.name ?? "Lumodesk"}
+				unreadMessages={unreadMessages}
+				user={session.user}
+			/>
 			{/*
 			  `relative` is load-bearing: Radix form controls (checkbox, switch,
 			  select, radio) render a hidden `position: absolute` native input.

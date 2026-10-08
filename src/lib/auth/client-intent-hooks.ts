@@ -8,6 +8,7 @@ import {
 } from "@/lib/auth/client-intent";
 import { ROLES } from "@/lib/auth/roles";
 import { db } from "@/lib/db";
+import { isPhoneEmail } from "@/lib/phone";
 
 type HookContext = { getCookie?: (name: string) => string | null | undefined };
 
@@ -35,6 +36,8 @@ export const clientIntentHooks = {
 				const locale = context?.getCookie?.(LOCALE_COOKIE);
 				const isClient =
 					context?.getCookie?.(CLIENT_INTENT_COOKIE) === CLIENT_INTENT_VALUE ||
+					// Phone sign-in only exists on the client side.
+					isPhoneEmail(user.email) ||
 					(await hasPendingInvitation(user.email));
 				return {
 					data: {

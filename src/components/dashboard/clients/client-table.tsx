@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { initialsOf } from "@/lib/initials";
+import { formatPhone } from "@/lib/phone";
 import type { ClientSummary } from "@/services/clients/types";
 
 export async function ClientTable({ clients }: { clients: ClientSummary[] }) {
@@ -26,7 +27,7 @@ export async function ClientTable({ clients }: { clients: ClientSummary[] }) {
 							<div className="min-w-0">
 								<p className="truncate text-sm font-medium">{client.name}</p>
 								<p className="truncate text-xs text-muted-foreground">
-									{client.email}
+									{client.email || formatPhone(client.phone)}
 								</p>
 							</div>
 						</div>

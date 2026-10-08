@@ -1,6 +1,14 @@
 "use client";
 
-import { Loader2, Mail, RotateCcw, Send, UserRound, X } from "lucide-react";
+import {
+	Loader2,
+	Mail,
+	Phone,
+	RotateCcw,
+	Send,
+	UserRound,
+	X,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -10,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useErrorMessage } from "@/hooks/use-error-message";
 import type { ActionResult } from "@/lib/action-result";
+import { formatPhone } from "@/lib/phone";
 import { cancelInvite, inviteClient } from "@/services/projects/invite-actions";
 import type { ProjectClient } from "@/services/projects/types";
 import { InviteStatusBadge } from "./invite-status-badge";
@@ -27,7 +36,10 @@ export function ProjectClientCard({
 	const errorMessage = useErrorMessage();
 	const [isPending, startTransition] = useTransition();
 	const [editing, setEditing] = useState(false);
-	const [email, setEmail] = useState(client.email ?? "");
+	// What the invitation goes to: an email or a phone number.
+	const address =
+		client.email ?? (client.phone ? formatPhone(client.phone) : "");
+	const [contact, setContact] = useState(address);
 
 	const run = (action: () => Promise<ActionResult>, success: string) =>
 		startTransition(async () => {
@@ -38,7 +50,7 @@ export function ProjectClientCard({
 			router.refresh();
 		});
 	const invite = (to: string) =>
-		run(() => inviteClient({ projectId, email: to }), t("sent"));
+		run(() => inviteClient({ projectId, contact: to }), t("sent"));
 
 	if (client.status === "ACCEPTED" && client.id) {
 		return (
@@ -50,19 +62,20 @@ export function ProjectClientCard({
 				>
 					{client.name}
 					<span className="ml-2 text-xs font-normal text-muted-foreground">
-						{client.email}
+						{address}
 					</span>
 				</Link>
 			</Card>
 		);
 	}
 
-	if (client.status && client.email && !editing) {
+	if (client.status && address && !editing) {
+		const Icon = client.email ? Mail : Phone;
 		return (
 			<Card>
-				<Mail className="h-4 w-4 text-muted-foreground" />
+				<Icon className="h-4 w-4 text-muted-foreground" />
 				<p className="flex min-w-0 flex-1 items-center gap-2 truncate text-sm">
-					{client.email}
+					{address}
 					<InviteStatusBadge status={client.status} />
 				</p>
 				<Button
@@ -70,7 +83,7 @@ export function ProjectClientCard({
 					variant="ghost"
 					className="h-7 gap-1.5 text-xs"
 					disabled={isPending}
-					onClick={() => invite(client.email ?? "")}
+					onClick={() => invite(address)}
 				>
 					<RotateCcw className="h-3.5 w-3.5" />
 					{client.status === "DECLINED" ? t("inviteAgain") : t("resend")}
@@ -104,16 +117,16 @@ export function ProjectClientCard({
 				className="flex flex-1 flex-wrap items-center gap-2"
 				onSubmit={(event) => {
 					event.preventDefault();
-					if (email.trim()) invite(email);
+					if (contact.trim()) invite(contact);
 				}}
 			>
 				<p className="text-xs text-muted-foreground">{t("prompt")}</p>
 				<Input
-					type="email"
 					required
-					value={email}
-					onChange={(event) => setEmail(event.target.value)}
-					placeholder="client@example.com"
+					value={contact}
+					onChange={(event) => setContact(event.target.value)}
+					placeholder={t("placeholder")}
+					aria-label={t("placeholder")}
 					className="h-8 max-w-xs flex-1 text-sm"
 				/>
 				<Button

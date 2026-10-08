@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { toE164 } from "@/lib/phone";
 
 // Messages are `Validation.*` i18n keys; <FormMessage /> translates them.
 
@@ -39,6 +40,18 @@ export const clientRegisterSchema = withMatchingPasswords(
 	}),
 );
 
+export const phoneSchema = z.object({
+	phone: z
+		.string()
+		.trim()
+		.min(1, "required")
+		.refine((value) => toE164(value) !== null, "invalidPhone"),
+});
+
+export const codeSchema = z.object({
+	code: z.string().length(OTP_LENGTH, "otpLength"),
+});
+
 export const forgotPasswordSchema = z.object({ email });
 
 export const resetPasswordSchema = withMatchingPasswords(
@@ -49,6 +62,8 @@ export const resetPasswordSchema = withMatchingPasswords(
 	}),
 );
 
+export type PhoneValues = z.infer<typeof phoneSchema>;
+export type CodeValues = z.infer<typeof codeSchema>;
 export type LoginValues = z.infer<typeof loginSchema>;
 export type RegisterValues = z.infer<typeof registerSchema>;
 export type ForgotPasswordValues = z.infer<typeof forgotPasswordSchema>;

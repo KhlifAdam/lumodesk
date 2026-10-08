@@ -14,7 +14,7 @@ export async function getGalleryAccess(galleryId: string, userId: string) {
 		select: {
 			photographerId: true,
 			sharedAt: true,
-			project: { select: { clientId: true, stage: true, paid: true } },
+			project: { select: { clientId: true, stage: true, paymentStatus: true } },
 		},
 	});
 	if (!gallery) return null;

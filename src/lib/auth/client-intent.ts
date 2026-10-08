@@ -19,6 +19,8 @@ export const AUTH_PATHS = {
 		welcome: "/client",
 		login: "/client/login",
 		register: "/client/register",
+		/** Sign in or sign up with a phone number and a texted code. */
+		phone: "/client/phone",
 		home: "/portal",
 	},
 } as const satisfies Record<AuthAudience, Record<string, string>>;

@@ -2,6 +2,7 @@ import "server-only";
 
 import type { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
+import { realEmail } from "@/lib/phone";
 import { pageMeta, pageSkip } from "@/services/shared/pagination";
 import { CLIENT_PAGE_SIZE, type ListClientsParams } from "./schemas";
 import type { ClientDetail, ClientPage, ClientSummary } from "./types";
@@ -21,6 +22,7 @@ function clientSelect(photographerId: string) {
 		id: true,
 		name: true,
 		email: true,
+		phoneNumber: true,
 		image: true,
 		_count: {
 			select: { clientProjects: { where: { photographerId } } },
@@ -36,7 +38,8 @@ function toSummary(row: ClientRow): ClientSummary {
 	return {
 		id: row.id,
 		name: row.name,
-		email: row.email,
+		email: realEmail(row.email) ?? "",
+		phone: row.phoneNumber ?? "",
 		image: row.image,
 		projectCount: row._count.clientProjects,
 	};
@@ -51,6 +54,7 @@ export async function listClients(
 		where.OR = [
 			{ name: { contains: q, mode: "insensitive" } },
 			{ email: { contains: q, mode: "insensitive" } },
+			{ phoneNumber: { contains: q.replace(/\s/g, "") } },
 		];
 	}
 	const total = await db.user.count({ where });
@@ -80,4 +84,36 @@ export async function getClient(
 		}),
 	]);
 	return row ? { ...toSummary(row), notes: profile?.notes ?? "" } : null;
+}
+
+/** A few of the photographer's clients matching `q`, for pickers. */
+export async function searchClients(
+	photographerId: string,
+	q: string,
+	take: number,
+) {
+	const where: Prisma.UserWhereInput = sharesProjectWith(photographerId);
+	if (q)
+		where.OR = [
+			{ name: { contains: q, mode: "insensitive" } },
+			{ email: { contains: q, mode: "insensitive" } },
+			{ phoneNumber: { contains: q.replace(/\s/g, "") } },
+		];
+	const rows = await db.user.findMany({
+		where,
+		select: {
+			id: true,
+			name: true,
+			email: true,
+			phoneNumber: true,
+			image: true,
+		},
+		orderBy: [{ name: "asc" }, { id: "asc" }],
+		take,
+	});
+	return rows.map(({ email, phoneNumber, ...row }) => ({
+		...row,
+		email: realEmail(email) ?? "",
+		phone: phoneNumber ?? "",
+	}));
 }

@@ -1,3 +1,4 @@
+import { isPhoneEmail } from "@/lib/phone";
 import { getTransporter } from "./transporter";
 
 export type MailMessage = {
@@ -8,5 +9,7 @@ export type MailMessage = {
 };
 
 export async function sendMail(message: MailMessage) {
+	// Phone-only accounts have a placeholder address that can't receive mail.
+	if (isPhoneEmail(message.to)) return;
 	await getTransporter().sendMail({ from: process.env.SMTP_FROM, ...message });
 }

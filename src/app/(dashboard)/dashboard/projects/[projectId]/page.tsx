@@ -1,20 +1,12 @@
-import {
-	ArrowLeft,
-	CalendarDays,
-	EyeOff,
-	Images,
-	MapPin,
-	Pencil,
-} from "lucide-react";
+import { ArrowLeft, ArrowUpRight, EyeOff, Images, Pencil } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getFormatter, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { GalleryCard } from "@/components/client-work/gallery-card";
 import { NewGalleryDialog } from "@/components/dashboard/projects/new-gallery-dialog";
 import { ProjectClientCard } from "@/components/dashboard/projects/project-client-card";
 import { ProjectDeleteButton } from "@/components/dashboard/projects/project-delete-button";
-import { ProjectFormDialog } from "@/components/dashboard/projects/project-form-dialog";
-import { ProjectPaymentControl } from "@/components/dashboard/projects/project-payment-control";
+import { ProjectFacts } from "@/components/dashboard/projects/project-facts";
 import { ProjectStageControl } from "@/components/dashboard/projects/project-stage-control";
 import { EmptyState } from "@/components/dashboard/shared/empty-state";
 import { PageHeader } from "@/components/dashboard/shared/page-header";
@@ -30,19 +22,10 @@ export default async function ProjectPage({
 	params: Promise<{ projectId: string }>;
 }) {
 	const t = await getTranslations("Projects.detail");
-	const format = await getFormatter();
 	const { projectId } = await params;
 	const { photographerId } = await requirePhotographer();
 	const project = await getProject(photographerId, projectId);
 	if (!project) notFound();
-
-	const formValues = {
-		id: project.id,
-		title: project.title,
-		description: project.description,
-		location: project.location,
-		eventDate: project.eventDate?.slice(0, 10) ?? "",
-	};
 
 	return (
 		<PageShell>
@@ -58,50 +41,35 @@ export default async function ProjectPage({
 				actions={
 					<>
 						<ProjectDeleteButton projectId={project.id} />
-						<ProjectFormDialog
-							project={formValues}
-							trigger={
-								<Button
-									size="sm"
-									variant="outline"
-									className="h-7 gap-1.5 text-xs"
-								>
-									<Pencil className="h-3.5 w-3.5" />
-									{t("edit")}
-								</Button>
-							}
-						/>
+						<Button
+							asChild
+							size="sm"
+							variant="outline"
+							className="h-7 gap-1.5 text-xs"
+						>
+							<Link href={`/dashboard/projects/${project.id}/edit`}>
+								<Pencil className="h-3.5 w-3.5" />
+								{t("edit")}
+							</Link>
+						</Button>
 					</>
 				}
 			/>
-			<ProjectClientCard projectId={project.id} client={project.client} />
-			<ProjectPaymentControl projectId={project.id} paid={project.paid} />
-			<div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-				{project.eventDate && (
-					<span className="flex items-center gap-1">
-						<CalendarDays className="h-3 w-3" />
-						{format.dateTime(new Date(project.eventDate), {
-							dateStyle: "long",
-							timeZone: "UTC",
-						})}
-					</span>
-				)}
-				{project.location && (
-					<span className="flex items-center gap-1">
-						<MapPin className="h-3 w-3" />
-						{project.location}
-					</span>
-				)}
-			</div>
-			{project.description && (
-				<p className="max-w-3xl whitespace-pre-wrap text-sm text-muted-foreground">
-					{project.description}
-				</p>
+			{project.bookingId && (
+				<Link
+					href={`/dashboard/bookings/${project.bookingId}`}
+					className="flex w-fit items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
+				>
+					{t("fromBooking")}
+					<ArrowUpRight className="h-3 w-3" />
+				</Link>
 			)}
+			<ProjectClientCard projectId={project.id} client={project.client} />
+			<ProjectFacts project={project} />
 			<ProjectStageControl
 				projectId={project.id}
 				stage={project.stage}
-				paid={project.paid}
+				payment={project.paymentStatus}
 			/>
 			<section className="flex flex-col gap-3">
 				<div className="flex items-center justify-between">

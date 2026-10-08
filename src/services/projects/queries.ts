@@ -2,14 +2,18 @@ import "server-only";
 
 import type { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
+import { realEmail } from "@/lib/phone";
 import { listGallerySummaries } from "@/services/galleries/summaries";
 import { pageMeta, pageSkip } from "@/services/shared/pagination";
 import { type ListProjectsParams, PROJECT_PAGE_SIZE } from "./schemas";
 import type { ProjectDetail, ProjectPage, ProjectSummary } from "./types";
 
 const projectInclude = {
-	client: { select: { id: true, name: true, email: true } },
+	client: {
+		select: { id: true, name: true, email: true, phoneNumber: true },
+	},
 	_count: { select: { galleries: true } },
+	booking: { select: { id: true } },
 } satisfies Prisma.ProjectInclude;
 
 type ProjectRow = Prisma.ProjectGetPayload<{ include: typeof projectInclude }>;
@@ -19,15 +23,21 @@ function toSummary(row: ProjectRow): ProjectSummary {
 		id: row.id,
 		title: row.title,
 		stage: row.stage,
-		paid: row.paid,
+		serviceType: row.serviceType,
+		mediaType: row.mediaType,
 		eventDate: row.eventDate?.toISOString() ?? null,
 		location: row.location ?? "",
 		client: {
 			id: row.client?.id ?? null,
 			name: row.client?.name ?? null,
-			email: row.client?.email ?? row.inviteEmail,
+			// A phone-only account's placeholder email is never shown.
+			email: row.client ? realEmail(row.client.email) : row.inviteEmail,
+			phone: row.client?.phoneNumber ?? row.invitePhone,
 			status: row.inviteStatus,
 		},
+		price: row.price?.toNumber() ?? null,
+		advance: row.advance.toNumber(),
+		paymentStatus: row.paymentStatus,
 		galleryCount: row._count.galleries,
 		updatedAt: row.updatedAt.toISOString(),
 	};
@@ -46,6 +56,7 @@ export async function listProjects(
 		where.OR = [
 			{ title: { contains: q, mode: "insensitive" } },
 			{ inviteEmail: { contains: q, mode: "insensitive" } },
+			{ invitePhone: { contains: q } },
 			{ client: { name: { contains: q, mode: "insensitive" } } },
 		];
 	}
@@ -75,6 +86,19 @@ export async function getProject(
 	return {
 		...toSummary(row),
 		description: row.description ?? "",
+		bookingId: row.booking?.id ?? null,
+		clientPhone: row.clientPhone ?? "",
+		contactName: row.contactName ?? "",
+		contactPhone: row.contactPhone ?? "",
+		clientNotes: row.clientNotes ?? "",
+		startTime: row.startTime ?? "",
+		endTime: row.endTime ?? "",
+		locationType: row.locationType ?? "",
+		deliveryDeadline: row.deliveryDeadline?.toISOString() ?? null,
+		equipment: row.equipment ?? "",
+		financialNotes: row.financialNotes ?? "",
+		team: row.team ?? "",
+		internalNotes: row.internalNotes ?? "",
 		galleries: await listGallerySummaries({ projectId: id, photographerId }),
 	};
 }

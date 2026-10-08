@@ -8,7 +8,7 @@ import { inviteToProject } from "./invitations";
 import { revalidateClientWork } from "./revalidate";
 import { inviteClientSchema } from "./schemas";
 
-/** Sends (or resends) the project invitation to an email. */
+/** Sends (or resends) the project invitation to an email or a phone number. */
 export async function inviteClient(input: unknown): Promise<ActionResult> {
 	const { session, photographerId } = await requirePhotographer();
 	const parsed = inviteClientSchema.safeParse(input);
@@ -17,12 +17,12 @@ export async function inviteClient(input: unknown): Promise<ActionResult> {
 	const result = await inviteToProject(
 		{ id: photographerId, email: session.user.email },
 		parsed.data.projectId,
-		parsed.data.email,
+		parsed.data.contact,
 	);
 	if (!result.ok) return result;
 
 	revalidateClientWork();
-	return result.data.emailSent ? ok() : fail("inviteEmailFailed");
+	return result.data.sent ? ok() : fail("inviteSendFailed");
 }
 
 /** Withdraws a pending or declined invitation. */
@@ -37,7 +37,12 @@ export async function cancelInvite(input: unknown): Promise<ActionResult> {
 			photographerId,
 			inviteStatus: { in: ["PENDING", "DECLINED"] },
 		},
-		data: { inviteEmail: null, inviteStatus: null, invitedAt: null },
+		data: {
+			inviteEmail: null,
+			invitePhone: null,
+			inviteStatus: null,
+			invitedAt: null,
+		},
 	});
 	if (count === 0) return fail("notFound");
 

@@ -11,17 +11,20 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String
-  email         String    @unique
-  emailVerified Boolean   @map("email_verified")
-  image         String?
+  id                  String    @id @default(cuid())
+  name                String
+  email               String    @unique
+  emailVerified       Boolean   @map("email_verified")
+  image               String?
   /// Preferred language (`en` | `fr`); picks the language of emails sent to them.
-  locale        String?
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
-  sessions      Session[]
-  accounts      Account[]
+  locale              String?
+  /// E.164. Set for accounts created from a phone number (client sign-in by SMS code).
+  phoneNumber         String?   @unique @map("phone_number")
+  phoneNumberVerified Boolean?  @map("phone_number_verified")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+  sessions            Session[]
+  accounts            Account[]
 
   role       String?
   banned     Boolean?  @default(false)
@@ -33,15 +36,20 @@ model User {
   albums   Album[]
   packages Package[]
 
-  projects        Project[]        @relation("PhotographerProjects")
-  clientProjects  Project[]        @relation("ClientProjects")
-  clientProfiles  ClientProfile[]  @relation("ProfilesOwned")
-  profilesAboutMe ClientProfile[]  @relation("ProfilesAbout")
-  galleries       Gallery[]
-  galleryItems    GalleryItem[]
-  galleryComments GalleryComment[]
-  driveImports    DriveImport[]
-  calendarEvents  CalendarEvent[]
+  projects            Project[]        @relation("PhotographerProjects")
+  clientProjects      Project[]        @relation("ClientProjects")
+  clientProfiles      ClientProfile[]  @relation("ProfilesOwned")
+  profilesAboutMe     ClientProfile[]  @relation("ProfilesAbout")
+  galleries           Gallery[]
+  galleryItems        GalleryItem[]
+  galleryComments     GalleryComment[]
+  driveImports        DriveImport[]
+  calendarEvents      CalendarEvent[]
+  studioConversations Conversation[]   @relation("ConversationPhotographer")
+  clientConversations Conversation[]   @relation("ConversationClient")
+  sentMessages        Message[]
+  bookings            Booking[]        @relation("PhotographerBookings")
+  clientBookings      Booking[]        @relation("ClientBookings")
 
   @@map("users")
 }
@@ -295,33 +303,101 @@ model ClientProfile {
   @@map("client_profiles")
 }
 
+enum ProjectServiceType {
+  WEDDING
+  ENGAGEMENT
+  BIRTHDAY
+  EVENT
+  PRODUCT
+  PORTRAIT
+  ADVERTISING
+  CORPORATE
+  OTHER
+
+  @@map("project_service_type")
+}
+
+enum ProjectMediaType {
+  PHOTO
+  VIDEO
+  BOTH
+
+  @@map("project_media_type")
+}
+
+enum ProjectLocationType {
+  STUDIO
+  OUTDOOR
+  HOME
+  COMPANY
+  OTHER
+
+  @@map("project_location_type")
+}
+
+enum PaymentStatus {
+  UNPAID
+  PARTIAL
+  PAID
+
+  @@map("payment_status")
+}
+
 model Project {
-  id             String        @id @default(cuid())
-  photographerId String        @map("photographer_id")
+  id             String             @id @default(cuid())
+  photographerId String             @map("photographer_id")
   /// Set when the invited client accepts.
-  clientId       String?       @map("client_id")
+  clientId       String?            @map("client_id")
   /// Lowercased address the invitation was sent to.
-  inviteEmail    String?       @map("invite_email")
-  inviteStatus   InviteStatus? @map("invite_status")
-  invitedAt      DateTime?     @map("invited_at")
+  inviteEmail    String?            @map("invite_email")
+  /// E.164 number the invitation was texted to, for clients without an email.
+  invitePhone    String?            @map("invite_phone")
+  inviteStatus   InviteStatus?      @map("invite_status")
+  invitedAt      DateTime?          @map("invited_at")
   title          String
   description    String?
-  eventDate      DateTime?     @map("event_date")
+  eventDate      DateTime?          @map("event_date")
   location       String?
-  stage          ProjectStage  @default(BOOKING)
-  /// Gates delivery: an unpaid project can't reach DELIVERY or show files to its client.
-  paid           Boolean       @default(false)
-  createdAt      DateTime      @default(now()) @map("created_at")
-  updatedAt      DateTime      @updatedAt @map("updated_at")
+  stage          ProjectStage       @default(BOOKING)
+  serviceType    ProjectServiceType @default(OTHER) @map("service_type")
+  mediaType      ProjectMediaType   @default(PHOTO) @map("media_type")
 
-  photographer User      @relation("PhotographerProjects", fields: [photographerId], references: [id], onDelete: Cascade)
-  client       User?     @relation("ClientProjects", fields: [clientId], references: [id], onDelete: SetNull)
+  // Client details kept on the project (the account has no phone number).
+  clientPhone  String? @map("client_phone")
+  contactName  String? @map("contact_name")
+  contactPhone String? @map("contact_phone")
+  clientNotes  String? @map("client_notes")
+
+  // Planning. `eventDate` is the day; times are local `HH:mm`.
+  startTime        String?              @map("start_time")
+  endTime          String?              @map("end_time")
+  locationType     ProjectLocationType? @map("location_type")
+  deliveryDeadline DateTime?            @map("delivery_deadline")
+  equipment        String?
+
+  // Money, in TND. A project that isn't PAID can't reach DELIVERY or show
+  // files to its client.
+  price          Decimal?      @db.Decimal(12, 3)
+  advance        Decimal       @default(0) @db.Decimal(12, 3)
+  paymentStatus  PaymentStatus @default(UNPAID) @map("payment_status")
+  financialNotes String?       @map("financial_notes")
+
+  // Organisation.
+  team          String?
+  internalNotes String?  @map("internal_notes")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  photographer User            @relation("PhotographerProjects", fields: [photographerId], references: [id], onDelete: Cascade)
+  client       User?           @relation("ClientProjects", fields: [clientId], references: [id], onDelete: SetNull)
   galleries    Gallery[]
   events       CalendarEvent[]
+  booking      Booking?
 
   @@index([photographerId, stage, updatedAt])
   @@index([clientId, updatedAt])
   @@index([inviteEmail, inviteStatus])
+  @@index([invitePhone, inviteStatus])
   @@map("projects")
 }
 
@@ -480,4 +556,136 @@ model CalendarEvent {
   @@index([photographerId, endsAt])
   @@index([projectId])
   @@map("calendar_events")
+}
+
+// ─── Messaging ───────────────────────────────────────────────────────────────
+// One conversation per photographer–client pair. A pair may only talk while it
+// shares an accepted project; counters are kept on the row so lists and the
+// unread badge never scan messages.
+
+model Conversation {
+  id                 String    @id @default(cuid())
+  photographerId     String    @map("photographer_id")
+  clientId           String    @map("client_id")
+  lastMessageAt      DateTime? @map("last_message_at")
+  /// First characters of the latest message, for the conversation list.
+  lastMessagePreview String?   @map("last_message_preview")
+  lastSenderId       String?   @map("last_sender_id")
+  photographerUnread Int       @default(0) @map("photographer_unread")
+  clientUnread       Int       @default(0) @map("client_unread")
+  createdAt          DateTime  @default(now()) @map("created_at")
+
+  photographer User      @relation("ConversationPhotographer", fields: [photographerId], references: [id], onDelete: Cascade)
+  client       User      @relation("ConversationClient", fields: [clientId], references: [id], onDelete: Cascade)
+  messages     Message[]
+
+  @@unique([photographerId, clientId])
+  @@index([photographerId, lastMessageAt])
+  @@index([clientId, lastMessageAt])
+  @@map("conversations")
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String   @map("conversation_id")
+  senderId       String   @map("sender_id")
+  body           String
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt, id])
+  @@map("messages")
+}
+
+// ─── Bookings ────────────────────────────────────────────────────────────────
+// The commercial phase: a request, its negotiation and the quote. Only a
+// CONFIRMED booking becomes a Project (kept linked through `projectId`).
+// The client is stored as contact details so prospects without an account fit;
+// `clientId` links to the account once it exists.
+
+enum BookingStatus {
+  NEW
+  DISCUSSION
+  QUOTE_SENT
+  CONFIRMED
+  /// Declined or cancelled; `statusReason` says why.
+  DECLINED
+
+  @@map("booking_status")
+}
+
+enum BookingSource {
+  INSTAGRAM
+  WHATSAPP
+  PHONE
+  WEBSITE
+  OTHER
+
+  @@map("booking_source")
+}
+
+enum BookingActivityKind {
+  CREATED
+  STATUS
+  NOTE
+
+  @@map("booking_activity_kind")
+}
+
+model Booking {
+  id               String             @id @default(cuid())
+  photographerId   String             @map("photographer_id")
+  clientId         String?            @map("client_id")
+  projectId        String?            @unique @map("project_id")
+  title            String
+  status           BookingStatus      @default(NEW)
+  source           BookingSource      @default(OTHER)
+  clientName       String             @map("client_name")
+  clientEmail      String?            @map("client_email")
+  clientPhone      String?            @map("client_phone")
+  serviceType      ProjectServiceType @default(OTHER) @map("service_type")
+  mediaType        ProjectMediaType   @default(PHOTO) @map("media_type")
+  description      String?
+  desiredDate      DateTime?          @map("desired_date")
+  startTime        String?            @map("start_time")
+  durationMinutes  Int?               @map("duration_minutes")
+  location         String?
+  /// Indicative budget of the client, in TND.
+  clientBudget     Decimal?           @map("client_budget") @db.Decimal(12, 3)
+  /// Price offered by the photographer, in TND; becomes the project price.
+  proposedPrice    Decimal?           @map("proposed_price") @db.Decimal(12, 3)
+  plannedAdvance   Decimal?           @map("planned_advance") @db.Decimal(12, 3)
+  responseDeadline DateTime?          @map("response_deadline")
+  internalNotes    String?            @map("internal_notes")
+  statusReason     String?            @map("status_reason")
+  confirmedAt      DateTime?          @map("confirmed_at")
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+
+  photographer User              @relation("PhotographerBookings", fields: [photographerId], references: [id], onDelete: Cascade)
+  client       User?             @relation("ClientBookings", fields: [clientId], references: [id], onDelete: SetNull)
+  project      Project?          @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  activities   BookingActivity[]
+
+  @@index([photographerId, status, desiredDate])
+  @@index([photographerId, createdAt])
+  @@index([clientId])
+  @@map("bookings")
+}
+
+model BookingActivity {
+  id         String              @id @default(cuid())
+  bookingId  String              @map("booking_id")
+  kind       BookingActivityKind
+  fromStatus BookingStatus?      @map("from_status")
+  toStatus   BookingStatus?      @map("to_status")
+  body       String?
+  createdAt  DateTime            @default(now()) @map("created_at")
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId, createdAt])
+  @@map("booking_activities")
 }

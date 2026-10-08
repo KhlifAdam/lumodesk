@@ -132,7 +132,13 @@
 		"alreadyAccepted": "The client already accepted this project.",
 		"emailNotVerified": "Verify your email first.",
 		"invitationNotFound": "This invitation is no longer available.",
-		"unpaidProject": "Mark the project as paid before delivering it."
+		"unpaidProject": "Mark the project as paid before delivering it.",
+		"bookingLocked": "A confirmed booking can't be changed.",
+		"bookingIncomplete": "Add a date and a proposed price before confirming.",
+		"alreadyConfirmed": "This booking is already confirmed.",
+		"tooManyRequests": "Too many requests. Please try again later.",
+		"invalidContact": "Enter a valid email or phone number.",
+		"inviteSendFailed": "The invitation is saved, but the message couldn't be sent. Try resending it."
 	},
 	"Validation": {
 		"required": "This field is required.",
@@ -154,7 +160,11 @@
 		"invalidDate": "Enter a valid date.",
 		"endBeforeStart": "The end must be after the start.",
 		"rangeTooLong": "An event can last at most a year.",
-		"invalidTime": "Enter a valid time."
+		"invalidTime": "Enter a valid time.",
+		"invalidAmount": "Enter a valid amount.",
+		"advanceTooHigh": "The advance can't exceed the price.",
+		"deliveryBeforeEvent": "The deadline can't be before the date.",
+		"invalidPhone": "Enter a valid phone number."
 	},
 	"Media": {
 		"title": "Media library",
@@ -581,6 +591,23 @@
 			"toLight": "Switch to light mode",
 			"toDark": "Switch to dark mode",
 			"clientArea": "Client area"
+		},
+		"booking": {
+			"cta": "Request a booking",
+			"title": "Request a booking",
+			"description": "Tell me about your project and I'll get back to you.",
+			"name": "Your name",
+			"email": "Email",
+			"phone": "Phone (optional)",
+			"service": "Type of service",
+			"date": "Wished date (optional)",
+			"message": "Your project",
+			"messagePlaceholder": "Tell me what you have in mind…",
+			"send": "Send request",
+			"sent": "Request sent. I'll reply soon.",
+			"sentTitle": "Thank you!",
+			"failed": "We couldn't send your request. Please try again.",
+			"close": "Close"
 		}
 	},
 	"Auth": {
@@ -664,7 +691,9 @@
 			"INVALID_OTP": "That code is invalid or has expired.",
 			"OTP_EXPIRED": "That code has expired. Request a new one.",
 			"TOO_MANY_ATTEMPTS": "Too many attempts. Request a new code.",
-			"USER_NOT_FOUND": "We couldn't find that account."
+			"USER_NOT_FOUND": "We couldn't find that account.",
+			"INVALID_PHONE_NUMBER": "Enter a valid phone number.",
+			"OTP_NOT_FOUND": "No code was sent to this number. Request a new one."
 		},
 		"backLink": {
 			"photographer": "Photographer space",
@@ -709,6 +738,24 @@
 		"highlights": {
 			"photographer": "Portfolio · Clients · Galleries",
 			"client": "Projects · Galleries · Your selections"
+		},
+		"phone": {
+			"title": "Continue with your phone",
+			"description": "No email needed. We'll text you a code.",
+			"codeDescription": "Enter the code we sent to {phone}.",
+			"phone": "Phone number",
+			"phoneHint": "Tunisian numbers can be typed without +216.",
+			"send": "Send me a code",
+			"sent": "Code sent.",
+			"code": "6-digit code",
+			"verify": "Continue",
+			"success": "You're in.",
+			"changeNumber": "Change number",
+			"resend": "Send a new code",
+			"resendIn": "New code in {seconds}s",
+			"useEmail": "Prefer email?",
+			"emailLink": "Sign in with email",
+			"useInstead": "No email? Use your phone number instead"
 		}
 	},
 	"Landing": {
@@ -1059,7 +1106,29 @@
 			"expires": "This code expires in {minutes} minutes.",
 			"ignore": "Didn't ask for this? You can safely ignore this email.",
 			"text": "Your Lumodesk verification code is {otp}. It expires in {minutes} minutes."
+		},
+		"newMessage": {
+			"subject": "{sender} sent you a message",
+			"preheader": "{preview}",
+			"heading": "You have a new message",
+			"intro": "{sender} wrote: “{preview}”. Open the conversation to read it and reply.",
+			"cta": "Read the message",
+			"text": "{sender} wrote: “{preview}”. Read and reply here: {url}"
+		},
+		"bookingRequest": {
+			"subject": "New booking request from {client}",
+			"preheader": "{preview}",
+			"heading": "You have a new booking request",
+			"intro": "{client} asked for a service on your website: “{preview}”. Open the request to reply.",
+			"cta": "Open the request",
+			"text": "{client} asked for a service on your website: “{preview}”. Open it here: {url}"
 		}
+	},
+	"Sms": {
+		"otp": "Lumodesk: your code is {code}. It expires in {minutes} minutes. Don't share it.",
+		"projectInvitation": "{studio} invited you to the project \"{project}\" on Lumodesk. Sign in with this number to accept: {url}",
+		"galleryShared": "{studio} shared the gallery \"{gallery}\" with you: {url}",
+		"newMessage": "{sender} sent you a message on Lumodesk: {url}"
 	},
 	"NotFound": {
 		"code": "404",
@@ -1090,7 +1159,10 @@
 			"back": "All clients",
 			"newProject": "New project",
 			"projects": "{count, plural, =0 {Projects} one {# project} other {# projects}}",
-			"noProjects": "No projects for this client yet."
+			"noProjects": "No projects for this client yet.",
+			"message": "Message",
+			"bookings": "{count, plural, one {# booking} other {# bookings}}",
+			"newBooking": "New booking"
 		},
 		"notes": {
 			"label": "Private notes",
@@ -1143,7 +1215,70 @@
 			"clientEmail": "Client email",
 			"clientEmailHint": "Optional. We'll email them an invitation to accept.",
 			"createdInvited": "Project created and invitation sent.",
-			"createdEmailFailed": "Project created, but the invitation email couldn't be sent. Resend it from the project."
+			"createdEmailFailed": "Project created, but the invitation couldn't be sent. Resend it from the project.",
+			"back": "All projects",
+			"backToProject": "Back to the project",
+			"cancel": "Cancel",
+			"serviceType": "Type of service",
+			"mediaType": "Media",
+			"descriptionHint": "Details and specific needs of the client.",
+			"general": {
+				"title": "General information",
+				"hint": "The essentials of the project. Its progress is tracked in the workflow once created."
+			},
+			"client": {
+				"title": "Client",
+				"hint": "Invite an existing client or a new one. They get the project once they accept.",
+				"hintEdit": "Contact details for this project. The invitation is managed from the project page.",
+				"email": "Client email",
+				"emailHint": "Optional. We'll email them an invitation to accept.",
+				"pick": "Existing client",
+				"search": "Search your clients…",
+				"none": "No client found.",
+				"phone": "Client phone",
+				"contactName": "Main contact",
+				"contactHint": "If it isn't the client, e.g. for an event.",
+				"contactPhone": "Contact phone",
+				"notes": "Client requests",
+				"notesHint": "What the client asked for.",
+				"phoneHint": "Tunisian numbers can be typed without +216.",
+				"invitePhone": "Invite by text message",
+				"invitePhoneHint": "No email? Text the invitation to this number. They sign in with a code."
+			},
+			"planning": {
+				"title": "Planning",
+				"hint": "When and where the shoot takes place.",
+				"date": "Date",
+				"startTime": "Start time",
+				"endTime": "End time",
+				"location": "Location",
+				"locationHint": "An address or a Google Maps link.",
+				"locationType": "Type of place",
+				"notSet": "Not set",
+				"deadline": "Delivery deadline",
+				"deadlineHint": "Optional.",
+				"equipment": "Equipment needed",
+				"equipmentHint": "Optional."
+			},
+			"finance": {
+				"title": "Finances",
+				"hint": "Price and payments, in {currency}.",
+				"price": "Agreed price",
+				"advance": "Advance paid",
+				"remaining": "Remaining",
+				"status": "Payment status",
+				"statusHint": "Follows the amounts, but you can change it. Delivery needs “Paid”.",
+				"notes": "Financial notes"
+			},
+			"team": {
+				"title": "Team & organisation",
+				"hint": "Who works on it, and your private notes.",
+				"members": "Team",
+				"membersHint": "Names of the people involved.",
+				"membersPlaceholder": "Just me",
+				"notes": "Internal notes",
+				"notesHint": "Only you can see these."
+			}
 		},
 		"detail": {
 			"back": "All projects",
@@ -1158,30 +1293,248 @@
 			"deleted": "Project deleted.",
 			"unpaidLocked": "Mark the project as paid to unlock delivery.",
 			"unpaidHint": "Delivery is locked until the project is paid. Files stay hidden from the client until it is delivered.",
-			"filesHidden": "Files are hidden from the client until the project is delivered and paid."
+			"filesHidden": "Files are hidden from the client until the project is delivered and paid.",
+			"fromBooking": "From a booking"
 		},
 		"invite": {
-			"prompt": "Invite the client:",
+			"prompt": "Invite the client by email or phone:",
 			"send": "Send invitation",
 			"sent": "Invitation sent.",
 			"resend": "Resend",
 			"inviteAgain": "Invite again",
-			"change": "Change email",
+			"change": "Change",
 			"keep": "Cancel",
 			"cancel": "Withdraw invitation",
 			"cancelled": "Invitation withdrawn.",
 			"status": {
 				"PENDING": "Invitation pending",
 				"DECLINED": "Declined"
-			}
+			},
+			"placeholder": "Email or phone number"
 		},
 		"payment": {
-			"paid": "Paid",
-			"unpaid": "Unpaid",
-			"markPaid": "Mark as paid",
-			"markUnpaid": "Mark as unpaid",
-			"markedPaid": "Marked as paid.",
-			"markedUnpaid": "Marked as unpaid."
+			"status": {
+				"UNPAID": "Unpaid",
+				"PARTIAL": "Partly paid",
+				"PAID": "Paid"
+			},
+			"updated": "Payment status updated.",
+			"change": "Payment status"
+		},
+		"serviceTypes": {
+			"WEDDING": "Wedding",
+			"ENGAGEMENT": "Engagement",
+			"BIRTHDAY": "Birthday",
+			"EVENT": "Event",
+			"PRODUCT": "Product",
+			"PORTRAIT": "Portrait",
+			"ADVERTISING": "Advertising",
+			"CORPORATE": "Corporate",
+			"OTHER": "Other"
+		},
+		"mediaTypes": {
+			"PHOTO": "Photography",
+			"VIDEO": "Videography",
+			"BOTH": "Photo + video"
+		},
+		"locationTypes": {
+			"STUDIO": "Studio",
+			"OUTDOOR": "Outdoor",
+			"HOME": "Home",
+			"COMPANY": "Company",
+			"OTHER": "Other"
+		},
+		"facts": {
+			"service": "Service",
+			"type": "Type",
+			"media": "Media",
+			"when": "Date & time",
+			"deadline": "Delivery deadline",
+			"where": "Location",
+			"openMap": "Open the map",
+			"placeType": "Type of place",
+			"equipment": "Equipment",
+			"team": "Team",
+			"description": "Description",
+			"client": "Client & notes",
+			"phone": "Client phone",
+			"contact": "Main contact",
+			"requests": "Client requests",
+			"internalNotes": "Internal notes",
+			"finance": "Finances",
+			"price": "Price",
+			"advance": "Advance",
+			"remaining": "Remaining"
+		}
+	},
+	"Bookings": {
+		"title": "Bookings",
+		"description": "Requests from first contact to a confirmed date. A confirmed booking opens its project.",
+		"stats": {
+			"total": "Total",
+			"pending": "Pending",
+			"confirmed": "Confirmed",
+			"closed": "Declined / cancelled"
+		},
+		"status": {
+			"NEW": "New request",
+			"DISCUSSION": "In discussion",
+			"QUOTE_SENT": "Quote sent",
+			"CONFIRMED": "Confirmed",
+			"DECLINED": "Declined / cancelled"
+		},
+		"source": {
+			"INSTAGRAM": "Instagram",
+			"WHATSAPP": "WhatsApp",
+			"PHONE": "Phone",
+			"WEBSITE": "Website",
+			"OTHER": "Other"
+		},
+		"list": {
+			"new": "New booking",
+			"search": "Search bookings…",
+			"filter": "Filter bookings",
+			"allBookings": "All bookings",
+			"noDate": "No date yet",
+			"viewDetails": "View details"
+		},
+		"empty": {
+			"title": "No bookings yet",
+			"description": "Add a request when a client contacts you, or wait for one from your website.",
+			"noMatch": "No booking matches."
+		},
+		"form": {
+			"back": "All bookings",
+			"backToBooking": "Back to the booking",
+			"cancel": "Cancel",
+			"createTitle": "New booking",
+			"editTitle": "Edit booking",
+			"description": "Only the client's name and a title are required. Fill in the rest as you learn it.",
+			"create": "Add booking",
+			"save": "Save",
+			"created": "Booking added.",
+			"updated": "Booking updated.",
+			"client": {
+				"title": "Client",
+				"hint": "Pick an existing client or type the contact details of a new one.",
+				"name": "Client name",
+				"email": "Email",
+				"phone": "Phone",
+				"source": "Where did the request come from?",
+				"sourceHint": "Instagram, WhatsApp, phone, website…"
+			},
+			"need": {
+				"title": "The request",
+				"hint": "What the client wants and when.",
+				"name": "Booking title",
+				"namePlaceholder": "Wedding of Ahmed & Mariem",
+				"serviceType": "Type of service",
+				"mediaType": "Media",
+				"description": "Description of the need",
+				"descriptionHint": "What the client would like to get.",
+				"date": "Wished date",
+				"startTime": "Start time",
+				"duration": "Estimated duration (hours)",
+				"location": "Location",
+				"locationHint": "An address or a Google Maps link, if known."
+			},
+			"quote": {
+				"title": "Quote",
+				"hint": "Amounts in {currency}. All optional at first contact.",
+				"budget": "Client's budget",
+				"price": "Proposed price",
+				"advance": "Planned advance",
+				"deadline": "Reply deadline",
+				"notes": "Internal notes",
+				"notesHint": "Only you can see these."
+			}
+		},
+		"detail": {
+			"back": "All bookings",
+			"edit": "Edit",
+			"projectCreated": "Project created: {title}",
+			"reason": "Reason:",
+			"deleteTitle": "Delete this booking?",
+			"deleteDescription": "Its history is deleted too. A project already created from it is kept.",
+			"deleted": "Booking deleted."
+		},
+		"actions": {
+			"statusUpdated": "Status updated.",
+			"confirm": "Confirm booking",
+			"confirmTitle": "Confirm this booking?",
+			"confirmDescription": "A project is created from it with the same details, a slot is added to your calendar, and the client is invited if you gave an email.",
+			"confirmAction": "Confirm and create the project",
+			"back": "Back",
+			"confirmed": "Booking confirmed, project created and client invited.",
+			"confirmedNoEmail": "Booking confirmed and project created. No invitation email was sent.",
+			"decline": "Decline",
+			"declineTitle": "Decline this request?",
+			"declineDescription": "It moves to declined. You can reopen it later.",
+			"declined": "Booking declined.",
+			"cancel": "Cancel booking",
+			"cancelTitle": "Cancel this booking?",
+			"cancelDescription": "The booking is marked cancelled. The project already created is kept; update it separately.",
+			"cancelled": "Booking cancelled.",
+			"reason": "Reason",
+			"reasonPlaceholder": "Reason (optional)",
+			"reopen": "Reopen",
+			"reopened": "Booking reopened."
+		},
+		"activity": {
+			"title": "History",
+			"placeholder": "Add a follow-up: info requested, alternative date offered…",
+			"add": "Add note",
+			"created": "Request created",
+			"statusChanged": "Status: {status}"
+		},
+		"facts": {
+			"client": "Client",
+			"need": "The request",
+			"quote": "Quote",
+			"name": "Name",
+			"email": "Email",
+			"phone": "Phone",
+			"source": "Source",
+			"type": "Type",
+			"media": "Media",
+			"when": "Wished date & time",
+			"where": "Location",
+			"openMap": "Open the map",
+			"description": "Need",
+			"budget": "Client's budget",
+			"price": "Proposed price",
+			"advance": "Planned advance",
+			"deadline": "Reply deadline",
+			"notes": "Internal notes",
+			"hours": "{count, plural, one {# hour} other {# hours}}"
+		}
+	},
+	"Messages": {
+		"title": "Messages",
+		"description": "Talk with your clients, all in one place.",
+		"backToProjects": "My projects",
+		"list": {
+			"emptyTitle": "No conversations yet",
+			"emptyDescription": "Start one with a client, or wait for them to write to you.",
+			"you": "You:"
+		},
+		"new": {
+			"action": "New message",
+			"title": "New message",
+			"description": "Choose the client you want to write to.",
+			"search": "Search your clients…",
+			"none": "No client found. Clients appear here once they accept a project."
+		},
+		"thread": {
+			"back": "Back to conversations",
+			"select": "Select a conversation to read it.",
+			"unavailable": "This conversation isn't available.",
+			"empty": "No messages yet. Say hello!",
+			"loadOlder": "Load older messages"
+		},
+		"composer": {
+			"placeholder": "Write a message…",
+			"send": "Send"
 		}
 	},
 	"Calendar": {
@@ -1323,7 +1676,8 @@
 			"title": "Client space",
 			"dashboard": "My dashboard",
 			"logout": "Log out",
-			"createStudio": "Create your studio"
+			"createStudio": "Create your studio",
+			"messages": "Messages"
 		},
 		"projects": {
 			"greeting": "Hello {name}",
@@ -1339,7 +1693,8 @@
 			"progress": "Progress",
 			"galleries": "Galleries",
 			"noGalleries": "No galleries yet",
-			"noGalleriesHint": "Your photographer will share your photos here."
+			"noGalleriesHint": "Your photographer will share your photos here.",
+			"messageStudio": "Message the studio"
 		},
 		"gallery": {
 			"hint": "Tap the heart to pick your favourites, then send your selection.",
@@ -1382,6 +1737,13 @@
 			"verify": "Verify",
 			"resend": "Resend code",
 			"verified": "Email verified."
+		},
+		"name": {
+			"title": "What should we call you?",
+			"description": "You signed in with your phone, so we only have your number. Add your name so your photographer knows who you are.",
+			"placeholder": "Your name",
+			"save": "Save",
+			"saved": "Thanks!"
 		}
 	}
 }

@@ -6,6 +6,7 @@ import { studioBrandSelect, toStudioBrand } from "@/services/clients/branding";
 import { listGallerySummaries } from "@/services/galleries/summaries";
 import { isVisibleToClient } from "@/services/projects/visibility";
 import { pageMeta, pageSkip } from "@/services/shared/pagination";
+import { pendingFor, type VerifiedContact } from "./contacts";
 import type {
 	PortalProject,
 	PortalProjectDetail,
@@ -28,6 +29,7 @@ function toPortalProject(row: PortalRow): PortalProject {
 	return {
 		id: row.id,
 		title: row.title,
+		photographerId: row.photographerId,
 		stage: row.stage,
 		eventDate: row.eventDate?.toISOString() ?? null,
 		location: row.location ?? "",
@@ -80,12 +82,12 @@ export async function getPortalProject(
 
 const INVITATIONS_LIMIT = 20;
 
-/** Invitations waiting for this address. Only call with a verified email. */
+/** Invitations waiting for the contacts this client verified. */
 export async function listPendingInvitations(
-	email: string,
+	contact: VerifiedContact,
 ): Promise<PortalProject[]> {
 	const rows = await db.project.findMany({
-		where: { inviteEmail: email.toLowerCase(), inviteStatus: "PENDING" },
+		where: pendingFor(contact),
 		include: portalInclude,
 		orderBy: { invitedAt: "desc" },
 		take: INVITATIONS_LIMIT,

@@ -3,6 +3,7 @@
 import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 interface NavItemProps {
@@ -10,9 +11,17 @@ interface NavItemProps {
 	label: string;
 	icon: LucideIcon;
 	exact?: boolean;
+	/** Trailing indicator, e.g. an unread count. */
+	badge?: ReactNode;
 }
 
-export function NavItem({ href, label, icon: Icon, exact }: NavItemProps) {
+export function NavItem({
+	href,
+	label,
+	icon: Icon,
+	exact,
+	badge,
+}: NavItemProps) {
 	const pathname = usePathname();
 	const isActive =
 		pathname === href || (!exact && pathname.startsWith(`${href}/`));
@@ -33,7 +42,8 @@ export function NavItem({ href, label, icon: Icon, exact }: NavItemProps) {
 					isActive ? "text-primary" : "text-muted-foreground",
 				)}
 			/>
-			{label}
+			<span className="flex-1">{label}</span>
+			{badge}
 		</Link>
 	);
 }

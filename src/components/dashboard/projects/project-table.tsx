@@ -52,7 +52,7 @@ export async function ProjectTable({
 								<Images className="h-3 w-3" />
 								{t("galleries", { count: project.galleryCount })}
 							</span>
-							<PaymentBadge paid={project.paid} />
+							<PaymentBadge status={project.paymentStatus} />
 							<StageBadge stage={project.stage} />
 						</div>
 					</Link>

@@ -79,3 +79,38 @@ export async function sendSelectionSubmittedEmail(props: {
 		),
 	});
 }
+
+/** To whoever has an unread message waiting, in their own language. */
+export async function sendNewMessageEmail(props: {
+	to: string;
+	locale: Locale;
+	sender: string;
+	preview: string;
+	path: string;
+}) {
+	const { to, locale, path, ...vars } = props;
+	await sendMail({
+		to,
+		...noticeEmail(mailCopy(locale).newMessage, locale, vars, appUrl(path)),
+	});
+}
+
+/** To the photographer, when a visitor asks for a service on their site. */
+export async function sendBookingRequestEmail(props: {
+	to: string;
+	locale: Locale;
+	client: string;
+	preview: string;
+	bookingId: string;
+}) {
+	const { to, locale, bookingId, ...vars } = props;
+	await sendMail({
+		to,
+		...noticeEmail(
+			mailCopy(locale).bookingRequest,
+			locale,
+			vars,
+			appUrl(`/dashboard/bookings/${bookingId}`),
+		),
+	});
+}

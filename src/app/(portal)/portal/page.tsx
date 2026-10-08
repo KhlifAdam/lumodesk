@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { EmptyState } from "@/components/dashboard/shared/empty-state";
 import { UrlPagination } from "@/components/dashboard/shared/url-pagination";
+import { NameCard } from "@/components/portal/name-card";
 import { PendingInvitations } from "@/components/portal/pending-invitations";
 import { PortalProjectCard } from "@/components/portal/portal-project-card";
 import { PortalProjectsSkeleton } from "@/components/portal/portal-skeletons";
@@ -29,6 +30,8 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
 				</h1>
 				<p className="text-sm text-muted-foreground">{t("description")}</p>
 			</div>
+			{session.user.phoneNumber &&
+				session.user.name === session.user.phoneNumber && <NameCard />}
 			<Suspense>
 				<PendingInvitations />
 			</Suspense>

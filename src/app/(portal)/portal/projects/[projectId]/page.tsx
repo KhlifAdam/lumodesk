@@ -1,4 +1,10 @@
-import { ArrowLeft, CalendarDays, Images, MapPin } from "lucide-react";
+import {
+	ArrowLeft,
+	CalendarDays,
+	Images,
+	MapPin,
+	MessageSquare,
+} from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
@@ -6,6 +12,7 @@ import { GalleryCard } from "@/components/client-work/gallery-card";
 import { StageTimeline } from "@/components/client-work/stage-timeline";
 import { EmptyState } from "@/components/dashboard/shared/empty-state";
 import { StudioHeading } from "@/components/portal/studio-heading";
+import { Button } from "@/components/ui/button";
 import { requireClient } from "@/lib/auth/require-client";
 import { getPortalProject } from "@/services/portal/queries";
 
@@ -31,10 +38,23 @@ export default async function PortalProjectPage({
 				{t("back")}
 			</Link>
 			<div className="flex flex-col gap-3">
-				<StudioHeading
-					studio={project.studio}
-					fallbackName={project.photographerName}
-				/>
+				<div className="flex flex-wrap items-center justify-between gap-2">
+					<StudioHeading
+						studio={project.studio}
+						fallbackName={project.photographerName}
+					/>
+					<Button
+						asChild
+						variant="outline"
+						size="sm"
+						className="h-8 gap-1.5 text-xs"
+					>
+						<Link href={`/portal/messages?studio=${project.photographerId}`}>
+							<MessageSquare className="h-3.5 w-3.5" />
+							{t("messageStudio")}
+						</Link>
+					</Button>
+				</div>
 				<h1 className="font-display text-2xl font-bold tracking-tight">
 					{project.title}
 				</h1>

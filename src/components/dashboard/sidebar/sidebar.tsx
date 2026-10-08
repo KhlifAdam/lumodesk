@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { UnreadBadge } from "@/components/messages/unread-badge";
 import { NAV_GROUPS } from "./nav-config";
 import { NavItem } from "./nav-item";
 import { SidebarLogo } from "./sidebar-logo";
@@ -8,6 +9,7 @@ import { UserMenu } from "./user-menu";
 
 interface SidebarProps {
 	studioName: string;
+	unreadMessages: number;
 	user: {
 		name: string;
 		email: string;
@@ -15,7 +17,7 @@ interface SidebarProps {
 	};
 }
 
-export function Sidebar({ studioName, user }: SidebarProps) {
+export function Sidebar({ studioName, unreadMessages, user }: SidebarProps) {
 	const t = useTranslations("Dashboard.Nav");
 
 	return (
@@ -33,7 +35,16 @@ export function Sidebar({ studioName, user }: SidebarProps) {
 							{t(group.labelKey)}
 						</span>
 						{group.items.map(({ labelKey, ...item }) => (
-							<NavItem key={item.href} label={t(labelKey)} {...item} />
+							<NavItem
+								key={item.href}
+								label={t(labelKey)}
+								badge={
+									labelKey === "messages" && (
+										<UnreadBadge side="photographer" initial={unreadMessages} />
+									)
+								}
+								{...item}
+							/>
 						))}
 					</div>
 				))}
