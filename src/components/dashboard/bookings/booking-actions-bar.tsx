@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Loader2, RotateCcw } from "lucide-react";
+import { Check, Loader2, RotateCcw, Send } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
@@ -26,6 +26,7 @@ import {
 	OPEN_STATUSES,
 	type OpenStatus,
 } from "@/services/bookings/options";
+import { sendBookingToClient } from "@/services/bookings/send-action";
 import {
 	declineBooking,
 	reopenBooking,
@@ -38,6 +39,12 @@ interface BookingActionsBarProps {
 	status: BookingStatus;
 	/** The project already made from this booking, if any. */
 	hasProject: boolean;
+	/** The date or the proposed price is still missing. */
+	blocked: boolean;
+	/** The request already went to the client once. */
+	sentToClient: boolean;
+	/** There is an email or a phone number to send it to. */
+	canSend: boolean;
 }
 
 /** Moves the request along its commercial steps, then confirms or closes it. */
@@ -45,6 +52,9 @@ export function BookingActionsBar({
 	bookingId,
 	status,
 	hasProject,
+	blocked,
+	sentToClient,
+	canSend,
 }: BookingActionsBarProps) {
 	const t = useTranslations("Bookings.actions");
 	const tStatus = useTranslations("Bookings.status");
@@ -121,12 +131,32 @@ export function BookingActionsBar({
 					label: tStatus(value),
 				}))}
 			/>
+			<Button
+				size="sm"
+				variant="outline"
+				className="h-8 gap-1.5 text-xs"
+				disabled={isPending || !canSend}
+				title={canSend ? undefined : t("sendNoContact")}
+				onClick={() =>
+					run(
+						() => sendBookingToClient(bookingId),
+						(data) =>
+							data.notified
+								? toast.success(t("sentToClient"))
+								: toast.warning(t("sentNotNotified")),
+					)
+				}
+			>
+				<Send className="h-3.5 w-3.5" />
+				{sentToClient ? t("sendAgain") : t("send")}
+			</Button>
 			<AlertDialog>
 				<AlertDialogTrigger asChild>
 					<Button
 						size="sm"
 						className="h-8 gap-1.5 text-xs"
-						disabled={isPending}
+						disabled={isPending || blocked}
+						title={blocked ? t("confirmBlocked") : undefined}
 					>
 						<Check className="h-3.5 w-3.5" />
 						{t("confirm")}

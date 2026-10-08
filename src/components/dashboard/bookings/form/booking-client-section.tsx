@@ -22,6 +22,7 @@ export function BookingClientSection() {
 				<TextField<BookingValues>
 					name="clientName"
 					label={t("name")}
+					required
 					className="flex-1"
 				/>
 				<ClientPicker

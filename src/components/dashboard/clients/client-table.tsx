@@ -27,7 +27,9 @@ export async function ClientTable({ clients }: { clients: ClientSummary[] }) {
 							<div className="min-w-0">
 								<p className="truncate text-sm font-medium">{client.name}</p>
 								<p className="truncate text-xs text-muted-foreground">
-									{client.email || formatPhone(client.phone)}
+									{[client.email, client.phone && formatPhone(client.phone)]
+										.filter(Boolean)
+										.join(" · ")}
 								</p>
 							</div>
 						</div>

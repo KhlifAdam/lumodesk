@@ -51,7 +51,9 @@ export default async function ClientPage({
 			</Link>
 			<PageHeader
 				title={client.name}
-				description={client.email || formatPhone(client.phone)}
+				description={[client.email, client.phone && formatPhone(client.phone)]
+					.filter(Boolean)
+					.join(" · ")}
 				actions={
 					<>
 						<Button

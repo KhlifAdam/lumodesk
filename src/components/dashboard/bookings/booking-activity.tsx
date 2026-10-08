@@ -17,12 +17,33 @@ export async function BookingActivity({
 	const timeZone = await getRequestTimeZone();
 
 	const label = (activity: BookingActivityItem) => {
-		if (activity.kind === "CREATED") return t("created");
-		if (activity.kind === "NOTE") return null;
-		return t("statusChanged", {
-			status: activity.toStatus ? tStatus(activity.toStatus) : "",
-		});
+		switch (activity.kind) {
+			case "CREATED":
+				return t("created");
+			case "NOTE":
+				return null;
+			case "SENT":
+				return t("sent");
+			case "CLIENT_ACCEPT":
+				return t("clientAccepted");
+			case "CLIENT_DECLINE":
+				return t("clientDeclined");
+			case "CLIENT_EDIT":
+				return t("clientEdited", {
+					fields: activity.body
+						.split(",")
+						.map((field) => t(`fields.${field as "location"}`))
+						.join(", "),
+				});
+			default:
+				return t("statusChanged", {
+					status: activity.toStatus ? tStatus(activity.toStatus) : "",
+				});
+		}
 	};
+	// The body of a client edit only lists field names: no free text to show.
+	const text = (activity: BookingActivityItem) =>
+		activity.kind === "CLIENT_EDIT" ? "" : activity.body;
 
 	return (
 		<section className="flex flex-col gap-3 rounded-xl border border-border bg-card p-3">
@@ -38,9 +59,9 @@ export async function BookingActivity({
 							{label(activity) && (
 								<p className="text-xs font-medium">{label(activity)}</p>
 							)}
-							{activity.body && (
+							{text(activity) && (
 								<p className="whitespace-pre-wrap break-words text-sm">
-									{activity.body}
+									{text(activity)}
 								</p>
 							)}
 							<p className="text-[11px] text-muted-foreground">

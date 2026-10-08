@@ -3,18 +3,6 @@ import type { ReactNode } from "react";
 import type { BookingDetail } from "@/services/bookings/types";
 import { formatMoney } from "@/services/projects/money";
 
-function Fact({ label, children }: { label: string; children: ReactNode }) {
-	if (!children) return null;
-	return (
-		<div className="flex flex-col gap-0.5">
-			<dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-				{label}
-			</dt>
-			<dd className="whitespace-pre-wrap break-words text-sm">{children}</dd>
-		</div>
-	);
-}
-
 function Card({ title, children }: { title: string; children: ReactNode }) {
 	return (
 		<section className="flex flex-col gap-3 rounded-xl border border-border bg-card p-3">
@@ -34,6 +22,34 @@ export async function BookingFacts({ booking }: { booking: BookingDetail }) {
 	const tSource = await getTranslations("Bookings.source");
 	const format = await getFormatter();
 	const locale = await getLocale();
+
+	/** One labelled value; an empty one says so, and flags what blocks confirming. */
+	const Fact = ({
+		label,
+		children,
+		required,
+	}: {
+		label: string;
+		children: ReactNode;
+		required?: boolean;
+	}) => (
+		<div className="flex flex-col gap-0.5">
+			<dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+				{label}
+			</dt>
+			<dd className="whitespace-pre-wrap break-words text-sm">
+				{children || (
+					<span
+						className={
+							required ? "text-destructive" : "text-muted-foreground/70"
+						}
+					>
+						{required ? t("requiredToConfirm") : t("notSet")}
+					</span>
+				)}
+			</dd>
+		</div>
+	);
 
 	const date = (iso: string | null) =>
 		iso
@@ -61,7 +77,9 @@ export async function BookingFacts({ booking }: { booking: BookingDetail }) {
 			<Card title={t("need")}>
 				<Fact label={t("type")}>{tService(booking.serviceType)}</Fact>
 				<Fact label={t("media")}>{tMedia(booking.mediaType)}</Fact>
-				<Fact label={t("when")}>{when}</Fact>
+				<Fact label={t("when")} required={!booking.desiredDate}>
+					{when}
+				</Fact>
 				<Fact label={t("where")}>
 					{isUrl(booking.location) ? (
 						<a
@@ -80,7 +98,9 @@ export async function BookingFacts({ booking }: { booking: BookingDetail }) {
 			</Card>
 			<Card title={t("quote")}>
 				<Fact label={t("budget")}>{money(booking.clientBudget)}</Fact>
-				<Fact label={t("price")}>{money(booking.proposedPrice)}</Fact>
+				<Fact label={t("price")} required={booking.proposedPrice === null}>
+					{money(booking.proposedPrice)}
+				</Fact>
 				<Fact label={t("advance")}>{money(booking.plannedAdvance)}</Fact>
 				<Fact label={t("deadline")}>{date(booking.responseDeadline)}</Fact>
 				<Fact label={t("notes")}>{booking.internalNotes}</Fact>

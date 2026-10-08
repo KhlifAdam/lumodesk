@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { BookingActionsBar } from "@/components/dashboard/bookings/booking-actions-bar";
 import { BookingActivity } from "@/components/dashboard/bookings/booking-activity";
+import { BookingChecklist } from "@/components/dashboard/bookings/booking-checklist";
+import { BookingClientStatus } from "@/components/dashboard/bookings/booking-client-status";
 import { BookingDeleteButton } from "@/components/dashboard/bookings/booking-delete-button";
 import { BookingFacts } from "@/components/dashboard/bookings/booking-facts";
 import { BookingStatusBadge } from "@/components/dashboard/bookings/booking-status-badge";
@@ -11,6 +13,8 @@ import { PageHeader } from "@/components/dashboard/shared/page-header";
 import { PageShell } from "@/components/dashboard/shared/page-shell";
 import { Button } from "@/components/ui/button";
 import { requirePhotographer } from "@/lib/auth/require-photographer";
+import { bookingCompleteness } from "@/services/bookings/completeness";
+import { isOpenStatus } from "@/services/bookings/options";
 import { getBooking } from "@/services/bookings/queries";
 
 export default async function BookingPage({
@@ -23,6 +27,8 @@ export default async function BookingPage({
 	const { photographerId } = await requirePhotographer();
 	const booking = await getBooking(photographerId, bookingId);
 	if (!booking) notFound();
+	const completeness = bookingCompleteness(booking);
+	const isOpen = isOpenStatus(booking.status);
 
 	return (
 		<PageShell>
@@ -60,7 +66,19 @@ export default async function BookingPage({
 				bookingId={booking.id}
 				status={booking.status}
 				hasProject={Boolean(booking.project)}
+				blocked={completeness.required.length > 0}
+				sentToClient={Boolean(booking.sentToClientAt)}
+				canSend={Boolean(booking.clientEmail || booking.clientPhone)}
 			/>
+			{isOpen && (
+				<BookingClientStatus
+					sentToClientAt={booking.sentToClientAt}
+					clientAcceptedAt={booking.clientAcceptedAt}
+				/>
+			)}
+			{isOpen && (
+				<BookingChecklist bookingId={booking.id} completeness={completeness} />
+			)}
 			{booking.project && (
 				<Link
 					href={`/dashboard/projects/${booking.project.id}`}

@@ -114,3 +114,43 @@ export async function sendBookingRequestEmail(props: {
 		),
 	});
 }
+
+/** To the client, when the photographer sends them a booking request. */
+export async function sendBookingSentEmail(props: {
+	to: string;
+	locale: Locale;
+	studio: string;
+	booking: string;
+	/** Where to go: the request itself, or sign-up for someone with no account. */
+	path: string;
+}) {
+	const { to, locale, path, ...vars } = props;
+	await sendMail({
+		to,
+		...noticeEmail(mailCopy(locale).bookingSent, locale, vars, appUrl(path)),
+	});
+}
+
+export type BookingReplyKind = "updated" | "accepted" | "declined";
+
+/** To the photographer, when the client edits, accepts or declines a request. */
+export async function sendBookingClientReplyEmail(props: {
+	to: string;
+	locale: Locale;
+	client: string;
+	booking: string;
+	kind: BookingReplyKind;
+	bookingId: string;
+}) {
+	const { to, locale, kind, bookingId, ...vars } = props;
+	const { actions, ...copy } = mailCopy(locale).bookingClientReply;
+	await sendMail({
+		to,
+		...noticeEmail(
+			copy,
+			locale,
+			{ ...vars, action: actions[kind] },
+			appUrl(`/dashboard/bookings/${bookingId}`),
+		),
+	});
+}

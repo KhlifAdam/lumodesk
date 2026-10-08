@@ -138,7 +138,8 @@
 		"alreadyConfirmed": "This booking is already confirmed.",
 		"tooManyRequests": "Too many requests. Please try again later.",
 		"invalidContact": "Enter a valid email or phone number.",
-		"inviteSendFailed": "The invitation is saved, but the message couldn't be sent. Try resending it."
+		"inviteSendFailed": "The invitation is saved, but the message couldn't be sent. Try resending it.",
+		"bookingNoContact": "Add the client's email or phone number first."
 	},
 	"Validation": {
 		"required": "This field is required.",
@@ -693,7 +694,8 @@
 			"TOO_MANY_ATTEMPTS": "Too many attempts. Request a new code.",
 			"USER_NOT_FOUND": "We couldn't find that account.",
 			"INVALID_PHONE_NUMBER": "Enter a valid phone number.",
-			"OTP_NOT_FOUND": "No code was sent to this number. Request a new one."
+			"OTP_NOT_FOUND": "No code was sent to this number. Request a new one.",
+			"PHONE_NUMBER_EXIST": "This number is already used by another account."
 		},
 		"backLink": {
 			"photographer": "Photographer space",
@@ -1122,13 +1124,35 @@
 			"intro": "{client} asked for a service on your website: “{preview}”. Open the request to reply.",
 			"cta": "Open the request",
 			"text": "{client} asked for a service on your website: “{preview}”. Open it here: {url}"
+		},
+		"bookingSent": {
+			"subject": "{studio} sent you a booking request",
+			"preheader": "Review “{booking}” and add your details",
+			"heading": "A booking request is waiting for you",
+			"intro": "{studio} sent you the request “{booking}”. Open it to read the details, add the location (a Google Maps link works) and your date, then accept or decline.",
+			"cta": "Open the request",
+			"text": "{studio} sent you the booking request “{booking}”. Open it here: {url}"
+		},
+		"bookingClientReply": {
+			"subject": "{client} {action} “{booking}”",
+			"preheader": "{client} {action}",
+			"heading": "Your client answered",
+			"intro": "{client} {action} the booking “{booking}”. Open it to see the details.",
+			"cta": "Open the booking",
+			"text": "{client} {action} the booking “{booking}”. Open it here: {url}",
+			"actions": {
+				"updated": "updated the details of",
+				"accepted": "accepted",
+				"declined": "declined"
+			}
 		}
 	},
 	"Sms": {
 		"otp": "Lumodesk: your code is {code}. It expires in {minutes} minutes. Don't share it.",
 		"projectInvitation": "{studio} invited you to the project \"{project}\" on Lumodesk. Sign in with this number to accept: {url}",
 		"galleryShared": "{studio} shared the gallery \"{gallery}\" with you: {url}",
-		"newMessage": "{sender} sent you a message on Lumodesk: {url}"
+		"newMessage": "{sender} sent you a message on Lumodesk: {url}",
+		"bookingSent": "{studio} sent you a booking request \"{booking}\": {url}"
 	},
 	"NotFound": {
 		"code": "404",
@@ -1396,7 +1420,8 @@
 			"filter": "Filter bookings",
 			"allBookings": "All bookings",
 			"noDate": "No date yet",
-			"viewDetails": "View details"
+			"viewDetails": "View details",
+			"incomplete": "To complete"
 		},
 		"empty": {
 			"title": "No bookings yet",
@@ -1436,7 +1461,9 @@
 				"startTime": "Start time",
 				"duration": "Estimated duration (hours)",
 				"location": "Location",
-				"locationHint": "An address or a Google Maps link, if known."
+				"locationHint": "An address or a Google Maps link, if known.",
+				"nameHint": "Optional. If empty, it is built from the type and the client's name.",
+				"neededToConfirm": "Needed to confirm the booking."
 			},
 			"quote": {
 				"title": "Quote",
@@ -1446,8 +1473,10 @@
 				"advance": "Planned advance",
 				"deadline": "Reply deadline",
 				"notes": "Internal notes",
-				"notesHint": "Only you can see these."
-			}
+				"notesHint": "Only you can see these.",
+				"neededToConfirm": "Needed to confirm the booking."
+			},
+			"requiredNote": "Fields marked * are required. The date and the proposed price are needed to confirm the booking."
 		},
 		"detail": {
 			"back": "All bookings",
@@ -1478,14 +1507,32 @@
 			"reason": "Reason",
 			"reasonPlaceholder": "Reason (optional)",
 			"reopen": "Reopen",
-			"reopened": "Booking reopened."
+			"reopened": "Booking reopened.",
+			"confirmBlocked": "Add the date and the proposed price first.",
+			"send": "Send to client",
+			"sendAgain": "Send again",
+			"sendNoContact": "Add the client's email or phone number first.",
+			"sentToClient": "Sent to the client.",
+			"sentNotNotified": "Saved and visible to the client, but the notification couldn't be sent."
 		},
 		"activity": {
 			"title": "History",
 			"placeholder": "Add a follow-up: info requested, alternative date offered…",
 			"add": "Add note",
 			"created": "Request created",
-			"statusChanged": "Status: {status}"
+			"statusChanged": "Status: {status}",
+			"sent": "Sent to the client",
+			"clientAccepted": "The client accepted",
+			"clientDeclined": "The client declined",
+			"clientEdited": "The client updated: {fields}",
+			"fields": {
+				"description": "description",
+				"desiredDate": "date",
+				"startTime": "start time",
+				"durationMinutes": "duration",
+				"location": "location",
+				"clientBudget": "budget"
+			}
 		},
 		"facts": {
 			"client": "Client",
@@ -1506,7 +1553,28 @@
 			"advance": "Planned advance",
 			"deadline": "Reply deadline",
 			"notes": "Internal notes",
-			"hours": "{count, plural, one {# hour} other {# hours}}"
+			"hours": "{count, plural, one {# hour} other {# hours}}",
+			"notSet": "Not set",
+			"requiredToConfirm": "Required to confirm"
+		},
+		"checklist": {
+			"title": "Before you can confirm",
+			"ready": "Ready to confirm",
+			"complete": "Complete the booking",
+			"required": "Required",
+			"recommended": "Recommended",
+			"fields": {
+				"desiredDate": "Date",
+				"proposedPrice": "Proposed price",
+				"contact": "Client email or phone",
+				"location": "Location",
+				"startTime": "Start time"
+			}
+		},
+		"clientStatus": {
+			"notSent": "Not sent to the client yet",
+			"waiting": "Sent to the client on {date}. Waiting for their answer.",
+			"accepted": "The client accepted on {date}. You can confirm."
 		}
 	},
 	"Messages": {
@@ -1677,7 +1745,8 @@
 			"dashboard": "My dashboard",
 			"logout": "Log out",
 			"createStudio": "Create your studio",
-			"messages": "Messages"
+			"messages": "Messages",
+			"account": "My account"
 		},
 		"projects": {
 			"greeting": "Hello {name}",
@@ -1744,6 +1813,81 @@
 			"placeholder": "Your name",
 			"save": "Save",
 			"saved": "Thanks!"
+		},
+		"account": {
+			"back": "My projects",
+			"title": "My account",
+			"description": "Your name and the ways to reach you. Your photographer sees them all.",
+			"name": "Name",
+			"email": "Email",
+			"phone": "Phone number",
+			"none": "Not set",
+			"verified": "Verified",
+			"add": "Add",
+			"change": "Change",
+			"sendCode": "Send a code",
+			"codeSent": "Code sent.",
+			"codePlaceholder": "Code sent to {to}",
+			"confirm": "Confirm",
+			"cancel": "Cancel",
+			"save": "Save",
+			"saved": "Saved.",
+			"backStep": "Back"
+		},
+		"bookings": {
+			"title": "{count, plural, one {# booking request} other {# booking requests}}",
+			"back": "My projects",
+			"reason": "Reason:",
+			"openProject": "Open the project",
+			"waitingStudioHint": "You accepted. The studio will confirm the booking and open the project.",
+			"state": {
+				"toAnswer": "Awaiting your answer",
+				"waitingStudio": "Waiting for the studio",
+				"confirmed": "Confirmed",
+				"declined": "Declined"
+			},
+			"form": {
+				"title": "Your details",
+				"hint": "Fill in or correct what concerns you. The studio is told when you save.",
+				"description": "What you need",
+				"descriptionHint": "Describe what you would like to get.",
+				"date": "Date",
+				"startTime": "Start time",
+				"duration": "Duration (hours)",
+				"location": "Location",
+				"locationHint": "An address or a Google Maps link.",
+				"openMap": "Open the map",
+				"budget": "Your budget",
+				"budgetHint": "Optional, in TND.",
+				"save": "Save my details",
+				"saved": "Your details were saved."
+			},
+			"answer": {
+				"title": "Your answer",
+				"hint": "Accept the proposal, or decline the request.",
+				"incomplete": "The studio still has to add the date and the price before you can accept.",
+				"accept": "Accept the proposal",
+				"accepted": "You accepted. The studio was told.",
+				"decline": "Decline",
+				"declined": "You declined the request.",
+				"declineTitle": "Decline this request?",
+				"declineDescription": "The studio will be told. You can add a reason."
+			},
+			"facts": {
+				"proposal": "The studio's proposal",
+				"service": "Service",
+				"media": "Media",
+				"price": "Price",
+				"advance": "Advance",
+				"deadline": "Reply by",
+				"yourDetails": "Your details",
+				"date": "Date and time",
+				"location": "Location",
+				"description": "What you need",
+				"budget": "Your budget",
+				"openMap": "Open the map",
+				"notSet": "Not set"
+			}
 		}
 	}
 }

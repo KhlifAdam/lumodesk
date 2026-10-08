@@ -106,6 +106,9 @@ export const auth = betterAuth({
 			adminRoles: [ROLES.admin],
 		}),
 		emailOTP({
+			// A phone-only account adds its first email this way; the code goes to
+			// the new address (the current one is a placeholder).
+			changeEmail: { enabled: true },
 			otpLength: 6,
 			expiresIn: OTP_EXPIRES_IN_SECONDS,
 			allowedAttempts: 3,
@@ -120,7 +123,7 @@ export const auth = betterAuth({
 				const sending =
 					type === "forget-password"
 						? sendPasswordResetOtp(props)
-						: type === "email-verification"
+						: type === "email-verification" || type === "change-email"
 							? sendEmailVerificationOtp(props)
 							: null;
 				sending?.catch((error) =>

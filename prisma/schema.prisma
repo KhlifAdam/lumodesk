@@ -630,6 +630,12 @@ enum BookingActivityKind {
   CREATED
   STATUS
   NOTE
+  /// The photographer sent the request to the client.
+  SENT
+  /// The client changed some of the details; `body` lists the fields.
+  CLIENT_EDIT
+  CLIENT_ACCEPT
+  CLIENT_DECLINE
 
   @@map("booking_activity_kind")
 }
@@ -661,6 +667,11 @@ model Booking {
   internalNotes    String?            @map("internal_notes")
   statusReason     String?            @map("status_reason")
   confirmedAt      DateTime?          @map("confirmed_at")
+  /// Set when the photographer sends the request to the client; the client
+  /// can then read it in their portal and fill in their part.
+  sentToClientAt   DateTime?          @map("sent_to_client_at")
+  /// The client accepted the proposal; the photographer confirms next.
+  clientAcceptedAt DateTime?          @map("client_accepted_at")
   createdAt        DateTime           @default(now()) @map("created_at")
   updatedAt        DateTime           @updatedAt @map("updated_at")
 

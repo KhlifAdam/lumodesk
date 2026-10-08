@@ -18,7 +18,7 @@ const MAX_DURATION_HOURS = 24;
 export const bookingStatusSchema = z.enum(BOOKING_STATUSES);
 
 const bookingFields = {
-	title: requiredText(120),
+	title: optionalText(120),
 	source: z.enum(BOOKING_SOURCES),
 	// Client: an existing one (`clientId`) or just contact details.
 	clientId: z.string(),
@@ -66,6 +66,24 @@ function checkBookingRules(
 
 export const bookingSchema = baseSchema.superRefine(checkBookingRules);
 
+/** The details a client can fill in or correct on a request sent to them. */
+export const clientEditSchema = baseSchema
+	.pick({
+		description: true,
+		desiredDate: true,
+		startTime: true,
+		durationHours: true,
+		location: true,
+		clientBudget: true,
+	})
+	.extend({ id: idSchema });
+
+export const clientAnswerSchema = z.object({
+	id: idSchema,
+	accept: z.boolean(),
+	reason: optionalText(500),
+});
+
 export const updateBookingSchema = baseSchema
 	.extend({ id: idSchema })
 	.superRefine(checkBookingRules);
@@ -105,5 +123,6 @@ export const publicRequestSchema = z.object({
 });
 
 export type BookingValues = z.infer<typeof bookingSchema>;
+export type ClientEditValues = z.infer<typeof clientEditSchema>;
 export type ListBookingsParams = z.infer<typeof listBookingsSchema>;
 export type PublicRequestValues = z.infer<typeof publicRequestSchema>;

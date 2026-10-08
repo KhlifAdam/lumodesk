@@ -27,6 +27,8 @@ interface BaseFieldProps<T extends FieldValues> {
 	label: string;
 	description?: string;
 	className?: string;
+	/** Marks the label with a * (validation still comes from the schema). */
+	required?: boolean;
 }
 
 interface TextFieldProps<T extends FieldValues> extends BaseFieldProps<T> {
@@ -50,6 +52,7 @@ export function TextField<T extends FieldValues>({
 	rows,
 	prefix,
 	step,
+	required,
 }: TextFieldProps<T>) {
 	const { control } = useFormContext<T>();
 	return (
@@ -58,7 +61,14 @@ export function TextField<T extends FieldValues>({
 			name={name}
 			render={({ field }) => (
 				<FormItem className={cn("space-y-1", className)}>
-					<FormLabel className="text-xs">{label}</FormLabel>
+					<FormLabel className="text-xs">
+						{label}
+						{required && (
+							<span aria-hidden className="ml-0.5 text-destructive">
+								*
+							</span>
+						)}
+					</FormLabel>
 					<FormControl>
 						{rows ? (
 							<Textarea
@@ -155,6 +165,7 @@ export function SelectField<T extends FieldValues>({
 	className,
 	options,
 	emptyLabel,
+	required,
 }: SelectFieldProps<T>) {
 	const { control } = useFormContext<T>();
 	return (
@@ -163,7 +174,14 @@ export function SelectField<T extends FieldValues>({
 			name={name}
 			render={({ field }) => (
 				<FormItem className={cn("space-y-1", className)}>
-					<FormLabel className="text-xs">{label}</FormLabel>
+					<FormLabel className="text-xs">
+						{label}
+						{required && (
+							<span aria-hidden className="ml-0.5 text-destructive">
+								*
+							</span>
+						)}
+					</FormLabel>
 					<Select
 						value={field.value || (emptyLabel ? EMPTY : undefined)}
 						onValueChange={(value) =>

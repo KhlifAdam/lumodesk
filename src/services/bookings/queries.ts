@@ -111,6 +111,8 @@ export async function getBooking(
 		internalNotes: row.internalNotes ?? "",
 		statusReason: row.statusReason ?? "",
 		confirmedAt: row.confirmedAt?.toISOString() ?? null,
+		sentToClientAt: row.sentToClientAt?.toISOString() ?? null,
+		clientAcceptedAt: row.clientAcceptedAt?.toISOString() ?? null,
 		project: row.project,
 		activities: row.activities.map((activity) => ({
 			id: activity.id,

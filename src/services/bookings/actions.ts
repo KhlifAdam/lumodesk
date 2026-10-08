@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { getTranslations } from "next-intl/server";
 import { type ActionResult, fail, failFromZod, ok } from "@/lib/action-result";
 import { requirePhotographer } from "@/lib/auth/require-photographer";
 import { db } from "@/lib/db";
@@ -15,9 +16,16 @@ import {
 
 const toDate = (value: string) => (value ? new Date(value) : null);
 
-function toData(values: Omit<BookingValues, "clientId">) {
+/** The typed title, else "Wedding · Ahmed Ben Ali" from the type and client. */
+async function titleOf(values: Omit<BookingValues, "clientId">) {
+	if (values.title) return values.title;
+	const tService = await getTranslations("Projects.serviceTypes");
+	return `${tService(values.serviceType)} · ${values.clientName}`;
+}
+
+async function toData(values: Omit<BookingValues, "clientId">) {
 	return {
-		title: values.title,
+		title: await titleOf(values),
 		source: values.source,
 		clientName: values.clientName,
 		clientEmail: values.clientEmail ? values.clientEmail.toLowerCase() : null,
@@ -90,7 +98,7 @@ export async function createBooking(
 				values.clientEmail,
 				values.clientPhone,
 			),
-			...toData(values),
+			...(await toData(values)),
 			activities: { create: { kind: "CREATED" } },
 		},
 		select: { id: true },
@@ -115,7 +123,9 @@ export async function updateBooking(input: unknown): Promise<ActionResult> {
 				values.clientEmail,
 				values.clientPhone,
 			),
-			...toData(values),
+			...(await toData(values)),
+			// New terms need a new answer from the client.
+			clientAcceptedAt: null,
 		},
 	});
 	if (count === 0) return fail(await whyNotEditable(photographerId, id));

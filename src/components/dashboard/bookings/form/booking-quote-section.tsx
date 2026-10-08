@@ -24,6 +24,7 @@ export function BookingQuoteSection() {
 				<TextField<BookingValues>
 					name="proposedPrice"
 					label={t("price")}
+					description={t("neededToConfirm")}
 					type="number"
 					step="0.001"
 				/>

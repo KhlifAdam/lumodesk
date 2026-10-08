@@ -138,7 +138,8 @@
 		"alreadyConfirmed": "Cette réservation est déjà confirmée.",
 		"tooManyRequests": "Trop de demandes. Réessayez plus tard.",
 		"invalidContact": "Saisissez un e-mail ou un numéro de téléphone valide.",
-		"inviteSendFailed": "L'invitation est enregistrée, mais le message n'a pas pu être envoyé. Essayez de la renvoyer."
+		"inviteSendFailed": "L'invitation est enregistrée, mais le message n'a pas pu être envoyé. Essayez de la renvoyer.",
+		"bookingNoContact": "Ajoutez d'abord l'e-mail ou le téléphone du client."
 	},
 	"Validation": {
 		"required": "Ce champ est obligatoire.",
@@ -693,7 +694,8 @@
 			"TOO_MANY_ATTEMPTS": "Trop de tentatives. Demandez un nouveau code.",
 			"USER_NOT_FOUND": "Nous n'avons pas trouvé ce compte.",
 			"INVALID_PHONE_NUMBER": "Saisissez un numéro de téléphone valide.",
-			"OTP_NOT_FOUND": "Aucun code n'a été envoyé à ce numéro. Demandez-en un nouveau."
+			"OTP_NOT_FOUND": "Aucun code n'a été envoyé à ce numéro. Demandez-en un nouveau.",
+			"PHONE_NUMBER_EXIST": "Ce numéro est déjà utilisé par un autre compte."
 		},
 		"backLink": {
 			"photographer": "Espace photographe",
@@ -1122,13 +1124,35 @@
 			"intro": "{client} a demandé une prestation sur votre site : « {preview} ». Ouvrez la demande pour répondre.",
 			"cta": "Ouvrir la demande",
 			"text": "{client} a demandé une prestation sur votre site : « {preview} ». Ouvrez-la ici : {url}"
+		},
+		"bookingSent": {
+			"subject": "{studio} vous a envoyé une demande de réservation",
+			"preheader": "Consultez « {booking} » et ajoutez vos informations",
+			"heading": "Une demande de réservation vous attend",
+			"intro": "{studio} vous a envoyé la demande « {booking} ». Ouvrez-la pour lire les détails, ajouter le lieu (un lien Google Maps convient) et votre date, puis l'accepter ou la refuser.",
+			"cta": "Ouvrir la demande",
+			"text": "{studio} vous a envoyé la demande de réservation « {booking} ». Ouvrez-la ici : {url}"
+		},
+		"bookingClientReply": {
+			"subject": "{client} {action} « {booking} »",
+			"preheader": "{client} {action}",
+			"heading": "Votre client a répondu",
+			"intro": "{client} {action} la réservation « {booking} ». Ouvrez-la pour voir les détails.",
+			"cta": "Ouvrir la réservation",
+			"text": "{client} {action} la réservation « {booking} ». Ouvrez-la ici : {url}",
+			"actions": {
+				"updated": "a modifié les détails de",
+				"accepted": "a accepté",
+				"declined": "a refusé"
+			}
 		}
 	},
 	"Sms": {
 		"otp": "Lumodesk : votre code est {code}. Il expire dans {minutes} minutes. Ne le partagez pas.",
 		"projectInvitation": "{studio} vous invite au projet « {project} » sur Lumodesk. Connectez-vous avec ce numéro pour accepter : {url}",
 		"galleryShared": "{studio} a partagé la galerie « {gallery} » avec vous : {url}",
-		"newMessage": "{sender} vous a envoyé un message sur Lumodesk : {url}"
+		"newMessage": "{sender} vous a envoyé un message sur Lumodesk : {url}",
+		"bookingSent": "{studio} vous a envoyé une demande de réservation « {booking} » : {url}"
 	},
 	"NotFound": {
 		"code": "404",
@@ -1396,7 +1420,8 @@
 			"filter": "Filtrer les réservations",
 			"allBookings": "Toutes les réservations",
 			"noDate": "Pas encore de date",
-			"viewDetails": "Voir les détails"
+			"viewDetails": "Voir les détails",
+			"incomplete": "À compléter"
 		},
 		"empty": {
 			"title": "Aucune réservation",
@@ -1436,7 +1461,9 @@
 				"startTime": "Heure de début",
 				"duration": "Durée estimée (heures)",
 				"location": "Lieu",
-				"locationHint": "Une adresse ou un lien Google Maps, si connu."
+				"locationHint": "Une adresse ou un lien Google Maps, si connu.",
+				"nameHint": "Facultatif. Si vide, il est composé du type et du nom du client.",
+				"neededToConfirm": "Nécessaire pour confirmer la réservation."
 			},
 			"quote": {
 				"title": "Devis",
@@ -1446,8 +1473,10 @@
 				"advance": "Avance prévue",
 				"deadline": "Date limite de réponse",
 				"notes": "Notes internes",
-				"notesHint": "Vous seul pouvez les voir."
-			}
+				"notesHint": "Vous seul pouvez les voir.",
+				"neededToConfirm": "Nécessaire pour confirmer la réservation."
+			},
+			"requiredNote": "Les champs marqués * sont obligatoires. La date et le prix proposé sont nécessaires pour confirmer la réservation."
 		},
 		"detail": {
 			"back": "Toutes les réservations",
@@ -1478,14 +1507,32 @@
 			"reason": "Raison",
 			"reasonPlaceholder": "Raison (facultatif)",
 			"reopen": "Rouvrir",
-			"reopened": "Réservation rouverte."
+			"reopened": "Réservation rouverte.",
+			"confirmBlocked": "Ajoutez d'abord la date et le prix proposé.",
+			"send": "Envoyer au client",
+			"sendAgain": "Renvoyer",
+			"sendNoContact": "Ajoutez d'abord l'e-mail ou le téléphone du client.",
+			"sentToClient": "Envoyée au client.",
+			"sentNotNotified": "Enregistré et visible par le client, mais la notification n'a pas pu être envoyée."
 		},
 		"activity": {
 			"title": "Historique",
 			"placeholder": "Ajouter un suivi : infos demandées, autre date proposée…",
 			"add": "Ajouter la note",
 			"created": "Demande créée",
-			"statusChanged": "Statut : {status}"
+			"statusChanged": "Statut : {status}",
+			"sent": "Envoyée au client",
+			"clientAccepted": "Le client a accepté",
+			"clientDeclined": "Le client a refusé",
+			"clientEdited": "Le client a modifié : {fields}",
+			"fields": {
+				"description": "description",
+				"desiredDate": "date",
+				"startTime": "heure de début",
+				"durationMinutes": "durée",
+				"location": "lieu",
+				"clientBudget": "budget"
+			}
 		},
 		"facts": {
 			"client": "Client",
@@ -1506,7 +1553,28 @@
 			"advance": "Avance prévue",
 			"deadline": "Date limite de réponse",
 			"notes": "Notes internes",
-			"hours": "{count, plural, one {# heure} other {# heures}}"
+			"hours": "{count, plural, one {# heure} other {# heures}}",
+			"notSet": "Non renseigné",
+			"requiredToConfirm": "Obligatoire pour confirmer"
+		},
+		"checklist": {
+			"title": "Avant de pouvoir confirmer",
+			"ready": "Prête à être confirmée",
+			"complete": "Compléter la réservation",
+			"required": "Obligatoire",
+			"recommended": "Conseillé",
+			"fields": {
+				"desiredDate": "Date",
+				"proposedPrice": "Prix proposé",
+				"contact": "E-mail ou téléphone du client",
+				"location": "Lieu",
+				"startTime": "Heure de début"
+			}
+		},
+		"clientStatus": {
+			"notSent": "Pas encore envoyée au client",
+			"waiting": "Envoyée au client le {date}. En attente de sa réponse.",
+			"accepted": "Le client a accepté le {date}. Vous pouvez confirmer."
 		}
 	},
 	"Messages": {
@@ -1677,7 +1745,8 @@
 			"dashboard": "Mon tableau de bord",
 			"logout": "Se déconnecter",
 			"createStudio": "Créer votre studio",
-			"messages": "Messagerie"
+			"messages": "Messagerie",
+			"account": "Mon compte"
 		},
 		"projects": {
 			"greeting": "Bonjour {name}",
@@ -1744,6 +1813,81 @@
 			"placeholder": "Votre nom",
 			"save": "Enregistrer",
 			"saved": "Merci !"
+		},
+		"account": {
+			"back": "Mes projets",
+			"title": "Mon compte",
+			"description": "Votre nom et les moyens de vous joindre. Votre photographe les voit tous.",
+			"name": "Nom",
+			"email": "E-mail",
+			"phone": "Numéro de téléphone",
+			"none": "Non renseigné",
+			"verified": "Vérifié",
+			"add": "Ajouter",
+			"change": "Modifier",
+			"sendCode": "Envoyer un code",
+			"codeSent": "Code envoyé.",
+			"codePlaceholder": "Code envoyé à {to}",
+			"confirm": "Confirmer",
+			"cancel": "Annuler",
+			"save": "Enregistrer",
+			"saved": "Enregistré.",
+			"backStep": "Retour"
+		},
+		"bookings": {
+			"title": "{count, plural, one {# demande de réservation} other {# demandes de réservation}}",
+			"back": "Mes projets",
+			"reason": "Raison :",
+			"openProject": "Ouvrir le projet",
+			"waitingStudioHint": "Vous avez accepté. Le studio va confirmer la réservation et ouvrir le projet.",
+			"state": {
+				"toAnswer": "À votre réponse",
+				"waitingStudio": "En attente du studio",
+				"confirmed": "Confirmée",
+				"declined": "Refusée"
+			},
+			"form": {
+				"title": "Vos informations",
+				"hint": "Renseignez ou corrigez ce qui vous concerne. Le studio est prévenu quand vous enregistrez.",
+				"description": "Votre besoin",
+				"descriptionHint": "Décrivez ce que vous souhaitez obtenir.",
+				"date": "Date",
+				"startTime": "Heure de début",
+				"duration": "Durée (heures)",
+				"location": "Lieu",
+				"locationHint": "Une adresse ou un lien Google Maps.",
+				"openMap": "Ouvrir la carte",
+				"budget": "Votre budget",
+				"budgetHint": "Facultatif, en TND.",
+				"save": "Enregistrer mes informations",
+				"saved": "Vos informations sont enregistrées."
+			},
+			"answer": {
+				"title": "Votre réponse",
+				"hint": "Acceptez la proposition, ou refusez la demande.",
+				"incomplete": "Le studio doit encore ajouter la date et le prix avant que vous puissiez accepter.",
+				"accept": "Accepter la proposition",
+				"accepted": "Vous avez accepté. Le studio est prévenu.",
+				"decline": "Refuser",
+				"declined": "Vous avez refusé la demande.",
+				"declineTitle": "Refuser cette demande ?",
+				"declineDescription": "Le studio sera prévenu. Vous pouvez ajouter une raison."
+			},
+			"facts": {
+				"proposal": "La proposition du studio",
+				"service": "Prestation",
+				"media": "Média",
+				"price": "Prix",
+				"advance": "Avance",
+				"deadline": "Réponse avant le",
+				"yourDetails": "Vos informations",
+				"date": "Date et heure",
+				"location": "Lieu",
+				"description": "Votre besoin",
+				"budget": "Votre budget",
+				"openMap": "Ouvrir la carte",
+				"notSet": "Non renseigné"
+			}
 		}
 	}
 }

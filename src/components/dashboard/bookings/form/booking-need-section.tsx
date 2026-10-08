@@ -19,6 +19,7 @@ export function BookingNeedSection() {
 			<TextField<BookingValues>
 				name="title"
 				label={t("name")}
+				description={t("nameHint")}
 				placeholder={t("namePlaceholder")}
 			/>
 			<div className="grid gap-3 sm:grid-cols-2">
@@ -49,6 +50,7 @@ export function BookingNeedSection() {
 				<TextField<BookingValues>
 					name="desiredDate"
 					label={t("date")}
+					description={t("neededToConfirm")}
 					type="date"
 				/>
 				<TextField<BookingValues>

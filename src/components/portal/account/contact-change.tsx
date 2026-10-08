@@ -1,0 +1,243 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { BadgeCheck, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { type ReactNode, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+import { type CodeValues, codeSchema } from "@/components/auth/schemas";
+import { useAuthError } from "@/components/auth/use-auth-error";
+import { Button } from "@/components/ui/button";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+
+type AuthResult = { error: { code?: string } | null };
+
+interface ContactChangeProps {
+	title: string;
+	/** The contact now on the account, formatted; null when there is none. */
+	current: string | null;
+	verified: boolean;
+	/** Turns what was typed into what the server stores; null when invalid. */
+	parse: (raw: string) => string | null;
+	/** `Validation` message shown when `parse` rejects the input. */
+	invalidKey: "invalidEmail" | "invalidPhone";
+	inputType: "email" | "tel";
+	placeholder: string;
+	/** Sends the code to the new contact. */
+	request: (value: string) => Promise<AuthResult>;
+	/** Checks the code and attaches the contact to the account. */
+	confirm: (value: string, code: string) => Promise<AuthResult>;
+	children?: ReactNode;
+}
+
+/**
+ * Adds or changes one contact of the signed-in account: type it, receive a
+ * code there, enter the code. The same steps for an email and a phone number.
+ */
+export function ContactChange({
+	title,
+	current,
+	verified,
+	parse,
+	invalidKey,
+	inputType,
+	placeholder,
+	request,
+	confirm,
+	children,
+}: ContactChangeProps) {
+	const t = useTranslations("Portal.account");
+	const router = useRouter();
+	const authError = useAuthError();
+	const [editing, setEditing] = useState(false);
+	// What the code was sent to; null while still asking for the contact.
+	const [pending, setPending] = useState<string | null>(null);
+
+	const valueSchema = useMemo(
+		() =>
+			z.object({
+				value: z
+					.string()
+					.trim()
+					.refine((raw) => parse(raw) !== null, invalidKey),
+			}),
+		[parse, invalidKey],
+	);
+	const valueForm = useForm<{ value: string }>({
+		resolver: zodResolver(valueSchema),
+		defaultValues: { value: "" },
+	});
+	const codeForm = useForm<CodeValues>({
+		resolver: zodResolver(codeSchema),
+		defaultValues: { code: "" },
+	});
+
+	function close() {
+		setEditing(false);
+		setPending(null);
+		valueForm.reset();
+		codeForm.reset();
+	}
+
+	async function onRequest({ raw }: { raw: string }) {
+		const value = parse(raw);
+		if (!value) return;
+		const { error } = await request(value);
+		if (error) return void toast.error(authError.message(error));
+		setPending(value);
+		toast.success(t("codeSent"));
+	}
+
+	async function onConfirm({ code }: CodeValues) {
+		if (!pending) return;
+		const { error } = await confirm(pending, code);
+		if (error) return void toast.error(authError.message(error));
+		toast.success(t("saved"));
+		close();
+		router.refresh();
+	}
+
+	return (
+		<section className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4">
+			<div className="flex flex-wrap items-center justify-between gap-2">
+				<div className="min-w-0">
+					<h2 className="text-xs font-medium text-muted-foreground">{title}</h2>
+					<p className="flex items-center gap-2 text-sm font-medium">
+						{current ?? (
+							<span className="text-muted-foreground">{t("none")}</span>
+						)}
+						{current && verified && (
+							<BadgeCheck
+								className="h-4 w-4 text-success"
+								aria-label={t("verified")}
+							/>
+						)}
+					</p>
+				</div>
+				{!editing && (
+					<Button
+						variant="outline"
+						size="sm"
+						className="h-8 text-xs"
+						onClick={() => setEditing(true)}
+					>
+						{current ? t("change") : t("add")}
+					</Button>
+				)}
+			</div>
+			{children}
+			{editing &&
+				(pending ? (
+					<Form {...codeForm}>
+						<form
+							onSubmit={codeForm.handleSubmit(onConfirm)}
+							className="flex flex-wrap items-start gap-2"
+						>
+							<FormField
+								control={codeForm.control}
+								name="code"
+								render={({ field }) => (
+									<FormItem className="space-y-1">
+										<FormControl>
+											<Input
+												inputMode="numeric"
+												autoComplete="one-time-code"
+												autoFocus
+												maxLength={6}
+												placeholder={t("codePlaceholder", { to: pending })}
+												aria-label={t("codePlaceholder", { to: pending })}
+												className="h-8 w-56 text-sm tracking-widest"
+												{...field}
+												onChange={(event) =>
+													field.onChange(event.target.value.replace(/\D/g, ""))
+												}
+											/>
+										</FormControl>
+										<FormMessage className="text-xs" />
+									</FormItem>
+								)}
+							/>
+							<Submit pending={codeForm.formState.isSubmitting}>
+								{t("confirm")}
+							</Submit>
+							<Button
+								type="button"
+								variant="ghost"
+								size="sm"
+								className="h-8 text-xs"
+								onClick={() => setPending(null)}
+							>
+								{t("backStep")}
+							</Button>
+						</form>
+					</Form>
+				) : (
+					<Form {...valueForm}>
+						<form
+							onSubmit={valueForm.handleSubmit(({ value }) =>
+								onRequest({ raw: value }),
+							)}
+							className="flex flex-wrap items-start gap-2"
+						>
+							<FormField
+								control={valueForm.control}
+								name="value"
+								render={({ field }) => (
+									<FormItem className="space-y-1">
+										<FormControl>
+											<Input
+												type={inputType}
+												autoFocus
+												placeholder={placeholder}
+												aria-label={placeholder}
+												className="h-8 w-64 text-sm"
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage className="text-xs" />
+									</FormItem>
+								)}
+							/>
+							<Submit pending={valueForm.formState.isSubmitting}>
+								{t("sendCode")}
+							</Submit>
+							<Button
+								type="button"
+								variant="ghost"
+								size="sm"
+								className="h-8 text-xs"
+								onClick={close}
+							>
+								{t("cancel")}
+							</Button>
+						</form>
+					</Form>
+				))}
+		</section>
+	);
+}
+
+function Submit({
+	pending,
+	children,
+}: {
+	pending: boolean;
+	children: ReactNode;
+}) {
+	return (
+		<Button type="submit" size="sm" className="h-8 text-xs" disabled={pending}>
+			{pending && <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />}
+			{children}
+		</Button>
+	);
+}

@@ -8,6 +8,7 @@ import { getRequestTimeZone } from "@/lib/request-time-zone";
 import { dayKeyIn, zonedToIso } from "@/services/calendar/dates";
 import { inviteToProject } from "@/services/projects/invitations";
 import { idSchema } from "@/services/shared/schemas";
+import { bookingCompleteness } from "./completeness";
 
 const DEFAULT_SHOOT_MINUTES = 120;
 const MINUTES_PER_DAY = 24 * 60;
@@ -40,24 +41,26 @@ export async function confirmBooking(
 	if (booking.status === "CONFIRMED" || booking.projectId)
 		return fail("alreadyConfirmed");
 	// Enough to run the job: when, and what was agreed.
-	if (!booking.desiredDate || booking.proposedPrice === null)
+	if (bookingCompleteness(booking).required.length > 0)
 		return fail("bookingIncomplete");
+	const { desiredDate } = booking;
+	if (!desiredDate) return fail("bookingIncomplete");
 
 	const timeZone = await getRequestTimeZone();
-	const day = booking.desiredDate.toISOString().slice(0, 10);
+	const day = desiredDate.toISOString().slice(0, 10);
 	const { startTime, durationMinutes } = booking;
 	const endTime = startTime
 		? addMinutes(startTime, durationMinutes ?? DEFAULT_SHOOT_MINUTES)
 		: null;
 	const startsAt = startTime
 		? new Date(zonedToIso(day, startTime, timeZone))
-		: booking.desiredDate;
+		: desiredDate;
 	const endsAt =
 		startTime && endTime
 			? new Date(
 					zonedToIso(dayKeyIn(startsAt.getTime(), timeZone), endTime, timeZone),
 				)
-			: booking.desiredDate;
+			: desiredDate;
 
 	const projectId = await db.$transaction(async (tx) => {
 		// Claims the booking first, so two clicks can't create two projects.
@@ -84,7 +87,7 @@ export async function confirmBooking(
 				mediaType: booking.mediaType,
 				description: booking.description,
 				clientPhone: booking.clientPhone,
-				eventDate: booking.desiredDate,
+				eventDate: desiredDate,
 				startTime,
 				endTime,
 				location: booking.location,

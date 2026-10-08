@@ -15,7 +15,14 @@ export interface BookingSummary {
 
 export interface BookingActivityItem {
 	id: string;
-	kind: "CREATED" | "STATUS" | "NOTE";
+	kind:
+		| "CREATED"
+		| "STATUS"
+		| "NOTE"
+		| "SENT"
+		| "CLIENT_EDIT"
+		| "CLIENT_ACCEPT"
+		| "CLIENT_DECLINE";
 	fromStatus: BookingStatus | null;
 	toStatus: BookingStatus | null;
 	body: string;
@@ -38,6 +45,10 @@ export interface BookingDetail extends BookingSummary {
 	internalNotes: string;
 	statusReason: string;
 	confirmedAt: string | null;
+	/** When the request was sent to the client, if it was. */
+	sentToClientAt: string | null;
+	/** When the client accepted the proposal, if they did. */
+	clientAcceptedAt: string | null;
 	project: { id: string; title: string } | null;
 	activities: BookingActivityItem[];
 }

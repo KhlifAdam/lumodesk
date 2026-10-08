@@ -1,6 +1,12 @@
 "use client";
 
-import { Camera, LayoutDashboard, LogOut, MessageSquare } from "lucide-react";
+import {
+	Camera,
+	LayoutDashboard,
+	LogOut,
+	MessageSquare,
+	UserRound,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -80,11 +86,24 @@ export function PortalHeader({
 						<DropdownMenuContent align="end" className="w-56">
 							<DropdownMenuLabel className="font-normal">
 								<p className="truncate text-sm font-medium">{user.name}</p>
-								<p className="truncate text-xs text-muted-foreground">
-									{user.email || formatPhone(user.phoneNumber ?? "")}
-								</p>
+								{user.email && (
+									<p className="truncate text-xs text-muted-foreground">
+										{user.email}
+									</p>
+								)}
+								{user.phoneNumber && (
+									<p className="truncate text-xs text-muted-foreground">
+										{formatPhone(user.phoneNumber)}
+									</p>
+								)}
 							</DropdownMenuLabel>
 							<DropdownMenuSeparator />
+							<DropdownMenuItem asChild className="cursor-pointer">
+								<Link href="/portal/account">
+									<UserRound className="mr-2 h-4 w-4" />
+									{t("account")}
+								</Link>
+							</DropdownMenuItem>
 							<DropdownMenuItem asChild className="cursor-pointer">
 								{isPhotographer ? (
 									<Link href="/dashboard">

@@ -62,7 +62,9 @@ export function ProjectClientCard({
 				>
 					{client.name}
 					<span className="ml-2 text-xs font-normal text-muted-foreground">
-						{address}
+						{[client.email, client.phone && formatPhone(client.phone)]
+							.filter(Boolean)
+							.join(" · ")}
 					</span>
 				</Link>
 			</Card>

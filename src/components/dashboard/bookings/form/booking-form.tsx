@@ -55,6 +55,7 @@ export function BookingForm({ initial, bookingId }: BookingFormProps) {
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="flex max-w-3xl flex-col gap-4"
 			>
+				<p className="text-xs text-muted-foreground">{t("requiredNote")}</p>
 				<BookingClientSection />
 				<BookingNeedSection />
 				<BookingQuoteSection />

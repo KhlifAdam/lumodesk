@@ -93,7 +93,9 @@ export function ClientPicker({
 							>
 								<span className="truncate text-sm font-medium">{hit.name}</span>
 								<span className="truncate text-xs text-muted-foreground">
-									{hit.email || formatPhone(hit.phone)}
+									{[hit.email, hit.phone && formatPhone(hit.phone)]
+										.filter(Boolean)
+										.join(" · ")}
 								</span>
 							</button>
 						</li>

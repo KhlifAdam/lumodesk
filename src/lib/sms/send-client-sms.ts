@@ -75,3 +75,18 @@ export function sendNewMessageSms(props: {
 		body: smsText(locale, "newMessage", { sender, url: appUrl(path) }),
 	});
 }
+
+/** A booking request sent to a client who has no email. */
+export function sendBookingSentSms(props: {
+	to: string;
+	locale: Locale;
+	studio: string;
+	booking: string;
+	path: string;
+}) {
+	const { to, locale, path, ...vars } = props;
+	return sendSms({
+		to,
+		body: smsText(locale, "bookingSent", { ...vars, url: appUrl(path) }),
+	});
+}
