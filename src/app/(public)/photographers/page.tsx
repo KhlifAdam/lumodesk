@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { CTA } from "@/components/landing/cta";
 import { FAQ } from "@/components/landing/faq";
 import { Features } from "@/components/landing/features";
@@ -8,8 +10,15 @@ import { Logos } from "@/components/landing/logos";
 import { Pricing } from "@/components/landing/pricing";
 import { Testimonials } from "@/components/landing/testimonials";
 import { Workflow } from "@/components/landing/workflow";
+import { BRAND_NAME } from "@/lib/brand";
 
-export default function Page() {
+export async function generateMetadata(): Promise<Metadata> {
+	const t = await getTranslations("Home.photographer");
+	return { title: `${BRAND_NAME} | ${t("metaTitle")}` };
+}
+
+/** The studio side's presentation; its calls to action lead to the photographer sign-up and sign-in. */
+export default function PhotographersPage() {
 	return (
 		<main className="min-h-screen bg-background text-foreground selection:bg-primary/20">
 			<div className="pointer-events-none absolute inset-x-0 top-0 h-[900px] mesh-glow" />

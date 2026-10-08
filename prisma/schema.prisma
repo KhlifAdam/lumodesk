@@ -40,6 +40,7 @@ model User {
   galleries       Gallery[]
   galleryItems    GalleryItem[]
   galleryComments GalleryComment[]
+  driveImports    DriveImport[]
 
   @@map("users")
 }
@@ -337,6 +338,7 @@ model Gallery {
   photographer User          @relation(fields: [photographerId], references: [id], onDelete: Cascade)
   project      Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
   items        GalleryItem[]
+  driveImports DriveImport[]
 
   @@index([projectId, position])
   @@index([photographerId])
@@ -357,12 +359,15 @@ model GalleryItem {
   height         Int?
   position       Int      @default(0)
   selected       Boolean  @default(false)
+  /// Google Drive file this was imported from; stops the same file entering a gallery twice.
+  driveFileId    String?  @map("drive_file_id")
   createdAt      DateTime @default(now()) @map("created_at")
 
   gallery      Gallery          @relation(fields: [galleryId], references: [id], onDelete: Cascade)
   photographer User             @relation(fields: [photographerId], references: [id], onDelete: Cascade)
   comments     GalleryComment[]
 
+  @@unique([galleryId, driveFileId])
   @@index([galleryId, position])
   @@index([galleryId, selected])
   @@map("gallery_items")
@@ -380,4 +385,56 @@ model GalleryComment {
 
   @@index([galleryItemId, createdAt])
   @@map("gallery_comments")
+}
+
+// ─── Google Drive import ─────────────────────────────────────────────────────
+// A photographer picks files in Google Drive; a background worker copies them
+// into a private gallery. One row per file, so progress and retries are per file.
+
+enum DriveImportStatus {
+  PENDING
+  RUNNING
+  DONE
+  FAILED
+
+  @@map("drive_import_status")
+}
+
+model DriveImport {
+  id             String            @id @default(cuid())
+  photographerId String            @map("photographer_id")
+  galleryId      String            @map("gallery_id")
+  status         DriveImportStatus @default(PENDING)
+  createdAt      DateTime          @default(now()) @map("created_at")
+  updatedAt      DateTime          @updatedAt @map("updated_at")
+
+  photographer User              @relation(fields: [photographerId], references: [id], onDelete: Cascade)
+  gallery      Gallery           @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  items        DriveImportItem[]
+
+  @@index([photographerId, createdAt])
+  @@index([galleryId])
+  @@map("drive_imports")
+}
+
+model DriveImportItem {
+  id          String            @id @default(cuid())
+  importId    String            @map("import_id")
+  driveFileId String            @map("drive_file_id")
+  filename    String
+  mimeType    String            @map("mime_type")
+  /// Bytes; BigInt because videos (a later step) can pass 2 GB.
+  size        BigInt
+  status      DriveImportStatus @default(PENDING)
+  /// Message key or short reason when `status` is FAILED.
+  error       String?
+  attempts    Int               @default(0)
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+
+  import DriveImport @relation(fields: [importId], references: [id], onDelete: Cascade)
+
+  @@unique([importId, driveFileId])
+  @@index([importId, status])
+  @@map("drive_import_items")
 }

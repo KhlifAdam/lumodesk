@@ -21,9 +21,8 @@ import { authClient } from "@/lib/auth/client";
 import { AUTH_PATHS, type AuthAudience } from "@/lib/auth/client-intent";
 import { ROLES } from "@/lib/auth/roles";
 import { AudienceBadge } from "./audience-badge";
-import { AudienceSwitch } from "./audience-switch";
+import { AuthBackLink } from "./auth-back-link";
 import { AuthHeading } from "./auth-heading";
-import { ClientBackLink } from "./client-back-link";
 import { PasswordInput } from "./password-input";
 import { type LoginValues, loginSchema } from "./schemas";
 import { SocialLogin } from "./social-login";
@@ -69,7 +68,7 @@ export function LoginForm({ audience }: { audience: AuthAudience }) {
 
 	return (
 		<div className="flex flex-col space-y-6">
-			{isClient && <ClientBackLink />}
+			<AuthBackLink audience={audience} />
 			<AuthHeading
 				title={t(isClient ? "client.login.title" : "login.title")}
 				description={t(
@@ -152,7 +151,6 @@ export function LoginForm({ audience }: { audience: AuthAudience }) {
 					{t("login.signUp")}
 				</Link>
 			</p>
-			<AudienceSwitch audience={audience} screen="login" />
 		</div>
 	);
 }

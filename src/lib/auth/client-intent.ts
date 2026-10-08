@@ -7,9 +7,15 @@ export type AuthAudience = "photographer" | "client";
 
 /** Auth screens and post-auth landing per audience. */
 export const AUTH_PATHS = {
-	photographer: { login: "/login", register: "/register", home: "/dashboard" },
+	photographer: {
+		/** The studio side's presentation, reached from the hub. */
+		welcome: "/photographers",
+		login: "/login",
+		register: "/register",
+		home: "/dashboard",
+	},
 	client: {
-		/** Where clients arrive from a studio's site, before signing in. */
+		/** Where clients arrive from the hub or a studio's site, before signing in. */
 		welcome: "/client",
 		login: "/client/login",
 		register: "/client/register",

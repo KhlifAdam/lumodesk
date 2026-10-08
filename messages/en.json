@@ -661,6 +661,11 @@
 			"TOO_MANY_ATTEMPTS": "Too many attempts. Request a new code.",
 			"USER_NOT_FOUND": "We couldn't find that account."
 		},
+		"backLink": {
+			"photographer": "Photographer space",
+			"client": "Client space",
+			"home": "Lumodesk home"
+		},
 		"audience": {
 			"photographer": "Photographer",
 			"client": "Client",
@@ -676,7 +681,6 @@
 			}
 		},
 		"client": {
-			"back": "Back to welcome",
 			"login": {
 				"title": "Welcome back",
 				"description": "Sign in to follow your projects and galleries with every photographer"
@@ -915,6 +919,73 @@
 			"videos": "Videos",
 			"copyright": "© {year} Lumodesk, Inc. Built for the ones who see differently."
 		}
+	},
+	"Home": {
+		"badge": "The platform for photographers and their clients",
+		"titleStart": "One place where photographers and their clients",
+		"titleAccent": "work together",
+		"subtitle": "{brand} runs the photographer's studio from booking to delivery, and gives every client a private space to follow their project and choose their photos.",
+		"choose": "Choose your space",
+		"connector": "One platform",
+		"photographer": {
+			"metaTitle": "For photographers",
+			"label": "I'm a photographer",
+			"title": "Run your whole studio",
+			"description": "Clients, projects, private galleries and your own website, all in one place.",
+			"points": [
+				"Every project from booking to delivery",
+				"Private galleries with client selection",
+				"Your own portfolio website"
+			],
+			"cta": "Discover the studio space",
+			"imageAlt": "Photographer working with a camera"
+		},
+		"client": {
+			"label": "I'm a client",
+			"title": "Follow your shoot",
+			"description": "One account for every photographer you work with: your projects, galleries and favourite photos.",
+			"points": [
+				"See where your project stands",
+				"Open your private galleries",
+				"Pick the photos you love"
+			],
+			"cta": "Open the client space",
+			"imageAlt": "Couple looking at their photos"
+		},
+		"how": {
+			"eyebrow": "How it works",
+			"title": "How the two sides meet",
+			"subtitle": "The photographer works in the studio, and the client sees each step in their own space.",
+			"actors": {
+				"studio": "Photographer",
+				"client": "Client"
+			},
+			"steps": {
+				"plan": {
+					"title": "Plan the shoot",
+					"text": "Booking, preparation and the shoot itself are tracked in the studio."
+				},
+				"invite": {
+					"title": "Invite the client",
+					"text": "The client receives an email and joins the project from their space."
+				},
+				"gallery": {
+					"title": "Open the gallery",
+					"text": "Photos arrive in a private gallery that only the invited client can see."
+				},
+				"pick": {
+					"title": "Pick the favourites",
+					"text": "The client selects the photos they love and sends the choice back in one click."
+				}
+			}
+		},
+		"final": {
+			"title": "Ready to step in?",
+			"subtitle": "Pick your space. You can always come back here.",
+			"studio": "I am a photographer",
+			"client": "I am a client"
+		},
+		"copyright": "© {year} {brand}. All rights reserved."
 	},
 	"ClientWelcome": {
 		"metaTitle": "Client space",

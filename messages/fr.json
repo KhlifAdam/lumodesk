@@ -661,6 +661,11 @@
 			"TOO_MANY_ATTEMPTS": "Trop de tentatives. Demandez un nouveau code.",
 			"USER_NOT_FOUND": "Nous n'avons pas trouvé ce compte."
 		},
+		"backLink": {
+			"photographer": "Espace photographe",
+			"client": "Espace client",
+			"home": "Accueil Lumodesk"
+		},
 		"audience": {
 			"photographer": "Photographe",
 			"client": "Client",
@@ -676,7 +681,6 @@
 			}
 		},
 		"client": {
-			"back": "Retour à l'accueil client",
 			"login": {
 				"title": "Bon retour",
 				"description": "Connectez-vous pour suivre vos projets et vos galeries avec tous vos photographes"
@@ -915,6 +919,73 @@
 			"videos": "Vidéos",
 			"copyright": "© {year} Lumodesk, Inc. Conçu pour ceux qui voient autrement."
 		}
+	},
+	"Home": {
+		"badge": "La plateforme des photographes et de leurs clients",
+		"titleStart": "Un seul lieu où photographes et clients",
+		"titleAccent": "travaillent ensemble",
+		"subtitle": "{brand} gère le studio du photographe, de la réservation à la livraison, et offre à chaque client un espace privé pour suivre son projet et choisir ses photos.",
+		"choose": "Choisissez votre espace",
+		"connector": "Une plateforme",
+		"photographer": {
+			"metaTitle": "Pour les photographes",
+			"label": "Je suis photographe",
+			"title": "Gérez tout votre studio",
+			"description": "Clients, projets, galeries privées et votre propre site web, au même endroit.",
+			"points": [
+				"Chaque projet, de la réservation à la livraison",
+				"Des galeries privées avec sélection par le client",
+				"Votre propre site portfolio"
+			],
+			"cta": "Découvrir l'espace studio",
+			"imageAlt": "Photographe au travail avec son appareil"
+		},
+		"client": {
+			"label": "Je suis client",
+			"title": "Suivez votre shooting",
+			"description": "Un seul compte pour tous vos photographes : vos projets, vos galeries et vos photos préférées.",
+			"points": [
+				"Voyez où en est votre projet",
+				"Ouvrez vos galeries privées",
+				"Choisissez les photos que vous aimez"
+			],
+			"cta": "Ouvrir l'espace client",
+			"imageAlt": "Couple regardant ses photos"
+		},
+		"how": {
+			"eyebrow": "Comment ça marche",
+			"title": "Comment les deux espaces se rejoignent",
+			"subtitle": "Le photographe travaille dans son studio, et le client suit chaque étape dans son propre espace.",
+			"actors": {
+				"studio": "Photographe",
+				"client": "Client"
+			},
+			"steps": {
+				"plan": {
+					"title": "Préparer le shooting",
+					"text": "Réservation, préparation et prise de vue sont suivies dans le studio."
+				},
+				"invite": {
+					"title": "Inviter le client",
+					"text": "Le client reçoit un e-mail et rejoint le projet depuis son espace."
+				},
+				"gallery": {
+					"title": "Ouvrir la galerie",
+					"text": "Les photos arrivent dans une galerie privée que seul le client invité peut voir."
+				},
+				"pick": {
+					"title": "Choisir ses favoris",
+					"text": "Le client sélectionne les photos qu’il aime et renvoie son choix en un clic."
+				}
+			}
+		},
+		"final": {
+			"title": "Prêt à commencer ?",
+			"subtitle": "Choisissez votre espace. Vous pouvez toujours revenir ici.",
+			"studio": "Je suis photographe",
+			"client": "Je suis client"
+		},
+		"copyright": "© {year} {brand}. Tous droits réservés."
 	},
 	"ClientWelcome": {
 		"metaTitle": "Espace client",
