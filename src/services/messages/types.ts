@@ -38,5 +38,7 @@ export interface ConversationPage extends PageMeta {
 /** An open conversation; `id` is null for a draft that has no message yet. */
 export interface Thread extends MessagePage {
 	id: string | null;
+	/** Messages from the partner that were unseen when it was opened. */
+	unread: number;
 	partner: Partner;
 }

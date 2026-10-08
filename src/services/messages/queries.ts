@@ -154,6 +154,7 @@ export async function getThread(
 	return {
 		id: row.id,
 		partner: partnerOf(row, viewer),
+		unread: row[unreadField(viewer.role)],
 		...(await listMessages(row.id)),
 	};
 }

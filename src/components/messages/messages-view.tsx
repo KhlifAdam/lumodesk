@@ -14,6 +14,7 @@ import type { MessagesParams } from "@/services/messages/schemas";
 import type { Thread } from "@/services/messages/types";
 import type { Viewer } from "@/services/messages/viewer";
 import { ConversationList } from "./conversation-list";
+import { LiveRefresh } from "./live-refresh";
 import { MessageThread } from "./message-thread";
 
 interface MessagesViewProps {
@@ -48,6 +49,7 @@ export function MessagesView(props: MessagesViewProps) {
 					hasSelection && "hidden md:block",
 				)}
 			>
+				<LiveRefresh side={viewer.role} />
 				<Suspense fallback={<ListSkeleton rows={5} />}>
 					<ListPane
 						viewer={viewer}
@@ -150,5 +152,7 @@ async function resolveThread(
 	if (existing) redirect(`${basePath}?c=${existing.id}`);
 
 	const partner = await findNewPartner(viewer, partnerId);
-	return partner ? { id: null, partner, messages: [], hasMore: false } : null;
+	return partner
+		? { id: null, partner, unread: 0, messages: [], hasMore: false }
+		: null;
 }

@@ -14,6 +14,7 @@ import { fetchJson, usePolling } from "./polling";
 import { unreadKey } from "./unread-badge";
 
 const POLL_MS = 4000;
+const SEEN_AFTER_MS = 5000;
 
 const fetchPage = fetchJson<MessagePage>;
 
@@ -45,6 +46,34 @@ export function useThread(
 	const [olderHasMore, setOlderHasMore] = useState(false);
 	const [sent, setSent] = useState<ChatMessage[]>([]);
 	const [isLoadingOlder, setLoadingOlder] = useState(false);
+	// Messages unseen when the conversation opened stay bold for a moment.
+	const [fresh, setFresh] = useState<Set<string>>(() =>
+		thread.unread > 0
+			? new Set(
+					thread.messages
+						.filter((m) => m.senderId !== viewer.id)
+						.slice(-thread.unread)
+						.map((m) => m.id),
+				)
+			: new Set(),
+	);
+	useEffect(() => {
+		if (fresh.size === 0) return;
+		let timer: ReturnType<typeof setTimeout> | undefined;
+		const startTimer = () => {
+			timer ??= setTimeout(() => setFresh(new Set()), SEEN_AFTER_MS);
+		};
+		// Only a tab the person is looking at counts as having seen them.
+		const onVisibility = () => {
+			if (document.visibilityState === "visible") startTimer();
+		};
+		onVisibility();
+		document.addEventListener("visibilitychange", onVisibility);
+		return () => {
+			clearTimeout(timer);
+			document.removeEventListener("visibilitychange", onVisibility);
+		};
+	}, [fresh]);
 
 	const messages = useMemo(() => {
 		const unique = new Map<string, ChatMessage>();
@@ -98,5 +127,5 @@ export function useThread(
 		return null;
 	}
 
-	return { messages, hasMore, isLoadingOlder, loadOlder, send };
+	return { messages, fresh, hasMore, isLoadingOlder, loadOlder, send };
 }

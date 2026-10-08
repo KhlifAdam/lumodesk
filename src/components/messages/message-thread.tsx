@@ -30,11 +30,8 @@ export function MessageThread({
 }: MessageThreadProps) {
 	const t = useTranslations("Messages.thread");
 	const format = useFormatter();
-	const { messages, hasMore, isLoadingOlder, loadOlder, send } = useThread(
-		thread,
-		viewer,
-		basePath,
-	);
+	const { messages, fresh, hasMore, isLoadingOlder, loadOlder, send } =
+		useThread(thread, viewer, basePath);
 	const { partner } = thread;
 
 	const scroller = useRef<HTMLDivElement>(null);
@@ -115,6 +112,8 @@ export function MessageThread({
 					const newDay =
 						!previous || dayKeyIn(previous.createdAt, timeZone) !== day;
 					const mine = message.senderId === viewer.id;
+					const isNew = fresh.has(message.id);
+					const firstNew = isNew && !fresh.has(previous?.id ?? "");
 					const date = new Date(message.createdAt);
 					return (
 						<Fragment key={message.id}>
@@ -123,12 +122,20 @@ export function MessageThread({
 									{format.dateTime(date, { dateStyle: "full", timeZone })}
 								</p>
 							)}
+							{firstNew && (
+								<div className="my-1 flex items-center gap-2 text-[11px] font-semibold text-primary">
+									<span className="h-px flex-1 bg-primary/30" />
+									{t("newMessages")}
+									<span className="h-px flex-1 bg-primary/30" />
+								</div>
+							)}
 							<div
 								className={cn("flex", mine ? "justify-end" : "justify-start")}
 							>
 								<div
 									className={cn(
-										"max-w-[80%] rounded-2xl px-3 py-1.5 text-sm",
+										"max-w-[80%] rounded-2xl px-3 py-1.5 text-sm transition-[font-weight,background-color] duration-700",
+										isNew && "font-bold ring-1 ring-primary/40",
 										mine
 											? "rounded-br-md bg-primary text-primary-foreground"
 											: "rounded-bl-md bg-muted text-foreground",

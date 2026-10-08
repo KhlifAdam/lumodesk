@@ -63,7 +63,14 @@ export async function ConversationList({
 											{partner.studioName ?? partner.name}
 										</p>
 										{lastMessageAt && (
-											<span className="shrink-0 text-[11px] text-muted-foreground">
+											<span
+												className={cn(
+													"shrink-0 text-[11px]",
+													unread > 0
+														? "font-semibold text-foreground"
+														: "text-muted-foreground",
+												)}
+											>
 												{format.dateTime(
 													new Date(lastMessageAt),
 													sameDay
@@ -78,7 +85,7 @@ export async function ConversationList({
 											className={cn(
 												"truncate text-xs",
 												unread > 0
-													? "text-foreground"
+													? "font-bold text-foreground"
 													: "text-muted-foreground",
 											)}
 										>

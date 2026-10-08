@@ -1598,7 +1598,8 @@
 			"select": "Select a conversation to read it.",
 			"unavailable": "This conversation isn't available.",
 			"empty": "No messages yet. Say hello!",
-			"loadOlder": "Load older messages"
+			"loadOlder": "Load older messages",
+			"newMessages": "New messages"
 		},
 		"composer": {
 			"placeholder": "Write a message…",

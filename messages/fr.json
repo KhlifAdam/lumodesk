@@ -1598,7 +1598,8 @@
 			"select": "Sélectionnez une conversation pour la lire.",
 			"unavailable": "Cette conversation n'est pas disponible.",
 			"empty": "Aucun message pour l'instant. Dites bonjour !",
-			"loadOlder": "Charger les messages précédents"
+			"loadOlder": "Charger les messages précédents",
+			"newMessages": "Nouveaux messages"
 		},
 		"composer": {
 			"placeholder": "Écrire un message…",
