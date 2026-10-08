@@ -8,6 +8,7 @@
 			"workspace": "Espace de travail",
 			"website": "Site web",
 			"overview": "Aperçu",
+			"calendar": "Calendrier",
 			"bookings": "Réservations",
 			"clients": "Clients",
 			"messages": "Messages",
@@ -149,7 +150,10 @@
 		"passwordTooShort": "Utilisez au moins 8 caractères.",
 		"passwordsDontMatch": "Les mots de passe ne correspondent pas.",
 		"otpLength": "Saisissez le code à 6 chiffres.",
-		"invalidDate": "Saisissez une date valide."
+		"invalidDate": "Saisissez une date valide.",
+		"endBeforeStart": "La fin doit être après le début.",
+		"rangeTooLong": "Un événement peut durer au plus un an.",
+		"invalidTime": "Saisissez une heure valide."
 	},
 	"Media": {
 		"title": "Médiathèque",
@@ -1166,6 +1170,70 @@
 				"PENDING": "Invitation en attente",
 				"DECLINED": "Refusée"
 			}
+		}
+	},
+	"Calendar": {
+		"title": "Calendrier",
+		"description": "Vos shootings, rendez-vous et les jours où vous êtes disponible ou non.",
+		"toolbar": {
+			"today": "Aujourd'hui",
+			"previous": "Mois précédent",
+			"next": "Mois suivant",
+			"newEvent": "Nouvel événement"
+		},
+		"types": {
+			"SHOOT": "Shooting",
+			"MEETING": "Rendez-vous",
+			"AVAILABLE": "Disponible",
+			"UNAVAILABLE": "Indisponible",
+			"OTHER": "Autre",
+			"PROJECT": "Date de projet"
+		},
+		"grid": {
+			"more": "+{count} de plus",
+			"addOn": "Ajouter un événement le {date}"
+		},
+		"day": {
+			"add": "Ajouter",
+			"allDay": "Toute la journée",
+			"empty": "Rien de prévu ce jour-là.",
+			"availability": "Disponibilité",
+			"notSet": "Non défini",
+			"schedule": "cliquez pour planifier",
+			"openProject": "Ouvrir le projet",
+			"availabilityUpdated": "Disponibilité mise à jour.",
+			"status": {
+				"free": "Libre",
+				"busy": "Occupé",
+				"available": "Disponible",
+				"unavailable": "Indisponible"
+			}
+		},
+		"form": {
+			"createTitle": "Nouvel événement",
+			"editTitle": "Modifier l'événement",
+			"description": "Les heures sont dans votre fuseau horaire local.",
+			"type": "Type",
+			"title": "Titre",
+			"titlePlaceholder": "Séance fiançailles avec Lina",
+			"allDay": "Toute la journée",
+			"allDayHint": "Bloque des journées entières, sans horaires.",
+			"start": "Début",
+			"end": "Fin",
+			"startTime": "Heure de début",
+			"endTime": "Heure de fin",
+			"location": "Lieu",
+			"project": "Projet",
+			"noProject": "Aucun projet",
+			"notes": "Notes",
+			"create": "Ajouter l'événement",
+			"save": "Enregistrer",
+			"created": "Événement ajouté.",
+			"updated": "Événement mis à jour.",
+			"deleted": "Événement supprimé.",
+			"conflicts": "{count, plural, one {Enregistré, mais il chevauche # autre événement occupé.} other {Enregistré, mais il chevauche # autres événements occupés.}}",
+			"deleteTitle": "Supprimer cet événement ?",
+			"deleteDescription": "Il sera retiré de votre calendrier. Cette action est irréversible."
 		}
 	},
 	"Galleries": {

@@ -8,6 +8,7 @@
 			"workspace": "Workspace",
 			"website": "Website",
 			"overview": "Overview",
+			"calendar": "Calendar",
 			"bookings": "Bookings",
 			"clients": "Clients",
 			"messages": "Messages",
@@ -149,7 +150,10 @@
 		"passwordTooShort": "Use at least 8 characters.",
 		"passwordsDontMatch": "Passwords don't match.",
 		"otpLength": "Enter the 6-digit code.",
-		"invalidDate": "Enter a valid date."
+		"invalidDate": "Enter a valid date.",
+		"endBeforeStart": "The end must be after the start.",
+		"rangeTooLong": "An event can last at most a year.",
+		"invalidTime": "Enter a valid time."
 	},
 	"Media": {
 		"title": "Media library",
@@ -1166,6 +1170,70 @@
 				"PENDING": "Invitation pending",
 				"DECLINED": "Declined"
 			}
+		}
+	},
+	"Calendar": {
+		"title": "Calendar",
+		"description": "Your shoots, meetings and the days you're available or not.",
+		"toolbar": {
+			"today": "Today",
+			"previous": "Previous month",
+			"next": "Next month",
+			"newEvent": "New event"
+		},
+		"types": {
+			"SHOOT": "Shoot",
+			"MEETING": "Meeting",
+			"AVAILABLE": "Available",
+			"UNAVAILABLE": "Unavailable",
+			"OTHER": "Other",
+			"PROJECT": "Project date"
+		},
+		"grid": {
+			"more": "+{count} more",
+			"addOn": "Add an event on {date}"
+		},
+		"day": {
+			"add": "Add",
+			"allDay": "All day",
+			"empty": "Nothing planned this day.",
+			"availability": "Availability",
+			"notSet": "Not set",
+			"schedule": "click to schedule",
+			"openProject": "Open project",
+			"availabilityUpdated": "Availability updated.",
+			"status": {
+				"free": "Free",
+				"busy": "Busy",
+				"available": "Available",
+				"unavailable": "Unavailable"
+			}
+		},
+		"form": {
+			"createTitle": "New event",
+			"editTitle": "Edit event",
+			"description": "Times are in your local time zone.",
+			"type": "Type",
+			"title": "Title",
+			"titlePlaceholder": "Engagement shoot with Lina",
+			"allDay": "All day",
+			"allDayHint": "Blocks whole days, without times.",
+			"start": "Start",
+			"end": "End",
+			"startTime": "Start time",
+			"endTime": "End time",
+			"location": "Location",
+			"project": "Project",
+			"noProject": "No project",
+			"notes": "Notes",
+			"create": "Add event",
+			"save": "Save",
+			"created": "Event added.",
+			"updated": "Event updated.",
+			"deleted": "Event deleted.",
+			"conflicts": "{count, plural, one {Saved, but it overlaps # other busy event.} other {Saved, but it overlaps # other busy events.}}",
+			"deleteTitle": "Delete this event?",
+			"deleteDescription": "It will be removed from your calendar. This can't be undone."
 		}
 	},
 	"Galleries": {

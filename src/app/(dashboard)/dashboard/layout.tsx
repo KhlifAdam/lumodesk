@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { Sidebar } from "@/components/dashboard/sidebar/sidebar";
+import { TimeZoneSync } from "@/components/dashboard/time-zone-sync";
 import { requirePhotographer } from "@/lib/auth/require-photographer";
+import { getRequestTimeZone } from "@/lib/request-time-zone";
 import { getStudioSummary } from "@/services/studio/queries";
 
 export default async function DashboardLayout({
@@ -9,10 +11,14 @@ export default async function DashboardLayout({
 	children: ReactNode;
 }) {
 	const { session, photographerId } = await requirePhotographer();
-	const studio = await getStudioSummary(photographerId);
+	const [studio, timeZone] = await Promise.all([
+		getStudioSummary(photographerId),
+		getRequestTimeZone(),
+	]);
 
 	return (
 		<div className="flex h-screen overflow-hidden bg-background">
+			<TimeZoneSync serverTimeZone={timeZone} />
 			<Sidebar studioName={studio?.name ?? "Lumodesk"} user={session.user} />
 			{/*
 			  `relative` is load-bearing: Radix form controls (checkbox, switch,

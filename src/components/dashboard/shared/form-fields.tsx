@@ -24,7 +24,7 @@ interface BaseFieldProps<T extends FieldValues> {
 
 interface TextFieldProps<T extends FieldValues> extends BaseFieldProps<T> {
 	placeholder?: string;
-	type?: "text" | "email" | "tel" | "url" | "number" | "date";
+	type?: "text" | "email" | "tel" | "url" | "number" | "date" | "time";
 	/** Renders a textarea with this many rows. */
 	rows?: number;
 	prefix?: ReactNode;

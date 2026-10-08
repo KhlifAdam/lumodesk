@@ -41,6 +41,7 @@ model User {
   galleryItems    GalleryItem[]
   galleryComments GalleryComment[]
   driveImports    DriveImport[]
+  calendarEvents  CalendarEvent[]
 
   @@map("users")
 }
@@ -314,6 +315,7 @@ model Project {
   photographer User      @relation("PhotographerProjects", fields: [photographerId], references: [id], onDelete: Cascade)
   client       User?     @relation("ClientProjects", fields: [clientId], references: [id], onDelete: SetNull)
   galleries    Gallery[]
+  events       CalendarEvent[]
 
   @@index([photographerId, stage, updatedAt])
   @@index([clientId, updatedAt])
@@ -437,4 +439,43 @@ model DriveImportItem {
   @@unique([importId, driveFileId])
   @@index([importId, status])
   @@map("drive_import_items")
+}
+
+// ─── Calendar ────────────────────────────────────────────────────────────────
+// The photographer's schedule: shoots, meetings, and the days they are
+// available or not. All-day events store UTC midnights of their first and last
+// day (inclusive); timed events store real instants.
+
+enum CalendarEventType {
+  SHOOT
+  MEETING
+  AVAILABLE
+  UNAVAILABLE
+  OTHER
+
+  @@map("calendar_event_type")
+}
+
+model CalendarEvent {
+  id             String            @id @default(cuid())
+  photographerId String            @map("photographer_id")
+  /// Optional link to the project this event is for.
+  projectId      String?           @map("project_id")
+  type           CalendarEventType @default(SHOOT)
+  title          String
+  allDay         Boolean           @default(false) @map("all_day")
+  startsAt       DateTime          @map("starts_at")
+  endsAt         DateTime          @map("ends_at")
+  location       String?
+  notes          String?
+  createdAt      DateTime          @default(now()) @map("created_at")
+  updatedAt      DateTime          @updatedAt @map("updated_at")
+
+  photographer User     @relation(fields: [photographerId], references: [id], onDelete: Cascade)
+  project      Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  @@index([photographerId, startsAt])
+  @@index([photographerId, endsAt])
+  @@index([projectId])
+  @@map("calendar_events")
 }

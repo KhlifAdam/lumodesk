@@ -1,6 +1,7 @@
 import {
 	BookOpen,
 	Briefcase,
+	CalendarDays,
 	FolderKanban,
 	Images,
 	LayoutGrid,
@@ -38,6 +39,7 @@ export const NAV_GROUPS: NavGroup[] = [
 				icon: LayoutGrid,
 				exact: true,
 			},
+			{ href: "/dashboard/calendar", labelKey: "calendar", icon: CalendarDays },
 			{ href: "/dashboard/bookings", labelKey: "bookings", icon: BookOpen },
 			{ href: "/dashboard/clients", labelKey: "clients", icon: Users },
 			{ href: "/dashboard/projects", labelKey: "projects", icon: FolderKanban },
