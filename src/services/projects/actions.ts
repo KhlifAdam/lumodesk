@@ -104,7 +104,11 @@ export async function updateProjectStage(
 			photographerId,
 			...(stage === PAYMENT_GATED_STAGE && { paymentStatus: "PAID" as const }),
 		},
-		data: { stage },
+		// Delivery is dated for the statistics; moving back clears it.
+		data: {
+			stage,
+			deliveredAt: stage === PAYMENT_GATED_STAGE ? new Date() : null,
+		},
 	});
 	if (count === 0) {
 		const exists = await db.project.count({ where: { id, photographerId } });

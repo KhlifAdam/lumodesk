@@ -359,6 +359,8 @@ model Project {
   eventDate      DateTime?          @map("event_date")
   location       String?
   stage          ProjectStage       @default(BOOKING)
+  /// When the project reached DELIVERY (cleared if it moves back); feeds the statistics.
+  deliveredAt    DateTime?          @map("delivered_at")
   serviceType    ProjectServiceType @default(OTHER) @map("service_type")
   mediaType      ProjectMediaType   @default(PHOTO) @map("media_type")
 
@@ -395,6 +397,7 @@ model Project {
   booking      Booking?
 
   @@index([photographerId, stage, updatedAt])
+  @@index([photographerId, createdAt])
   @@index([clientId, updatedAt])
   @@index([inviteEmail, inviteStatus])
   @@index([invitePhone, inviteStatus])

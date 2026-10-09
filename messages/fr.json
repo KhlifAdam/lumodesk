@@ -83,6 +83,59 @@
 				"viewAll": "Tout voir",
 				"empty": "Rien d'envoyé pour le moment.",
 				"upload": "Envoyer des médias"
+			},
+			"website": {
+				"title": "Votre site web"
+			},
+			"statistics": {
+				"title": "Statistiques",
+				"periods": {
+					"week": "Cette semaine",
+					"month": "Ce mois-ci",
+					"last30": "30 derniers jours",
+					"year": "Cette année",
+					"all": "Tout",
+					"custom": "Personnalisé"
+				},
+				"from": "Du",
+				"to": "Au",
+				"apply": "Appliquer",
+				"vsPrevious": "vs période précédente",
+				"kpi": {
+					"newBookings": "Nouvelles réservations",
+					"confirmedBookings": "Réservations confirmées",
+					"newClients": "Nouveaux clients",
+					"unread": "Messages non lus",
+					"newProjects": "Nouveaux projets",
+					"deliveredProjects": "Projets livrés",
+					"bookedValue": "Valeur réservée",
+					"outstanding": "Reste à encaisser",
+					"files": "Fichiers importés",
+					"shootsNextWeek": "Shootings à faire",
+					"activeProjects": "Projets en cours",
+					"totalClients": "Total clients"
+				},
+				"hint": {
+					"now": "En ce moment",
+					"next7": "7 prochains jours"
+				},
+				"chart": {
+					"title": "Activité",
+					"bookings": "Nouvelles réservations",
+					"projects": "Nouveaux projets",
+					"empty": "Rien sur cette période pour l'instant."
+				},
+				"breakdown": {
+					"bookings": "Réservations reçues, par statut",
+					"projects": "Projets, par étape",
+					"empty": "Rien à afficher pour cette période."
+				},
+				"upcoming": {
+					"title": "Prochains shootings",
+					"calendar": "Calendrier",
+					"empty": "Aucun shooting prévu.",
+					"untitled": "Shooting"
+				}
 			}
 		}
 	},

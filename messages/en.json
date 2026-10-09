@@ -83,6 +83,59 @@
 				"viewAll": "View all",
 				"empty": "Nothing uploaded yet.",
 				"upload": "Upload media"
+			},
+			"website": {
+				"title": "Your website"
+			},
+			"statistics": {
+				"title": "Statistics",
+				"periods": {
+					"week": "This week",
+					"month": "This month",
+					"last30": "Last 30 days",
+					"year": "This year",
+					"all": "All time",
+					"custom": "Custom"
+				},
+				"from": "From",
+				"to": "To",
+				"apply": "Apply",
+				"vsPrevious": "vs previous period",
+				"kpi": {
+					"newBookings": "New bookings",
+					"confirmedBookings": "Confirmed bookings",
+					"newClients": "New clients",
+					"unread": "Unread messages",
+					"newProjects": "New projects",
+					"deliveredProjects": "Delivered projects",
+					"bookedValue": "Booked value",
+					"outstanding": "Still to collect",
+					"files": "Files uploaded",
+					"shootsNextWeek": "Shoots to do",
+					"activeProjects": "Projects in progress",
+					"totalClients": "Total clients"
+				},
+				"hint": {
+					"now": "Right now",
+					"next7": "Next 7 days"
+				},
+				"chart": {
+					"title": "Activity",
+					"bookings": "New bookings",
+					"projects": "New projects",
+					"empty": "Nothing in this period yet."
+				},
+				"breakdown": {
+					"bookings": "Bookings received, by status",
+					"projects": "Projects, by stage",
+					"empty": "Nothing to show for this period."
+				},
+				"upcoming": {
+					"title": "Upcoming shoots",
+					"calendar": "Calendar",
+					"empty": "No shoot planned.",
+					"untitled": "Shoot"
+				}
 			}
 		}
 	},
