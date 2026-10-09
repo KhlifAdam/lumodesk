@@ -31,7 +31,7 @@ export async function PendingInvitations() {
 				<VerifyEmailCard email={realAddress} count={unverifiedCount} />
 			)}
 			{invitations.length > 0 && (
-				<section className="flex flex-col gap-3">
+				<section id="invitations" className="flex scroll-mt-20 flex-col gap-3">
 					<h2 className="text-sm font-semibold">
 						{t("title", { count: invitations.length })}
 					</h2>

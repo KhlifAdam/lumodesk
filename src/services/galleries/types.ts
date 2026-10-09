@@ -13,7 +13,8 @@ export interface GalleryPhoto {
 	commentCount: number;
 	/** Null for a video whose poster couldn't be made in the browser. */
 	previewUrl: string | null;
-	fullUrl: string;
+	/** The original; for a client before delivery, the preview (or null). */
+	fullUrl: string | null;
 }
 
 export interface GallerySummary {
@@ -40,6 +41,8 @@ export interface GalleryView extends PageMeta {
 	shared: boolean;
 	submitted: boolean;
 	filter: GalleryFilter;
+	/** Full-quality files and downloads; otherwise previews only. */
+	originals: boolean;
 	items: GalleryPhoto[];
 }
 

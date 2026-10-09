@@ -631,6 +631,8 @@ enum BookingSource {
   PHONE
   WEBSITE
   OTHER
+  /// Asked by the client from their own space.
+  PORTAL
 
   @@map("booking_source")
 }

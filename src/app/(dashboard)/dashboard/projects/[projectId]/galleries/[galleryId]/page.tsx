@@ -2,6 +2,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { GalleryDownloads } from "@/components/client-work/gallery-downloads";
 import { GalleryPhotoGrid } from "@/components/dashboard/galleries/gallery-photo-grid";
 import { GallerySettingsDialog } from "@/components/dashboard/galleries/gallery-settings-dialog";
 import { GalleryToolbar } from "@/components/dashboard/galleries/gallery-toolbar";
@@ -40,7 +41,17 @@ export default async function GalleryManagerPage({
 			<PageHeader
 				title={gallery.title}
 				description={gallery.description || t("description")}
-				actions={<GallerySettingsDialog gallery={gallery} />}
+				actions={
+					<>
+						{gallery.total > 0 && (
+							<GalleryDownloads
+								galleryId={gallery.id}
+								selectedCount={gallery.selectedCount}
+							/>
+						)}
+						<GallerySettingsDialog gallery={gallery} />
+					</>
+				}
 			/>
 			<GalleryToolbar gallery={gallery} />
 			<GalleryUploader galleryId={gallery.id} />

@@ -52,10 +52,12 @@ export function BookingClientSection() {
 				label={t("source")}
 				description={t("sourceHint")}
 				className="sm:max-w-xs"
-				options={BOOKING_SOURCES.map((value) => ({
-					value,
-					label: tSource(value),
-				}))}
+				options={BOOKING_SOURCES.filter((value) => value !== "PORTAL").map(
+					(value) => ({
+						value,
+						label: tSource(value),
+					}),
+				)}
 			/>
 		</FormSection>
 	);

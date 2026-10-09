@@ -19,6 +19,7 @@ import {
 	updateProjectSchema,
 	updateStageSchema,
 } from "./schemas";
+import { notifyStageChange } from "./stage-notices";
 import { PAYMENT_GATED_STAGE } from "./visibility";
 
 const toDate = (value: string) => (value ? new Date(value) : null);
@@ -101,6 +102,11 @@ export async function updateProjectStage(
 	if (!parsed.success) return failFromZod(parsed.error);
 
 	const { id, stage } = parsed.data;
+	const current = await db.project.findFirst({
+		where: { id, photographerId },
+		select: { stage: true },
+	});
+	if (!current) return fail("notFound");
 	// The paid check is part of the write, so it can't race with a payment edit.
 	const { count } = await db.project.updateMany({
 		where: {
@@ -114,11 +120,9 @@ export async function updateProjectStage(
 			deliveredAt: stage === PAYMENT_GATED_STAGE ? new Date() : null,
 		},
 	});
-	if (count === 0) {
-		const exists = await db.project.count({ where: { id, photographerId } });
-		return fail(exists ? "unpaidProject" : "notFound");
-	}
+	if (count === 0) return fail("unpaidProject");
 
+	await notifyStageChange(id, current.stage, stage);
 	revalidateClientWork();
 	return ok();
 }

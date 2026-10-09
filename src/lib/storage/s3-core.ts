@@ -8,6 +8,7 @@ import {
 	S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { attachmentHeader } from "@/lib/content-disposition";
 import { getR2Credentials } from "@/lib/env";
 
 const UPLOAD_URL_TTL_SECONDS = 60 * 10;
@@ -82,4 +83,31 @@ export async function deleteKeys(bucket: string, keys: string[]) {
 			}),
 		);
 	}
+}
+
+/** Presigned GET that makes the browser save the file under `filename`. */
+export function presignDownload(
+	bucket: string,
+	key: string,
+	filename: string,
+	expiresIn: number,
+) {
+	return getSignedUrl(
+		getClient(),
+		new GetObjectCommand({
+			Bucket: bucket,
+			Key: key,
+			ResponseContentDisposition: attachmentHeader(filename),
+		}),
+		{ expiresIn },
+	);
+}
+
+/** The object's bytes as a web stream, for the server to pass along. */
+export async function getObjectStream(bucket: string, key: string) {
+	const res = await getClient().send(
+		new GetObjectCommand({ Bucket: bucket, Key: key }),
+	);
+	if (!res.Body) throw new Error(`Empty object ${key}`);
+	return res.Body.transformToWebStream();
 }

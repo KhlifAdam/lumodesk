@@ -43,6 +43,8 @@ export interface PortalBookingSummary {
 	desiredDate: string | null;
 	proposedPrice: number | null;
 	accepted: boolean;
+	/** Asked by the client from their space, not sent by the studio. */
+	requestedByClient: boolean;
 }
 
 export interface PortalBookingDetail extends PortalBookingSummary {
@@ -82,6 +84,7 @@ function toSummary(row: Row): PortalBookingSummary {
 		desiredDate: row.desiredDate?.toISOString() ?? null,
 		proposedPrice: toNumber(row.proposedPrice),
 		accepted: row.clientAcceptedAt !== null,
+		requestedByClient: row.source === "PORTAL",
 	};
 }
 

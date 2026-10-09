@@ -154,3 +154,26 @@ export async function sendBookingClientReplyEmail(props: {
 		),
 	});
 }
+
+export type ProjectStageNotice = "galleriesReady" | "projectDelivered";
+
+/** To the client, when their galleries open for choosing or are delivered. */
+export async function sendProjectStageEmail(props: {
+	to: string;
+	locale: Locale;
+	kind: ProjectStageNotice;
+	studio: string;
+	project: string;
+	projectId: string;
+}) {
+	const { to, locale, kind, projectId, ...vars } = props;
+	await sendMail({
+		to,
+		...noticeEmail(
+			mailCopy(locale)[kind],
+			locale,
+			vars,
+			appUrl(`/portal/projects/${projectId}`),
+		),
+	});
+}

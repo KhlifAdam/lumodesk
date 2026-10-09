@@ -1130,6 +1130,24 @@
 			"ignore": "Didn't ask for this? You can safely ignore this email — your password won't change.",
 			"text": "Your Lumodesk password reset code is {otp}. It expires in {minutes} minutes. If you didn't request this, you can ignore this email."
 		},
+		"galleriesReady": {
+			"languageName": "English",
+			"subject": "{studio}: your photos are ready to choose from",
+			"preheader": "Pick your favourites for {project}",
+			"heading": "Time to choose your photos",
+			"intro": "{studio} opened the galleries of your project “{project}”. Browse the previews, pick your favourites and leave comments. The full-quality files will follow at delivery.",
+			"cta": "Choose my photos",
+			"text": "{studio} opened the galleries of your project “{project}”: pick your favourites here: {url}"
+		},
+		"projectDelivered": {
+			"languageName": "English",
+			"subject": "{studio} delivered your project",
+			"preheader": "Your files for {project} are ready to download",
+			"heading": "Your files are delivered",
+			"intro": "{studio} delivered your project “{project}”. The full-quality photos and videos are now available to view and download.",
+			"cta": "Download my files",
+			"text": "{studio} delivered your project “{project}”. Download your files here: {url}"
+		},
 		"galleryShared": {
 			"languageName": "English",
 			"subject": "{studio} shared a gallery with you",
@@ -1179,9 +1197,9 @@
 			"subject": "New booking request from {client}",
 			"preheader": "{preview}",
 			"heading": "You have a new booking request",
-			"intro": "{client} asked for a service on your website: “{preview}”. Open the request to reply.",
+			"intro": "{client} sent you a booking request: “{preview}”. Open it to reply.",
 			"cta": "Open the request",
-			"text": "{client} asked for a service on your website: “{preview}”. Open it here: {url}"
+			"text": "{client} sent you a booking request: “{preview}”. Open it here: {url}"
 		},
 		"bookingSent": {
 			"subject": "{studio} sent you a booking request",
@@ -1208,6 +1226,8 @@
 	"Sms": {
 		"otp": "Lumodesk: your code is {code}. It expires in {minutes} minutes. Don't share it.",
 		"projectInvitation": "{studio} invited you to the project \"{project}\" on Lumodesk. Sign in with this number to accept: {url}",
+		"galleriesReady": "{studio}: your photos for \"{project}\" are ready to choose from: {url}",
+		"projectDelivered": "{studio} delivered \"{project}\": your files are ready to download: {url}",
 		"galleryShared": "{studio} shared the gallery \"{gallery}\" with you: {url}",
 		"newMessage": "{sender} sent you a message on Lumodesk: {url}",
 		"bookingSent": "{studio} sent you a booking request \"{booking}\": {url}"
@@ -1374,8 +1394,10 @@
 			"deleteDescription": "Its galleries, photos and comments are deleted for good.",
 			"deleted": "Project deleted.",
 			"unpaidLocked": "Mark the project as paid to unlock delivery.",
-			"unpaidHint": "Delivery is locked until the project is paid. Files stay hidden from the client until it is delivered.",
-			"filesHidden": "Files are hidden from the client until the project is delivered and paid.",
+			"unpaidHint": "Delivery is locked until the project is paid. Until then the client only sees previews, without downloads.",
+			"filesHidden": "Files are hidden from the client until the Selection step.",
+			"filesProofing": "The client sees shared galleries as previews to choose from. Originals and downloads open once delivered and paid.",
+			"filesDelivered": "Delivered: the client can view and download the originals.",
 			"fromBooking": "From a booking",
 			"importFiles": "Import files"
 		},
@@ -1453,7 +1475,7 @@
 			"title": "Import files",
 			"back": "Back to the project",
 			"galleryTitle": "Gallery",
-			"galleryHint": "The files are added to this gallery. The client only sees them once the project is delivered and paid.",
+			"galleryHint": "The files are added to this gallery. Once shared, the client sees previews from the Selection step and the originals once the project is delivered and paid.",
 			"gallery": "Gallery",
 			"chooseGallery": "Choose a gallery",
 			"galleryOption": "{title} ({count, plural, one {# file} other {# files}})",
@@ -1500,7 +1522,8 @@
 			"WHATSAPP": "WhatsApp",
 			"PHONE": "Phone",
 			"WEBSITE": "Website",
-			"OTHER": "Other"
+			"OTHER": "Other",
+			"PORTAL": "Client space"
 		},
 		"list": {
 			"new": "New booking",
@@ -1767,7 +1790,10 @@
 		"lightbox": {
 			"title": "Photo",
 			"previous": "Previous photo",
-			"next": "Next photo"
+			"next": "Next photo",
+			"download": "Download",
+			"previewOnly": "Preview — full quality once delivered",
+			"videoLocked": "The video plays once the project is delivered."
 		},
 		"comments": {
 			"title": "Comments",
@@ -1826,6 +1852,10 @@
 			"deleteTitle": "Delete this gallery?",
 			"deleteDescription": "All its photos, picks and comments are deleted for good.",
 			"deleted": "Gallery deleted."
+		},
+		"download": {
+			"all": "Download all",
+			"selected": "{count, plural, one {Download my pick} other {Download my # picks}}"
 		}
 	},
 	"Portal": {
@@ -1852,11 +1882,25 @@
 			"galleries": "Galleries",
 			"noGalleries": "No galleries yet",
 			"noGalleriesHint": "Your photographer will share your photos here.",
-			"messageStudio": "Message the studio"
+			"messageStudio": "Message the studio",
+			"overview": {
+				"title": "Your shoot",
+				"service": "Service",
+				"date": "Date and time",
+				"location": "Location",
+				"openMap": "Open the map",
+				"deadline": "Delivery planned for",
+				"payment": "Payment",
+				"price": "Price",
+				"paid": "Already paid",
+				"remaining": "Left to pay",
+				"paymentHint": "Files are delivered once the payment is complete."
+			}
 		},
 		"gallery": {
 			"hint": "Tap the heart to pick your favourites, then send your selection.",
 			"hintLimit": "Pick up to {limit} favourites, then send your selection.",
+			"previewsOnly": "You are viewing previews to make your choice. Full-quality files and downloads open once the project is delivered.",
 			"hintSubmitted": "Your selection has been sent to your photographer.",
 			"filters": {
 				"all": "All photos",
@@ -1977,6 +2021,34 @@
 				"openMap": "Open the map",
 				"notSet": "Not set"
 			}
+		},
+		"home": {
+			"nextShoot": "Next shoot",
+			"noShoot": "No shoot planned yet.",
+			"mapLink": "Map link",
+			"todo": {
+				"title": "To do",
+				"bookings": "{count, plural, one {Answer # booking request} other {Answer # booking requests}}",
+				"invitations": "{count, plural, one {Accept # project invitation} other {Accept # project invitations}}",
+				"select": "Choose your photos in “{gallery}” ({project})",
+				"balance": "{amount} left to pay for “{project}”",
+				"messages": "{count, plural, one {# unread message} other {# unread messages}}",
+				"none": "Nothing to do for now. You're all set."
+			}
+		},
+		"request": {
+			"action": "Request a booking",
+			"title": "Request a booking",
+			"description": "Tell the studio what you need. They'll reply with a date and a price.",
+			"studio": "Studio",
+			"service": "Type of service",
+			"date": "Wished date (optional)",
+			"location": "Location (optional)",
+			"locationHint": "An address or a Google Maps link.",
+			"message": "Your request",
+			"messagePlaceholder": "What would you like to get?",
+			"send": "Send the request",
+			"sent": "Request sent to the studio."
 		}
 	}
 }

@@ -1,6 +1,8 @@
 import {
 	ArrowLeft,
 	ArrowUpRight,
+	CheckCircle2,
+	Eye,
 	EyeOff,
 	Images,
 	Pencil,
@@ -21,7 +23,10 @@ import { PageShell } from "@/components/dashboard/shared/page-shell";
 import { Button } from "@/components/ui/button";
 import { requirePhotographer } from "@/lib/auth/require-photographer";
 import { getProject } from "@/services/projects/queries";
-import { isVisibleToClient } from "@/services/projects/visibility";
+import {
+	canClientView,
+	isDeliveredToClient,
+} from "@/services/projects/visibility";
 
 export default async function ProjectPage({
 	params,
@@ -91,12 +96,24 @@ export default async function ProjectPage({
 						<NewGalleryDialog projectId={project.id} />
 					</div>
 				</div>
-				{!isVisibleToClient(project) && (
-					<p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-						<EyeOff className="h-3.5 w-3.5" />
-						{t("filesHidden")}
-					</p>
-				)}
+				<p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+					{isDeliveredToClient(project) ? (
+						<>
+							<CheckCircle2 className="h-3.5 w-3.5 text-success" />
+							{t("filesDelivered")}
+						</>
+					) : canClientView(project) ? (
+						<>
+							<Eye className="h-3.5 w-3.5" />
+							{t("filesProofing")}
+						</>
+					) : (
+						<>
+							<EyeOff className="h-3.5 w-3.5" />
+							{t("filesHidden")}
+						</>
+					)}
+				</p>
 				{project.galleries.length === 0 ? (
 					<EmptyState
 						icon={Images}

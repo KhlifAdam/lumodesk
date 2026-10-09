@@ -6,16 +6,16 @@ import { db } from "@/lib/db";
 import { resolveMailLocale } from "@/lib/mail/mail-copy";
 import { sendSelectionSubmittedEmail } from "@/lib/mail/send-client-notices";
 import { revalidateClientWork } from "@/services/projects/revalidate";
-import { CLIENT_VISIBLE_PROJECT } from "@/services/projects/visibility";
+import { CLIENT_VIEWABLE_PROJECT } from "@/services/projects/visibility";
 import { lockGallery } from "@/services/shared/lock-rows";
 import { idSchema } from "@/services/shared/schemas";
 import { toggleSelectionSchema } from "./schemas";
 
-/** A shared gallery of one of the client's delivered, paid projects. */
+/** A shared gallery the client may choose from (the project reached Selection). */
 function clientGalleryWhere(clientId: string) {
 	return {
 		sharedAt: { not: null },
-		project: { clientId, ...CLIENT_VISIBLE_PROJECT },
+		project: { clientId, ...CLIENT_VIEWABLE_PROJECT },
 	};
 }
 

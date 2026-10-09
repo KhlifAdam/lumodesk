@@ -1,7 +1,14 @@
 import "server-only";
 
 import { getR2PrivateEnv } from "@/lib/env";
-import { deleteKeys, head, presignGet, presignPut } from "./s3-core";
+import {
+	deleteKeys,
+	getObjectStream,
+	head,
+	presignDownload,
+	presignGet,
+	presignPut,
+} from "./s3-core";
 import {
 	abortMultipart,
 	completeMultipart,
@@ -12,6 +19,8 @@ import {
 } from "./s3-multipart";
 
 const VIEW_URL_TTL_SECONDS = 60 * 60;
+/** Used right away by the browser: a few minutes is plenty. */
+const DOWNLOAD_URL_TTL_SECONDS = 5 * 60;
 /** Signatures are made at the start of a window, so URLs repeat and stay cacheable. */
 const SIGNING_WINDOW_MS = 15 * 60 * 1000;
 
@@ -76,4 +85,13 @@ export function completePrivateMultipart(
 
 export function abortPrivateMultipart(key: string, uploadId: string) {
 	return abortMultipart(bucket(), key, uploadId);
+}
+
+/** A short link that downloads the file under its original name. */
+export function getPrivateDownloadUrl(key: string, filename: string) {
+	return presignDownload(bucket(), key, filename, DOWNLOAD_URL_TTL_SECONDS);
+}
+
+export function readPrivateObject(key: string) {
+	return getObjectStream(bucket(), key);
 }

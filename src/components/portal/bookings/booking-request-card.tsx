@@ -8,6 +8,7 @@ import type { PortalBookingSummary } from "@/services/portal/booking-queries";
 export function requestState(booking: {
 	status: PortalBookingSummary["status"];
 	accepted: boolean;
+	requestedByClient: boolean;
 }) {
 	if (booking.status === "CONFIRMED")
 		return { key: "confirmed", tone: "text-success bg-success/10" } as const;
@@ -16,7 +17,11 @@ export function requestState(booking: {
 			key: "declined",
 			tone: "text-destructive bg-destructive/10",
 		} as const;
-	if (booking.accepted)
+	// Their own request, not yet answered by the studio.
+	if (
+		booking.accepted ||
+		(booking.requestedByClient && booking.status === "NEW")
+	)
 		return {
 			key: "waitingStudio",
 			tone: "text-primary bg-primary/10",

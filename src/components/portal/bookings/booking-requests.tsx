@@ -11,7 +11,7 @@ export async function BookingRequests() {
 	if (bookings.length === 0) return null;
 
 	return (
-		<section className="flex flex-col gap-3">
+		<section id="booking-requests" className="flex scroll-mt-20 flex-col gap-3">
 			<h2 className="text-sm font-semibold">
 				{t("title", { count: bookings.length })}
 			</h2>

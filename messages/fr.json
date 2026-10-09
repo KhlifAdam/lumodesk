@@ -1130,6 +1130,24 @@
 			"ignore": "Vous n'êtes pas à l'origine de cette demande ? Vous pouvez ignorer cet e-mail : votre mot de passe ne changera pas.",
 			"text": "Votre code de réinitialisation Lumodesk est {otp}. Il expire dans {minutes} minutes. Si vous n'êtes pas à l'origine de cette demande, ignorez cet e-mail."
 		},
+		"galleriesReady": {
+			"languageName": "Français",
+			"subject": "{studio} : vos photos sont prêtes pour la sélection",
+			"preheader": "Choisissez vos favorites pour {project}",
+			"heading": "À vous de choisir vos photos",
+			"intro": "{studio} a ouvert les galeries de votre projet « {project} ». Parcourez les aperçus, choisissez vos favorites et laissez des commentaires. Les fichiers en pleine qualité suivront à la livraison.",
+			"cta": "Choisir mes photos",
+			"text": "{studio} a ouvert les galeries de votre projet « {project} » : choisissez vos favorites ici : {url}"
+		},
+		"projectDelivered": {
+			"languageName": "Français",
+			"subject": "{studio} a livré votre projet",
+			"preheader": "Vos fichiers pour {project} sont prêts à télécharger",
+			"heading": "Vos fichiers sont livrés",
+			"intro": "{studio} a livré votre projet « {project} ». Les photos et vidéos en pleine qualité sont maintenant disponibles à la consultation et au téléchargement.",
+			"cta": "Télécharger mes fichiers",
+			"text": "{studio} a livré votre projet « {project} ». Téléchargez vos fichiers ici : {url}"
+		},
 		"galleryShared": {
 			"languageName": "Français",
 			"subject": "{studio} a partagé une galerie avec vous",
@@ -1179,9 +1197,9 @@
 			"subject": "Nouvelle demande de réservation de {client}",
 			"preheader": "{preview}",
 			"heading": "Vous avez une nouvelle demande de réservation",
-			"intro": "{client} a demandé une prestation sur votre site : « {preview} ». Ouvrez la demande pour répondre.",
+			"intro": "{client} vous a envoyé une demande de réservation : « {preview} ». Ouvrez-la pour répondre.",
 			"cta": "Ouvrir la demande",
-			"text": "{client} a demandé une prestation sur votre site : « {preview} ». Ouvrez-la ici : {url}"
+			"text": "{client} vous a envoyé une demande de réservation : « {preview} ». Ouvrez-la ici : {url}"
 		},
 		"bookingSent": {
 			"subject": "{studio} vous a envoyé une demande de réservation",
@@ -1208,6 +1226,8 @@
 	"Sms": {
 		"otp": "Lumodesk : votre code est {code}. Il expire dans {minutes} minutes. Ne le partagez pas.",
 		"projectInvitation": "{studio} vous invite au projet « {project} » sur Lumodesk. Connectez-vous avec ce numéro pour accepter : {url}",
+		"galleriesReady": "{studio} : vos photos de « {project} » sont prêtes pour la sélection : {url}",
+		"projectDelivered": "{studio} a livré « {project} » : vos fichiers sont prêts à télécharger : {url}",
 		"galleryShared": "{studio} a partagé la galerie « {gallery} » avec vous : {url}",
 		"newMessage": "{sender} vous a envoyé un message sur Lumodesk : {url}",
 		"bookingSent": "{studio} vous a envoyé une demande de réservation « {booking} » : {url}"
@@ -1374,8 +1394,10 @@
 			"deleteDescription": "Ses galeries, photos et commentaires seront définitivement supprimés.",
 			"deleted": "Projet supprimé.",
 			"unpaidLocked": "Marquez le projet comme payé pour débloquer la livraison.",
-			"unpaidHint": "La livraison est verrouillée tant que le projet n'est pas payé. Les fichiers restent masqués au client jusqu'à la livraison.",
-			"filesHidden": "Les fichiers sont masqués au client jusqu'à ce que le projet soit livré et payé.",
+			"unpaidHint": "La livraison est verrouillée tant que le projet n'est pas payé. D'ici là, le client ne voit que des aperçus, sans téléchargement.",
+			"filesHidden": "Les fichiers sont masqués au client jusqu'à l'étape Sélection.",
+			"filesProofing": "Le client voit les galeries partagées en aperçu pour faire son choix. Originaux et téléchargements à la livraison, une fois payé.",
+			"filesDelivered": "Livré : le client peut voir et télécharger les originaux.",
 			"fromBooking": "Issu d'une réservation",
 			"importFiles": "Importer des fichiers"
 		},
@@ -1453,7 +1475,7 @@
 			"title": "Importer des fichiers",
 			"back": "Retour au projet",
 			"galleryTitle": "Galerie",
-			"galleryHint": "Les fichiers sont ajoutés à cette galerie. Le client ne les voit qu'une fois le projet livré et payé.",
+			"galleryHint": "Les fichiers sont ajoutés à cette galerie. Une fois partagée, le client voit des aperçus dès l'étape Sélection, et les originaux une fois le projet livré et payé.",
 			"gallery": "Galerie",
 			"chooseGallery": "Choisir une galerie",
 			"galleryOption": "{title} ({count, plural, one {# fichier} other {# fichiers}})",
@@ -1500,7 +1522,8 @@
 			"WHATSAPP": "WhatsApp",
 			"PHONE": "Téléphone",
 			"WEBSITE": "Site web",
-			"OTHER": "Autre"
+			"OTHER": "Autre",
+			"PORTAL": "Espace client"
 		},
 		"list": {
 			"new": "Nouvelle réservation",
@@ -1767,7 +1790,10 @@
 		"lightbox": {
 			"title": "Photo",
 			"previous": "Photo précédente",
-			"next": "Photo suivante"
+			"next": "Photo suivante",
+			"download": "Télécharger",
+			"previewOnly": "Aperçu — pleine qualité à la livraison",
+			"videoLocked": "La vidéo sera lisible une fois le projet livré."
 		},
 		"comments": {
 			"title": "Commentaires",
@@ -1826,6 +1852,10 @@
 			"deleteTitle": "Supprimer cette galerie ?",
 			"deleteDescription": "Toutes ses photos, sélections et commentaires seront définitivement supprimés.",
 			"deleted": "Galerie supprimée."
+		},
+		"download": {
+			"all": "Tout télécharger",
+			"selected": "{count, plural, one {Télécharger ma sélection} other {Télécharger mes # photos choisies}}"
 		}
 	},
 	"Portal": {
@@ -1852,11 +1882,25 @@
 			"galleries": "Galeries",
 			"noGalleries": "Aucune galerie pour l'instant",
 			"noGalleriesHint": "Votre photographe partagera vos photos ici.",
-			"messageStudio": "Écrire au studio"
+			"messageStudio": "Écrire au studio",
+			"overview": {
+				"title": "Votre prestation",
+				"service": "Prestation",
+				"date": "Date et heure",
+				"location": "Lieu",
+				"openMap": "Ouvrir la carte",
+				"deadline": "Livraison prévue le",
+				"payment": "Paiement",
+				"price": "Prix",
+				"paid": "Déjà payé",
+				"remaining": "Reste à payer",
+				"paymentHint": "Les fichiers sont livrés une fois le paiement complet."
+			}
 		},
 		"gallery": {
 			"hint": "Touchez le cœur pour choisir vos favorites, puis envoyez votre sélection.",
 			"hintLimit": "Choisissez jusqu'à {limit} favorites, puis envoyez votre sélection.",
+			"previewsOnly": "Vous consultez des aperçus pour faire votre choix. Les fichiers en pleine qualité et les téléchargements seront disponibles à la livraison du projet.",
 			"hintSubmitted": "Votre sélection a été envoyée à votre photographe.",
 			"filters": {
 				"all": "Toutes les photos",
@@ -1977,6 +2021,34 @@
 				"openMap": "Ouvrir la carte",
 				"notSet": "Non renseigné"
 			}
+		},
+		"home": {
+			"nextShoot": "Prochain shooting",
+			"noShoot": "Aucun shooting prévu pour l'instant.",
+			"mapLink": "Lien de la carte",
+			"todo": {
+				"title": "À faire",
+				"bookings": "{count, plural, one {Répondre à # demande de réservation} other {Répondre à # demandes de réservation}}",
+				"invitations": "{count, plural, one {Accepter # invitation de projet} other {Accepter # invitations de projet}}",
+				"select": "Choisir vos photos dans « {gallery} » ({project})",
+				"balance": "{amount} restent à payer pour « {project} »",
+				"messages": "{count, plural, one {# message non lu} other {# messages non lus}}",
+				"none": "Rien à faire pour l'instant. Tout est en ordre."
+			}
+		},
+		"request": {
+			"action": "Demander une réservation",
+			"title": "Demander une réservation",
+			"description": "Dites au studio ce dont vous avez besoin. Il vous répondra avec une date et un prix.",
+			"studio": "Studio",
+			"service": "Type de prestation",
+			"date": "Date souhaitée (facultatif)",
+			"location": "Lieu (facultatif)",
+			"locationHint": "Une adresse ou un lien Google Maps.",
+			"message": "Votre demande",
+			"messagePlaceholder": "Que souhaitez-vous obtenir ?",
+			"send": "Envoyer la demande",
+			"sent": "Demande envoyée au studio."
 		}
 	}
 }

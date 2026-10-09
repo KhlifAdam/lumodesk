@@ -1,14 +1,27 @@
 import "server-only";
 
 import { db } from "@/lib/db";
-import { isVisibleToClient } from "@/services/projects/visibility";
+import {
+	canClientView,
+	isDeliveredToClient,
+} from "@/services/projects/visibility";
+
+export interface GalleryAccess {
+	role: "owner" | "client";
+	/** Full-quality files and downloads; otherwise previews only. */
+	originals: boolean;
+}
 
 /**
- * Who may see a gallery: its photographer always; the project's client only
- * once it is shared and the project is delivered and paid. Returns null for
- * everyone else.
+ * Who may see a gallery: its photographer always, with the originals. The
+ * project's client once it is shared and the project has reached Selection:
+ * previews to choose from, and the originals once delivered and paid.
+ * Returns null for everyone else.
  */
-export async function getGalleryAccess(galleryId: string, userId: string) {
+export async function getGalleryAccess(
+	galleryId: string,
+	userId: string,
+): Promise<GalleryAccess | null> {
 	const gallery = await db.gallery.findUnique({
 		where: { id: galleryId },
 		select: {
@@ -18,10 +31,17 @@ export async function getGalleryAccess(galleryId: string, userId: string) {
 		},
 	});
 	if (!gallery) return null;
-	if (gallery.photographerId === userId) return "owner" as const;
-	const isClient = gallery.project.clientId === userId;
-	const visible = gallery.sharedAt && isVisibleToClient(gallery.project);
-	return isClient && visible ? ("client" as const) : null;
+	if (gallery.photographerId === userId)
+		return { role: "owner", originals: true };
+
+	const { project } = gallery;
+	if (
+		project.clientId !== userId ||
+		!gallery.sharedAt ||
+		!canClientView(project)
+	)
+		return null;
+	return { role: "client", originals: isDeliveredToClient(project) };
 }
 
 /** Same check, starting from a photo. */
@@ -32,5 +52,5 @@ export async function getItemAccess(itemId: string, userId: string) {
 	});
 	if (!item) return null;
 	const access = await getGalleryAccess(item.galleryId, userId);
-	return access ? { access, galleryId: item.galleryId } : null;
+	return access ? { ...access, galleryId: item.galleryId } : null;
 }

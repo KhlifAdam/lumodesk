@@ -90,3 +90,22 @@ export function sendBookingSentSms(props: {
 		body: smsText(locale, "bookingSent", { ...vars, url: appUrl(path) }),
 	});
 }
+
+/** Galleries open for choosing, or the project delivered, for a phone-only client. */
+export function sendProjectStageSms(props: {
+	to: string;
+	locale: Locale;
+	kind: "galleriesReady" | "projectDelivered";
+	studio: string;
+	project: string;
+	projectId: string;
+}) {
+	const { to, locale, kind, projectId, ...vars } = props;
+	return sendSms({
+		to,
+		body: smsText(locale, kind, {
+			...vars,
+			url: appUrl(`/portal/projects/${projectId}`),
+		}),
+	});
+}

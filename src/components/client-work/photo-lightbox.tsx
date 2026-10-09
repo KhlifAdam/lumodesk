@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, Lock } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { type ReactNode, useEffect } from "react";
@@ -13,6 +13,8 @@ interface PhotoLightboxProps {
 	onIndexChange: (index: number | null) => void;
 	/** Controls for the open photo (select, comments). */
 	renderActions?: (photo: GalleryPhoto) => ReactNode;
+	/** False while the client is choosing: previews only, no video, no download. */
+	originals?: boolean;
 }
 
 const arrowClass =
@@ -24,6 +26,7 @@ export function PhotoLightbox({
 	index,
 	onIndexChange,
 	renderActions,
+	originals = true,
 }: PhotoLightboxProps) {
 	const t = useTranslations("Galleries.lightbox");
 	const photo = index !== null ? (items[index] ?? null) : null;
@@ -50,7 +53,7 @@ export function PhotoLightbox({
 				</DialogTitle>
 				{photo && index !== null && (
 					<div className="relative h-full w-full">
-						{photo.type === "VIDEO" ? (
+						{photo.type === "VIDEO" && originals && photo.fullUrl ? (
 							// The signed URL supports range requests, so seeking works.
 							<video
 								key={photo.id}
@@ -63,7 +66,7 @@ export function PhotoLightbox({
 							>
 								<track kind="captions" />
 							</video>
-						) : (
+						) : photo.type === "IMAGE" && photo.fullUrl ? (
 							<Image
 								key={photo.id}
 								src={photo.fullUrl}
@@ -72,11 +75,48 @@ export function PhotoLightbox({
 								unoptimized
 								className="object-contain p-4"
 							/>
+						) : (
+							// A video before delivery: its poster only.
+							<div className="flex h-full w-full flex-col items-center justify-center gap-3 p-4 pb-16">
+								{photo.previewUrl && (
+									<div className="relative h-3/4 w-full">
+										<Image
+											key={photo.id}
+											src={photo.previewUrl}
+											alt={photo.filename}
+											fill
+											unoptimized
+											className="object-contain"
+										/>
+									</div>
+								)}
+								<p className="flex items-center gap-1.5 text-sm text-white/70">
+									<Lock className="h-4 w-4" />
+									{t("videoLocked")}
+								</p>
+							</div>
 						)}
 						<div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-4 bg-gradient-to-t from-black/70 to-transparent px-5 py-4 text-sm text-white/80">
-							<span className="truncate">{photo.filename}</span>
+							<span className="flex min-w-0 flex-col">
+								<span className="truncate">{photo.filename}</span>
+								{!originals && (
+									<span className="text-xs text-white/50">
+										{t("previewOnly")}
+									</span>
+								)}
+							</span>
 							<div className="flex shrink-0 items-center gap-3">
 								{renderActions?.(photo)}
+								{originals && (
+									<a
+										href={`/api/galleries/items/${photo.id}/download`}
+										aria-label={t("download")}
+										title={t("download")}
+										className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/25"
+									>
+										<Download className="h-4 w-4" />
+									</a>
+								)}
 								<span className="tabular-nums">
 									{index + 1} / {items.length}
 								</span>

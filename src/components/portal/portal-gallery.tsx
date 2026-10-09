@@ -112,6 +112,7 @@ export function PortalGallery({ gallery }: { gallery: GalleryView }) {
 				index={openIndex}
 				onIndexChange={setOpenIndex}
 				renderActions={(photo) => heart(photo, true)}
+				originals={gallery.originals}
 			/>
 			<CommentsSheet photo={commentsFor} onClose={() => setCommentsFor(null)} />
 		</div>

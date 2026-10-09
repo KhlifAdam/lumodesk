@@ -1,7 +1,8 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Lock } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { GalleryDownloads } from "@/components/client-work/gallery-downloads";
 import { PortalGallery } from "@/components/portal/portal-gallery";
 import { requireClient } from "@/lib/auth/require-client";
 import { getClientGallery } from "@/services/galleries/queries";
@@ -52,6 +53,18 @@ export default async function PortalGalleryPage({
 				)}
 				{hint && <p className="text-xs text-muted-foreground">{hint}</p>}
 			</div>
+			{!gallery.originals && gallery.total > 0 && (
+				<p className="flex items-center gap-2 rounded-lg border border-border bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
+					<Lock className="h-3.5 w-3.5 shrink-0" />
+					{t("previewsOnly")}
+				</p>
+			)}
+			{gallery.originals && gallery.total > 0 && (
+				<GalleryDownloads
+					galleryId={gallery.id}
+					selectedCount={gallery.selectedCount}
+				/>
+			)}
 			<PortalGallery
 				key={`${gallery.filter}-${gallery.page}`}
 				gallery={gallery}

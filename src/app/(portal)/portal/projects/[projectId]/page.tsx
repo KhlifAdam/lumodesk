@@ -1,16 +1,11 @@
-import {
-	ArrowLeft,
-	CalendarDays,
-	Images,
-	MapPin,
-	MessageSquare,
-} from "lucide-react";
+import { ArrowLeft, Images, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getFormatter, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { GalleryCard } from "@/components/client-work/gallery-card";
 import { StageTimeline } from "@/components/client-work/stage-timeline";
 import { EmptyState } from "@/components/dashboard/shared/empty-state";
+import { ProjectOverview } from "@/components/portal/project/project-overview";
 import { StudioHeading } from "@/components/portal/studio-heading";
 import { Button } from "@/components/ui/button";
 import { requireClient } from "@/lib/auth/require-client";
@@ -22,7 +17,6 @@ export default async function PortalProjectPage({
 	params: Promise<{ projectId: string }>;
 }) {
 	const t = await getTranslations("Portal.project");
-	const format = await getFormatter();
 	const { projectId } = await params;
 	const { clientId } = await requireClient();
 	const project = await getPortalProject(clientId, projectId);
@@ -58,29 +52,8 @@ export default async function PortalProjectPage({
 				<h1 className="font-display text-2xl font-bold tracking-tight">
 					{project.title}
 				</h1>
-				<div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-					{project.eventDate && (
-						<span className="flex items-center gap-1">
-							<CalendarDays className="h-3 w-3" />
-							{format.dateTime(new Date(project.eventDate), {
-								dateStyle: "long",
-								timeZone: "UTC",
-							})}
-						</span>
-					)}
-					{project.location && (
-						<span className="flex items-center gap-1">
-							<MapPin className="h-3 w-3" />
-							{project.location}
-						</span>
-					)}
-				</div>
-				{project.description && (
-					<p className="max-w-3xl whitespace-pre-wrap text-sm text-muted-foreground">
-						{project.description}
-					</p>
-				)}
 			</div>
+			<ProjectOverview project={project} />
 			<section className="rounded-xl border border-border bg-card p-3">
 				<h2 className="mb-2 text-xs font-medium text-muted-foreground">
 					{t("progress")}

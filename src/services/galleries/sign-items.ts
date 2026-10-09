@@ -29,12 +29,21 @@ export const galleryItemSelect = {
 	_count: { select: { comments: true } },
 } as const;
 
-/** Only call after an access check: the URLs grant read access to the files. */
-export async function toGalleryPhoto(item: ItemRow): Promise<GalleryPhoto> {
-	const [fullUrl, previewUrl] = await Promise.all([
-		getPrivateViewUrl(item.key),
+/**
+ * Only call after an access check: the URLs grant read access to the files.
+ * Without `originals` (a client choosing before delivery) no URL to the
+ * original is ever signed: the preview stands in for it.
+ */
+export async function toGalleryPhoto(
+	item: ItemRow,
+	originals: boolean,
+): Promise<GalleryPhoto> {
+	const [original, preview] = await Promise.all([
+		originals ? getPrivateViewUrl(item.key) : null,
 		item.previewKey ? getPrivateViewUrl(item.previewKey) : null,
 	]);
+	// A photo can stand in for its own preview; a video file can't.
+	const previewUrl = preview ?? (item.type === "IMAGE" ? original : null);
 	return {
 		id: item.id,
 		type: item.type,
@@ -44,9 +53,8 @@ export async function toGalleryPhoto(item: ItemRow): Promise<GalleryPhoto> {
 		height: item.height,
 		selected: item.selected,
 		commentCount: item._count.comments,
-		// A photo can stand in for its own preview; a video file can't.
-		previewUrl: previewUrl ?? (item.type === "IMAGE" ? fullUrl : null),
-		fullUrl,
+		previewUrl,
+		fullUrl: original ?? (item.type === "IMAGE" ? previewUrl : null),
 	};
 }
 

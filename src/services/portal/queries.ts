@@ -4,7 +4,10 @@ import type { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
 import { studioBrandSelect, toStudioBrand } from "@/services/clients/branding";
 import { listGallerySummaries } from "@/services/galleries/summaries";
-import { isVisibleToClient } from "@/services/projects/visibility";
+import {
+	canClientView,
+	isDeliveredToClient,
+} from "@/services/projects/visibility";
 import { pageMeta, pageSkip } from "@/services/shared/pagination";
 import { pendingFor, type VerifiedContact } from "./contacts";
 import type {
@@ -35,8 +38,8 @@ function toPortalProject(row: PortalRow): PortalProject {
 		location: row.location ?? "",
 		studio: studio ? toStudioBrand(studio) : null,
 		photographerName: name,
-		// Files stay hidden until the project is delivered and paid.
-		sharedGalleryCount: isVisibleToClient(row) ? row._count.galleries : 0,
+		// Shared galleries open to the client from the Selection step.
+		sharedGalleryCount: canClientView(row) ? row._count.galleries : 0,
 	};
 }
 
@@ -71,7 +74,17 @@ export async function getPortalProject(
 	return {
 		...toPortalProject(row),
 		description: row.description ?? "",
-		galleries: isVisibleToClient(row)
+		serviceType: row.serviceType,
+		mediaType: row.mediaType,
+		startTime: row.startTime ?? "",
+		endTime: row.endTime ?? "",
+		locationType: row.locationType,
+		deliveryDeadline: row.deliveryDeadline?.toISOString() ?? null,
+		price: row.price?.toNumber() ?? null,
+		advance: row.advance.toNumber(),
+		paymentStatus: row.paymentStatus,
+		delivered: isDeliveredToClient(row),
+		galleries: canClientView(row)
 			? await listGallerySummaries({
 					projectId: id,
 					sharedAt: { not: null },

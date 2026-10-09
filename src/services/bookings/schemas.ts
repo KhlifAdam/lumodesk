@@ -122,7 +122,17 @@ export const publicRequestSchema = z.object({
 	website: z.string().max(0).optional(),
 });
 
+/** A client asks a studio they already work with for a new service. */
+export const portalRequestSchema = z.object({
+	photographerId: idSchema,
+	serviceType: z.enum(SERVICE_TYPES),
+	desiredDate: dateInput,
+	location: optionalText(300),
+	message: requiredText(2000),
+});
+
 export type BookingValues = z.infer<typeof bookingSchema>;
+export type PortalRequestValues = z.infer<typeof portalRequestSchema>;
 export type ClientEditValues = z.infer<typeof clientEditSchema>;
 export type ListBookingsParams = z.infer<typeof listBookingsSchema>;
 export type PublicRequestValues = z.infer<typeof publicRequestSchema>;

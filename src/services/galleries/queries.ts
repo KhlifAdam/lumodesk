@@ -2,7 +2,10 @@ import "server-only";
 
 import type { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
-import { CLIENT_VISIBLE_PROJECT } from "@/services/projects/visibility";
+import {
+	CLIENT_VIEWABLE_PROJECT,
+	isDeliveredToClient,
+} from "@/services/projects/visibility";
 import { pageMeta, pageSkip } from "@/services/shared/pagination";
 import { GALLERY_PAGE_SIZE } from "./constants";
 import { galleryItemSelect, toGalleryPhoto } from "./sign-items";
@@ -18,16 +21,25 @@ interface ViewParams {
 	filter: GalleryFilter;
 }
 
-/** Loads one page of a gallery. `where` must already scope it to the viewer. */
+/**
+ * Loads one page of a gallery. `where` must already scope it to the viewer;
+ * a client only gets the originals once the project is delivered and paid.
+ */
 async function loadGalleryView(
 	where: Prisma.GalleryWhereInput,
 	{ page, filter }: ViewParams,
+	viewer: "owner" | "client",
 ): Promise<GalleryView | null> {
 	const gallery = await db.gallery.findFirst({
 		where,
-		include: { project: { select: { id: true, title: true } } },
+		include: {
+			project: {
+				select: { id: true, title: true, stage: true, paymentStatus: true },
+			},
+		},
 	});
 	if (!gallery) return null;
+	const originals = viewer === "owner" || isDeliveredToClient(gallery.project);
 
 	const itemWhere: Prisma.GalleryItemWhereInput = { galleryId: gallery.id };
 	if (filter === "selected") itemWhere.selected = true;
@@ -58,7 +70,8 @@ async function loadGalleryView(
 		shared: Boolean(gallery.sharedAt),
 		submitted: Boolean(gallery.submittedAt),
 		filter,
-		items: await Promise.all(rows.map(toGalleryPhoto)),
+		originals,
+		items: await Promise.all(rows.map((row) => toGalleryPhoto(row, originals))),
 	};
 }
 
@@ -67,7 +80,7 @@ export function getOwnedGallery(
 	galleryId: string,
 	params: ViewParams,
 ) {
-	return loadGalleryView({ id: galleryId, photographerId }, params);
+	return loadGalleryView({ id: galleryId, photographerId }, params, "owner");
 }
 
 export function getClientGallery(
@@ -79,8 +92,9 @@ export function getClientGallery(
 		{
 			id: galleryId,
 			sharedAt: { not: null },
-			project: { clientId, ...CLIENT_VISIBLE_PROJECT },
+			project: { clientId, ...CLIENT_VIEWABLE_PROJECT },
 		},
 		params,
+		"client",
 	);
 }
