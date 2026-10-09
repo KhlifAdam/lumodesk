@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, FileImage, FileVideo, RotateCcw } from "lucide-react";
+import { CheckCircle2, FileImage, FileVideo, RotateCcw, X } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -12,9 +12,16 @@ interface UploadQueueProps {
 	tasks: UploadTask[];
 	onRetry: (id: string) => void;
 	onClear: () => void;
+	/** Shows a stop button on files still waiting or uploading. */
+	onCancel?: (id: string) => void;
 }
 
-export function UploadQueue({ tasks, onRetry, onClear }: UploadQueueProps) {
+export function UploadQueue({
+	tasks,
+	onRetry,
+	onClear,
+	onCancel,
+}: UploadQueueProps) {
 	const t = useTranslations();
 	const locale = useLocale();
 	const errorMessage = useErrorMessage();
@@ -49,7 +56,9 @@ export function UploadQueue({ tasks, onRetry, onClear }: UploadQueueProps) {
 								<div className="flex items-center justify-between gap-2 text-xs">
 									<span className="truncate font-medium">{task.file.name}</span>
 									<span className="shrink-0 text-muted-foreground">
-										{formatBytes(task.file.size, locale)}
+										{task.status === "uploading"
+											? `${formatBytes((task.file.size * task.progress) / 100, locale)} / ${formatBytes(task.file.size, locale)}`
+											: formatBytes(task.file.size, locale)}
 									</span>
 								</div>
 								{task.status === "error" ? (
@@ -60,12 +69,25 @@ export function UploadQueue({ tasks, onRetry, onClear }: UploadQueueProps) {
 									<Progress value={task.progress} className="h-1.5" />
 								)}
 							</div>
+							{onCancel &&
+								(task.status === "queued" || task.status === "uploading") && (
+									<Button
+										variant="ghost"
+										size="icon"
+										className="h-7 w-7"
+										onClick={() => onCancel(task.id)}
+										aria-label={t("Media.queue.cancel")}
+									>
+										<X className="h-3.5 w-3.5" />
+									</Button>
+								)}
 							{task.status === "done" && (
 								<CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
 							)}
 							{task.status === "error" &&
 								task.error !== "unsupportedType" &&
-								task.error !== "tooLarge" && (
+								task.error !== "tooLarge" &&
+								task.error !== "uploadCancelled" && (
 									<Button
 										variant="ghost"
 										size="icon"

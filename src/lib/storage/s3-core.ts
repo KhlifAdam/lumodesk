@@ -15,7 +15,7 @@ const DELETE_BATCH_SIZE = 1000;
 
 let client: S3Client | undefined;
 
-function getClient() {
+export function getClient() {
 	const env = getR2Credentials();
 	client ??= new S3Client({
 		region: "auto",

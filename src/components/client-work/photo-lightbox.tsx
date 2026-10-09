@@ -18,7 +18,7 @@ interface PhotoLightboxProps {
 const arrowClass =
 	"absolute top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/25";
 
-/** Full-size view of private gallery photos (signed URLs, not optimized). */
+/** Full-size view of private gallery photos and videos (signed URLs, not optimized). */
 export function PhotoLightbox({
 	items,
 	index,
@@ -50,14 +50,29 @@ export function PhotoLightbox({
 				</DialogTitle>
 				{photo && index !== null && (
 					<div className="relative h-full w-full">
-						<Image
-							key={photo.id}
-							src={photo.fullUrl}
-							alt={photo.filename}
-							fill
-							unoptimized
-							className="object-contain p-4"
-						/>
+						{photo.type === "VIDEO" ? (
+							// The signed URL supports range requests, so seeking works.
+							<video
+								key={photo.id}
+								src={photo.fullUrl}
+								poster={photo.previewUrl ?? undefined}
+								controls
+								playsInline
+								preload="metadata"
+								className="h-full w-full object-contain p-4 pb-16"
+							>
+								<track kind="captions" />
+							</video>
+						) : (
+							<Image
+								key={photo.id}
+								src={photo.fullUrl}
+								alt={photo.filename}
+								fill
+								unoptimized
+								className="object-contain p-4"
+							/>
+						)}
 						<div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-4 bg-gradient-to-t from-black/70 to-transparent px-5 py-4 text-sm text-white/80">
 							<span className="truncate">{photo.filename}</span>
 							<div className="flex shrink-0 items-center gap-3">

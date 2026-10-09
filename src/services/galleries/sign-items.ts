@@ -7,7 +7,9 @@ interface ItemRow {
 	id: string;
 	key: string;
 	previewKey: string | null;
+	type: "IMAGE" | "VIDEO";
 	filename: string;
+	durationSec: number | null;
 	width: number | null;
 	height: number | null;
 	selected: boolean;
@@ -18,7 +20,9 @@ export const galleryItemSelect = {
 	id: true,
 	key: true,
 	previewKey: true,
+	type: true,
 	filename: true,
+	durationSec: true,
 	width: true,
 	height: true,
 	selected: true,
@@ -33,12 +37,15 @@ export async function toGalleryPhoto(item: ItemRow): Promise<GalleryPhoto> {
 	]);
 	return {
 		id: item.id,
+		type: item.type,
 		filename: item.filename,
+		durationSec: item.durationSec,
 		width: item.width,
 		height: item.height,
 		selected: item.selected,
 		commentCount: item._count.comments,
-		previewUrl: previewUrl ?? fullUrl,
+		// A photo can stand in for its own preview; a video file can't.
+		previewUrl: previewUrl ?? (item.type === "IMAGE" ? fullUrl : null),
 		fullUrl,
 	};
 }

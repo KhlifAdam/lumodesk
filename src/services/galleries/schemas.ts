@@ -7,8 +7,9 @@ import {
 } from "@/services/shared/schemas";
 import {
 	COMMENT_MAX_LENGTH,
-	GALLERY_MAX_FILE_SIZE,
+	galleryMaxSize,
 	isGalleryMime,
+	PART_URLS_PER_REQUEST,
 	PREVIEW_MAX_FILE_SIZE,
 	SELECTION_LIMIT_MAX,
 } from "./constants";
@@ -44,26 +45,51 @@ export const shareGallerySchema = z.object({
 	shared: z.boolean(),
 });
 
-const fileFields = {
-	galleryId: idSchema,
-	filename: z.string().min(1).max(255),
-	mimeType: z.string().refine(isGalleryMime, "unsupportedType"),
-	size: z.number().int().positive().max(GALLERY_MAX_FILE_SIZE, "tooLarge"),
+/** A file to send to a gallery: the server opens (or resumes) its upload. */
+export const startUploadSchema = z
+	.object({
+		galleryId: idSchema,
+		filename: z.string().min(1).max(255),
+		mimeType: z.string().refine(isGalleryMime, "unsupportedType"),
+		size: z.number().int().positive(),
+		/** Recognises the same file chosen again, to resume its upload. */
+		fingerprint: z.string().min(1).max(600),
+		/** Browser-made JPEG preview; null when none could be made (some videos). */
+		previewSize: z
+			.number()
+			.int()
+			.positive()
+			.max(PREVIEW_MAX_FILE_SIZE, "tooLarge")
+			.nullable(),
+	})
+	.refine((v) => v.size <= galleryMaxSize(v.mimeType), {
+		path: ["size"],
+		message: "tooLarge",
+	});
+
+export const signPartsSchema = z.object({
+	sessionId: idSchema,
+	partNumbers: z
+		.array(z.number().int().min(1).max(10_000))
+		.min(1)
+		.max(PART_URLS_PER_REQUEST),
+});
+
+export const completeUploadSchema = z.object({
+	sessionId: idSchema,
 	previewSize: z
 		.number()
 		.int()
 		.positive()
-		.max(PREVIEW_MAX_FILE_SIZE, "tooLarge"),
-};
-
-export const requestGalleryUploadSchema = z.object(fileFields);
-
-export const confirmGalleryUploadSchema = z.object({
-	...fileFields,
-	key: z.string().min(1),
-	previewKey: z.string().min(1),
+		.max(PREVIEW_MAX_FILE_SIZE)
+		.nullable(),
 	width: z.number().int().positive().optional(),
 	height: z.number().int().positive().optional(),
+	durationSec: z
+		.number()
+		.positive()
+		.max(24 * 60 * 60)
+		.optional(),
 });
 
 export const galleryItemIdsSchema = z.object({

@@ -12,7 +12,7 @@ export function GalleryUploader({ galleryId }: { galleryId: string }) {
 	const t = useTranslations("Galleries.manager");
 	const router = useRouter();
 	const refresh = useCallback(() => router.refresh(), [router]);
-	const { tasks, addFiles, retry, clearFinished } = useGalleryUpload(
+	const { tasks, addFiles, retry, cancel, clearFinished } = useGalleryUpload(
 		galleryId,
 		refresh,
 	);
@@ -24,7 +24,12 @@ export function GalleryUploader({ galleryId }: { galleryId: string }) {
 				accept={GALLERY_MIME_TYPES}
 				hint={t("dropHint")}
 			/>
-			<UploadQueue tasks={tasks} onRetry={retry} onClear={clearFinished} />
+			<UploadQueue
+				tasks={tasks}
+				onRetry={retry}
+				onCancel={cancel}
+				onClear={clearFinished}
+			/>
 		</div>
 	);
 }

@@ -14,6 +14,8 @@ export async function listGallerySummaries(
 		orderBy: [{ position: "asc" }, { createdAt: "asc" }],
 		include: {
 			items: {
+				// A video without a poster has nothing an <img> can show.
+				where: { OR: [{ type: "IMAGE" }, { previewKey: { not: null } }] },
 				orderBy: [{ position: "asc" }, { id: "asc" }],
 				take: 1,
 				select: { key: true, previewKey: true },

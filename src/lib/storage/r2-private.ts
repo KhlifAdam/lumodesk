@@ -2,6 +2,14 @@ import "server-only";
 
 import { getR2PrivateEnv } from "@/lib/env";
 import { deleteKeys, head, presignGet, presignPut } from "./s3-core";
+import {
+	abortMultipart,
+	completeMultipart,
+	createMultipart,
+	listParts,
+	presignPart,
+	type StoredPart,
+} from "./s3-multipart";
 
 const VIEW_URL_TTL_SECONDS = 60 * 60;
 /** Signatures are made at the start of a window, so URLs repeat and stay cacheable. */
@@ -37,4 +45,35 @@ export function headPrivateObject(key: string) {
 
 export function deletePrivateObjects(keys: string[]) {
 	return deleteKeys(bucket(), keys);
+}
+
+// Large files (project imports) go up in parts, so a cut connection only
+// costs the part in flight and the upload can resume later.
+
+export function startPrivateMultipart(key: string, contentType: string) {
+	return createMultipart(bucket(), key, contentType);
+}
+
+export function signPrivatePart(
+	key: string,
+	uploadId: string,
+	partNumber: number,
+) {
+	return presignPart(bucket(), key, uploadId, partNumber);
+}
+
+export function listPrivateParts(key: string, uploadId: string) {
+	return listParts(bucket(), key, uploadId);
+}
+
+export function completePrivateMultipart(
+	key: string,
+	uploadId: string,
+	parts: StoredPart[],
+) {
+	return completeMultipart(bucket(), key, uploadId, parts);
+}
+
+export function abortPrivateMultipart(key: string, uploadId: string) {
+	return abortMultipart(bucket(), key, uploadId);
 }

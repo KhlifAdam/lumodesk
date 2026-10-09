@@ -192,7 +192,11 @@
 		"tooManyRequests": "Trop de demandes. Réessayez plus tard.",
 		"invalidContact": "Saisissez un e-mail ou un numéro de téléphone valide.",
 		"inviteSendFailed": "L'invitation est enregistrée, mais le message n'a pas pu être envoyé. Essayez de la renvoyer.",
-		"bookingNoContact": "Ajoutez d'abord l'e-mail ou le téléphone du client."
+		"bookingNoContact": "Ajoutez d'abord l'e-mail ou le téléphone du client.",
+		"uploadCancelled": "Envoi annulé.",
+		"uploadIncomplete": "Des morceaux du fichier manquent. Réessayez pour les envoyer.",
+		"uploadInProgress": "Ce fichier est déjà en cours d'envoi.",
+		"noGallery": "Choisissez d'abord une galerie."
 	},
 	"Validation": {
 		"required": "Ce champ est obligatoire.",
@@ -231,7 +235,8 @@
 		"queue": {
 			"summary": "{done} sur {total} envoyés",
 			"clear": "Effacer les terminés",
-			"retry": "Relancer l'envoi"
+			"retry": "Relancer l'envoi",
+			"cancel": "Annuler"
 		},
 		"filters": {
 			"all": "Tout",
@@ -1371,7 +1376,8 @@
 			"unpaidLocked": "Marquez le projet comme payé pour débloquer la livraison.",
 			"unpaidHint": "La livraison est verrouillée tant que le projet n'est pas payé. Les fichiers restent masqués au client jusqu'à la livraison.",
 			"filesHidden": "Les fichiers sont masqués au client jusqu'à ce que le projet soit livré et payé.",
-			"fromBooking": "Issu d'une réservation"
+			"fromBooking": "Issu d'une réservation",
+			"importFiles": "Importer des fichiers"
 		},
 		"invite": {
 			"prompt": "Inviter le client par e-mail ou téléphone :",
@@ -1442,6 +1448,35 @@
 			"price": "Prix",
 			"advance": "Avance",
 			"remaining": "Reste à payer"
+		},
+		"import": {
+			"title": "Importer des fichiers",
+			"back": "Retour au projet",
+			"galleryTitle": "Galerie",
+			"galleryHint": "Les fichiers sont ajoutés à cette galerie. Le client ne les voit qu'une fois le projet livré et payé.",
+			"gallery": "Galerie",
+			"chooseGallery": "Choisir une galerie",
+			"galleryOption": "{title} ({count, plural, one {# fichier} other {# fichiers}})",
+			"newGallery": "Nouvelle galerie",
+			"newGalleryPlaceholder": "Cérémonie, Séance couple…",
+			"create": "Créer",
+			"cancel": "Annuler",
+			"galleryCreated": "Galerie créée.",
+			"dropHint": "Photos (JPEG, PNG, WebP jusqu'à 100 Mo) et vidéos (MP4, MOV, WebM jusqu'à 10 Go). Les gros fichiers sont envoyés par morceaux et peuvent reprendre.",
+			"chooseFolder": "Choisir un dossier",
+			"skipped": "{count, plural, one {# fichier ignoré : ce n'est ni une photo ni une vidéo.} other {# fichiers ignorés : ni photos ni vidéos.}}",
+			"openGallery": "Ouvrir la galerie",
+			"stageHint": "Ce projet n'est pas encore à l'étape Import de son workflow.",
+			"moveToImport": "Passer à Import",
+			"stageMoved": "Le projet est maintenant à l'étape Import.",
+			"interrupted": {
+				"title": "{count, plural, one {# envoi interrompu} other {# envois interrompus}}",
+				"hint": "Choisissez à nouveau le même fichier pour reprendre là où il s'est arrêté.",
+				"progress": "{uploaded} sur {total} · {gallery}",
+				"resume": "Reprendre",
+				"discard": "Abandonner",
+				"discarded": "Envoi abandonné."
+			}
 		}
 	},
 	"Bookings": {
@@ -1752,7 +1787,7 @@
 		},
 		"manager": {
 			"description": "Importez des photos, puis partagez la galerie avec votre client.",
-			"dropHint": "JPG, PNG, WebP jusqu'à 40 Mo · stockage privé",
+			"dropHint": "Photos (JPEG, PNG, WebP jusqu'à 100 Mo) et vidéos (MP4, MOV, WebM jusqu'à 10 Go).",
 			"shared": "Partagée avec le client",
 			"private": "Privée",
 			"sharedToast": "Galerie partagée. Votre client a été prévenu.",

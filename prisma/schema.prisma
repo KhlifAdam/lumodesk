@@ -44,6 +44,7 @@ model User {
   galleryItems        GalleryItem[]
   galleryComments     GalleryComment[]
   driveImports        DriveImport[]
+  uploadSessions      UploadSession[]
   calendarEvents      CalendarEvent[]
   studioConversations Conversation[]   @relation("ConversationPhotographer")
   clientConversations Conversation[]   @relation("ConversationClient")
@@ -418,10 +419,11 @@ model Gallery {
   createdAt        DateTime  @default(now()) @map("created_at")
   updatedAt        DateTime  @updatedAt @map("updated_at")
 
-  photographer User          @relation(fields: [photographerId], references: [id], onDelete: Cascade)
-  project      Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  items        GalleryItem[]
-  driveImports DriveImport[]
+  photographer   User            @relation(fields: [photographerId], references: [id], onDelete: Cascade)
+  project        Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  items          GalleryItem[]
+  driveImports   DriveImport[]
+  uploadSessions UploadSession[]
 
   @@index([projectId, position])
   @@index([photographerId])
@@ -429,22 +431,26 @@ model Gallery {
 }
 
 model GalleryItem {
-  id             String   @id @default(cuid())
-  galleryId      String   @map("gallery_id")
-  photographerId String   @map("photographer_id")
+  id             String    @id @default(cuid())
+  galleryId      String    @map("gallery_id")
+  photographerId String    @map("photographer_id")
   /// Object key in the private R2 bucket.
-  key            String   @unique
-  previewKey     String?  @map("preview_key")
+  key            String    @unique
+  previewKey     String?   @map("preview_key")
   filename       String
-  mimeType       String   @map("mime_type")
-  size           Int
+  mimeType       String    @map("mime_type")
+  /// Bytes; BigInt because videos can pass 2 GB.
+  size           BigInt
+  type           MediaType @default(IMAGE)
+  /// Seconds, for videos.
+  durationSec    Float?    @map("duration_sec")
   width          Int?
   height         Int?
-  position       Int      @default(0)
-  selected       Boolean  @default(false)
+  position       Int       @default(0)
+  selected       Boolean   @default(false)
   /// Google Drive file this was imported from; stops the same file entering a gallery twice.
-  driveFileId    String?  @map("drive_file_id")
-  createdAt      DateTime @default(now()) @map("created_at")
+  driveFileId    String?   @map("drive_file_id")
+  createdAt      DateTime  @default(now()) @map("created_at")
 
   gallery      Gallery          @relation(fields: [galleryId], references: [id], onDelete: Cascade)
   photographer User             @relation(fields: [photographerId], references: [id], onDelete: Cascade)
@@ -702,4 +708,34 @@ model BookingActivity {
 
   @@index([bookingId, createdAt])
   @@map("booking_activities")
+}
+
+// ─── Project file import ─────────────────────────────────────────────────────
+// A large file goes to the private bucket in parts (S3 multipart upload). The
+// session remembers the upload, so choosing the same file again resumes it
+// instead of starting over. It is deleted once the file is in the gallery.
+
+model UploadSession {
+  id             String   @id @default(cuid())
+  photographerId String   @map("photographer_id")
+  galleryId      String   @map("gallery_id")
+  /// Object key the parts are assembled into.
+  key            String   @unique
+  /// The bucket's multipart upload id.
+  uploadId       String   @map("upload_id")
+  filename       String
+  mimeType       String   @map("mime_type")
+  size           BigInt
+  partSize       Int      @map("part_size")
+  /// Name, size and last-modified time of the file, to recognise it when chosen again.
+  fingerprint    String
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  photographer User    @relation(fields: [photographerId], references: [id], onDelete: Cascade)
+  gallery      Gallery @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+
+  @@unique([galleryId, fingerprint])
+  @@index([photographerId, galleryId])
+  @@map("upload_sessions")
 }

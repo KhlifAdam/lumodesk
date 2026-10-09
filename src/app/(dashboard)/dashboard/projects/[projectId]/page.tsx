@@ -1,4 +1,11 @@
-import { ArrowLeft, ArrowUpRight, EyeOff, Images, Pencil } from "lucide-react";
+import {
+	ArrowLeft,
+	ArrowUpRight,
+	EyeOff,
+	Images,
+	Pencil,
+	Upload,
+} from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
@@ -74,7 +81,15 @@ export default async function ProjectPage({
 			<section className="flex flex-col gap-3">
 				<div className="flex items-center justify-between">
 					<h2 className="text-sm font-semibold">{t("galleries")}</h2>
-					<NewGalleryDialog projectId={project.id} />
+					<div className="flex items-center gap-2">
+						<Button asChild size="sm" className="h-7 gap-1.5 text-xs">
+							<Link href={`/dashboard/projects/${project.id}/import`}>
+								<Upload className="h-3.5 w-3.5" />
+								{t("importFiles")}
+							</Link>
+						</Button>
+						<NewGalleryDialog projectId={project.id} />
+					</div>
 				</div>
 				{!isVisibleToClient(project) && (
 					<p className="flex items-center gap-1.5 text-xs text-muted-foreground">

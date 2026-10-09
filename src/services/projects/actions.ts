@@ -4,7 +4,11 @@ import { type ActionResult, fail, failFromZod, ok } from "@/lib/action-result";
 import { requirePhotographer } from "@/lib/auth/require-photographer";
 import { db } from "@/lib/db";
 import { toE164 } from "@/lib/phone";
-import { deleteGalleryFiles } from "@/services/galleries/cleanup";
+import {
+	abortUploads,
+	deleteGalleryFiles,
+	findUploadSessions,
+} from "@/services/galleries/cleanup";
 import { emptyToNull, idSchema } from "@/services/shared/schemas";
 import { inviteToProject } from "./invitations";
 import { revalidateClientWork } from "./revalidate";
@@ -142,16 +146,19 @@ export async function deleteProject(input: unknown): Promise<ActionResult> {
 	const parsed = idSchema.safeParse(input);
 	if (!parsed.success) return failFromZod(parsed.error);
 
-	const files = await db.galleryItem.findMany({
-		where: { photographerId, gallery: { projectId: parsed.data } },
-		select: { key: true, previewKey: true },
-	});
+	const [files, uploads] = await Promise.all([
+		db.galleryItem.findMany({
+			where: { photographerId, gallery: { projectId: parsed.data } },
+			select: { key: true, previewKey: true },
+		}),
+		findUploadSessions({ photographerId, gallery: { projectId: parsed.data } }),
+	]);
 	const { count } = await db.project.deleteMany({
 		where: { id: parsed.data, photographerId },
 	});
 	if (count === 0) return fail("notFound");
 
-	await deleteGalleryFiles(files);
+	await Promise.all([deleteGalleryFiles(files), abortUploads(uploads)]);
 	revalidateClientWork();
 	return ok();
 }

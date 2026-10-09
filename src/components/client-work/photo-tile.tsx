@@ -1,8 +1,9 @@
-import { MessageCircle } from "lucide-react";
+import { Film, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import type { GalleryPhoto } from "@/services/galleries/types";
+import { VideoBadge } from "./media-badge";
 
 interface PhotoTileProps {
 	photo: GalleryPhoto;
@@ -17,7 +18,7 @@ interface PhotoTileProps {
 	className?: string;
 }
 
-/** Square private photo (signed URL, so not optimized) with overlay controls. */
+/** Square private photo or video (signed URL, so not optimized) with overlay controls. */
 export function PhotoTile({
 	photo,
 	onOpen,
@@ -41,14 +42,24 @@ export function PhotoTile({
 				aria-label={openLabel}
 				className="absolute inset-0"
 			>
-				<Image
-					src={photo.previewUrl}
-					alt={photo.filename}
-					fill
-					unoptimized
-					className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-				/>
+				{photo.previewUrl ? (
+					<Image
+						src={photo.previewUrl}
+						alt={photo.filename}
+						fill
+						unoptimized
+						className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+					/>
+				) : (
+					<span className="flex h-full w-full flex-col items-center justify-center gap-1.5 px-2 text-muted-foreground">
+						<Film className="h-6 w-6" />
+						<span className="w-full truncate text-center text-[11px]">
+							{photo.filename}
+						</span>
+					</span>
+				)}
 			</button>
+			{photo.type === "VIDEO" && <VideoBadge durationSec={photo.durationSec} />}
 			{badge && <div className="absolute left-1.5 top-1.5">{badge}</div>}
 			{actions && (
 				<div className="absolute right-1.5 top-1.5 flex gap-1">{actions}</div>

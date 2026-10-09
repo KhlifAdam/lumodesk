@@ -11,7 +11,11 @@ import { revalidateClientWork } from "@/services/projects/revalidate";
 import { isVisibleToClient } from "@/services/projects/visibility";
 import { lockGallery, lockPhotographer } from "@/services/shared/lock-rows";
 import { emptyToNull, idSchema } from "@/services/shared/schemas";
-import { deleteGalleryFiles } from "./cleanup";
+import {
+	abortUploads,
+	deleteGalleryFiles,
+	findUploadSessions,
+} from "./cleanup";
 import { GALLERIES_PER_PROJECT_LIMIT } from "./constants";
 import {
 	createGallerySchema,
@@ -171,16 +175,19 @@ export async function deleteGallery(input: unknown): Promise<ActionResult> {
 	const parsed = idSchema.safeParse(input);
 	if (!parsed.success) return failFromZod(parsed.error);
 
-	const files = await db.galleryItem.findMany({
-		where: { galleryId: parsed.data, photographerId },
-		select: { key: true, previewKey: true },
-	});
+	const [files, uploads] = await Promise.all([
+		db.galleryItem.findMany({
+			where: { galleryId: parsed.data, photographerId },
+			select: { key: true, previewKey: true },
+		}),
+		findUploadSessions({ galleryId: parsed.data, photographerId }),
+	]);
 	const { count } = await db.gallery.deleteMany({
 		where: { id: parsed.data, photographerId },
 	});
 	if (count === 0) return fail("notFound");
 
-	await deleteGalleryFiles(files);
+	await Promise.all([deleteGalleryFiles(files), abortUploads(uploads)]);
 	revalidateClientWork();
 	return ok();
 }

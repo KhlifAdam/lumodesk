@@ -83,7 +83,8 @@ async function uploads(photographerId: string, r: Range) {
 	]);
 	return {
 		count: media + items,
-		bytes: (mediaSize._sum.size ?? 0) + (itemSize._sum.size ?? 0),
+		// Gallery sizes are BigInt (videos pass 2 GB); a sum fits a JS number.
+		bytes: (mediaSize._sum.size ?? 0) + Number(itemSize._sum.size ?? 0),
 	};
 }
 

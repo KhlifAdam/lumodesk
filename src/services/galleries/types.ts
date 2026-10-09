@@ -1,14 +1,18 @@
 import type { PageMeta } from "@/services/shared/pagination";
 
-/** A gallery photo with short-lived signed URLs. */
+/** A gallery photo or video with short-lived signed URLs. */
 export interface GalleryPhoto {
 	id: string;
+	type: "IMAGE" | "VIDEO";
 	filename: string;
+	/** Seconds, for videos. */
+	durationSec: number | null;
 	width: number | null;
 	height: number | null;
 	selected: boolean;
 	commentCount: number;
-	previewUrl: string;
+	/** Null for a video whose poster couldn't be made in the browser. */
+	previewUrl: string | null;
 	fullUrl: string;
 }
 
